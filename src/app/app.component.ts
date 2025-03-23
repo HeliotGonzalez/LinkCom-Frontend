@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService } from './services/api-service.service';
 import Swal from 'sweetalert2';
-import { CommunityFormCardComponent } from './community-form-card/community-form-card.component'
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommunityFormCardComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
+  standalone: true,
   styleUrl: './app.component.css'
 })
 export class AppComponent {

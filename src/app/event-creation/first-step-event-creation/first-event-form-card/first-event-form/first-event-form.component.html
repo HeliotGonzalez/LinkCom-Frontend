@@ -1,0 +1,35 @@
+<div class="community-form-header">
+    <app-form-steps [steps]="[
+    { step: 1, route: '/firstStepEventCreation' },
+    { step: 2, route: '/secondStepEventCreation' }
+  ]" [currentStep]="1" class="form-steps-circles-container"></app-form-steps>
+    <div class="community-form-title-container text-center">
+        <h1 class="community-form-title">Event creation</h1>
+        <h2 class="community-form-subtitle">Fill the basic information!</h2>
+    </div>
+</div>
+<form class="community-form">
+    <div class="community-form-inputs d-flex flex-column gap-5 flex-grow-1">
+        <div class="input-container d-flex flex-column">
+            <label for="community-name-input">Community name *</label>
+            <input id="community-name-input" placeholder="Choose a cool name for the event!" required>
+        </div>
+        <div class="input-container flex-column">
+            <label class="multiple-input-label d-flex flex-column">
+                Event time *
+                <div class="multiple-input-container d-flex flex-grow-1 gap-2">
+                    <input id="community-date-input" type="date" placeholder="dd/mm/yyyy" required class="flex-grow-1">
+                    <input id="community-time-input" type="time" placeholder="00:00" required class="flex-grow-1">
+                </div>
+            </label>
+        </div>
+        <div class="input-container d-flex flex-column" id="interests-input-container">
+            <label for="community-interests-input">Event Location *</label>
+            <input id="community-interests-input" placeholder="Where will the event be?">
+        </div>
+    </div>
+    <div class="community-form-footer d-flex justify-content-center">
+        <button class="form-button cancel-button">CANCEL</button>
+        <button (click)="nextPage()" class="form-button normal-button">NEXT</button>
+    </div>
+</form>

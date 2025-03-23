@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommunityFormCardComponent } from './community-form-card.component';
+import { FirstCommunityFormCardComponent } from './first-community-form-card.component';
 
 describe('CommunityFormCardComponent', () => {
-  let component: CommunityFormCardComponent;
-  let fixture: ComponentFixture<CommunityFormCardComponent>;
+  let component: FirstCommunityFormCardComponent;
+  let fixture: ComponentFixture<FirstCommunityFormCardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommunityFormCardComponent]
+      imports: [FirstCommunityFormCardComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CommunityFormCardComponent);
+    fixture = TestBed.createComponent(FirstCommunityFormCardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

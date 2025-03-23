@@ -1,0 +1,30 @@
+<div class="community-form-header">
+    <app-form-steps [steps]="[
+    { step: 1, route: '/firstStepEventCreation' },
+    { step: 2, route: '/secondStepEventCreation' },
+  ]" [currentStep]="2" class="form-steps-circles-container"></app-form-steps>
+    <div class="community-form-title-container text-center">
+        <h1 class="community-form-title">Event creation</h1>
+        <h2 class="community-form-subtitle">The last step, tell others about the event!</h2>
+    </div>
+</div>
+<form class="community-form">
+    <div class="community-form-inputs d-flex flex-column align-content-center justify-content-center flex-grow-1">
+        <div class="input-container drop-zone d-flex justify-content-center align-items-center"
+             (dragover)="onDragOver($event)"
+             (drop)="onDrop($event)">
+            <p *ngIf="!uploadedImage">Upload your image!</p>
+            <div *ngIf="uploadedImage" class="image-preview h-100 w-auto d-flex justify-content-center align-items-center">
+                <img [src]="uploadedImage" alt="Loaded Image" style="object-fit: cover;">
+            </div>
+        </div>
+        <div class="input-container d-flex flex-column">
+            <label for="community-form-description-input">Community description *</label>
+            <textarea class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!"></textarea>
+        </div>
+    </div>
+    <div class="community-form-footer d-flex justify-content-center">
+        <button (click)="previousPage()" class="form-button normal-empty-button">PREVIOUS</button>
+        <button (click)="nextPage()" class="form-button normal-button">CREATE</button>
+    </div>
+</form>
