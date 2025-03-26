@@ -13,14 +13,14 @@
         <div class="input-container drop-zone d-flex justify-content-center align-items-center"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event)">
-            <p *ngIf="!uploadedImage">Upload your image!</p>
+          <p *ngIf="!uploadedImage">Upload an image!</p>
             <div *ngIf="uploadedImage" class="image-preview h-100 w-auto d-flex justify-content-center align-items-center">
                 <img [src]="uploadedImage" alt="Loaded Image" style="object-fit: cover;">
             </div>
         </div>
         <div class="input-container d-flex flex-column">
             <label for="community-form-description-input">Community description *</label>
-            <textarea class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!"></textarea>
+            <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!"></textarea>
         </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">

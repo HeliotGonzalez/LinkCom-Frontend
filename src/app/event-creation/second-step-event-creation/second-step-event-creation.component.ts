@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {
     FirstEventFormCardComponent
-} from "../event-creation/first-step-event-creation/first-event-form-card/first-event-form-card.component";
+} from "../first-step-event-creation/first-event-form-card/first-event-form-card.component";
 import {SecondEventFormCardComponent} from "./second-event-form-card/second-event-form-card.component";
 
 @Component({

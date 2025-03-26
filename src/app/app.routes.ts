@@ -11,7 +11,7 @@ import {
 import {
   FirstStepEventCreationComponent
 } from './event-creation/first-step-event-creation/first-step-event-creation.component';
-import {SecondStepEventCreationComponent} from "./second-step-event-creation/second-step-event-creation.component";
+import {SecondStepEventCreationComponent} from "./event-creation/second-step-event-creation/second-step-event-creation.component";
 
 export const routes: Routes = [
   {path: '', component: FirstStepEventCreationComponent},

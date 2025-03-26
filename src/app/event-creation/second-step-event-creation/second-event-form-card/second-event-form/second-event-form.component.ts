@@ -1,29 +1,36 @@
 import { Component } from '@angular/core';
-import {FormStepsComponent} from "../../../community-creation/form-steps/form-steps.component";
+import {FormStepsComponent} from "../../../../community-creation/form-steps/form-steps.component";
 import {NgIf} from "@angular/common";
 import {Router} from "@angular/router";
+import {CommunityFormService} from '../../../../services/community-form-service/community-form.service';
+import {FormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-second-event-form',
   imports: [
     FormStepsComponent,
-    NgIf
+    NgIf,
+    FormsModule
   ],
   templateUrl: './second-event-form.component.html',
+  standalone: true,
   styleUrl: './second-event-form.component.css'
 })
 export class SecondEventFormComponent {
-  uploadedImage: string | null = null;
+  protected uploadedImage: string | null = null;
+  protected eventDescription: string | null = "";
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private formService: CommunityFormService) {
   }
 
   previousPage() {
     this.router.navigate(["/firstStepEventCreation"]).then(r => {});
+    this.saveFormData();
   }
 
   nextPage() {
     this.router.navigate(["/firstStepEventCreation"]).then(r => {});
+    this.saveFormData();
   }
 
   onDragOver(event: DragEvent) {
@@ -49,5 +56,16 @@ export class SecondEventFormComponent {
     } else {
       alert("Por favor, sube solo una imagen.");
     }
+  }
+
+  ngOnInit() {
+    this.uploadedImage = this.formService.get("eventImage");
+    this.eventDescription = this.formService.get("eventDescription");
+  }
+
+  private saveFormData() {
+    this.formService.put("eventImage", this.uploadedImage);
+    this.formService.put("eventDescription", this.eventDescription);
+    this.formService.update();
   }
 }

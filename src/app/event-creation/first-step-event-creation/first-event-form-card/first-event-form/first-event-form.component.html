@@ -11,21 +11,21 @@
 <form class="community-form">
     <div class="community-form-inputs d-flex flex-column gap-5 flex-grow-1">
         <div class="input-container d-flex flex-column">
-            <label for="community-name-input">Community name *</label>
-            <input id="community-name-input" placeholder="Choose a cool name for the event!" required>
+            <label for="event-name-input">Event name *</label>
+            <input (keydown.enter)="setFocus($event, eventDateInput)" [(ngModel)]="eventName" name="event-name" id="event-name-input" placeholder="Choose a cool name for the event!" required>
         </div>
         <div class="input-container flex-column">
             <label class="multiple-input-label d-flex flex-column">
                 Event time *
                 <div class="multiple-input-container d-flex flex-grow-1 gap-2">
-                    <input id="community-date-input" type="date" placeholder="dd/mm/yyyy" required class="flex-grow-1">
-                    <input id="community-time-input" type="time" placeholder="00:00" required class="flex-grow-1">
+                    <input (keydown.enter)="setFocus($event, eventTimeInput)" [(ngModel)]="eventDate" #eventDateInput name="event-date" id="event-date-input" type="date" placeholder="dd/mm/yyyy" required class="flex-grow-1">
+                    <input (keydown.enter)="setFocus($event, eventLocationInput)"[(ngModel)]="eventTime" #eventTimeInput name="event-time" id="event-time-input" type="time" placeholder="00:00" required class="flex-grow-1">
                 </div>
             </label>
         </div>
         <div class="input-container d-flex flex-column" id="interests-input-container">
-            <label for="community-interests-input">Event Location *</label>
-            <input id="community-interests-input" placeholder="Where will the event be?">
+            <label for="event-location-input">Event Location *</label>
+            <input (keydown.enter)="nextPage()" [(ngModel)]="eventLocation" #eventLocationInput name="event-location" id="event-location-input" placeholder="Where will the event be?">
         </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">

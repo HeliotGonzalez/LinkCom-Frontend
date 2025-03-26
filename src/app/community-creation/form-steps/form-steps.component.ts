@@ -1,6 +1,5 @@
 import {Component, Input} from '@angular/core';
 import {RouterLink} from '@angular/router';
-import {CommunityFormService} from '../../services/communityFormService/community-form.service';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
 
 @Component({

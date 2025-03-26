@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CommunityFormService } from './community-form.service';
 
-describe('CommunityFormService', () => {
+describe('CommunityFormServiceService', () => {
   let service: CommunityFormService;
 
   beforeEach(() => {
