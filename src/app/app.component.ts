@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ApiService } from './services/api-service.service';
-import { HttpClient } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { RegisterScreenComponent } from './register-screen/register-screen.component'; // Import the register-screen component
-import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
   imports: [RouterOutlet, FormsModule, RegisterScreenComponent], // Add RegisterScreenComponent to imports
   templateUrl: './app.component.html',
+  standalone: true,
   styleUrl: './app.component.css'
 })
 

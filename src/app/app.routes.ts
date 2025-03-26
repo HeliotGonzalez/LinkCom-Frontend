@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { RegisterScreenComponent } from './register-screen/register-screen.component';
+import { UserRegisterComponent } from './user-register/user-register.component';
+import { LoginComponent } from './login/login.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'register', pathMatch: 'full' }, // Default route redirects to 'register'
-  { path: 'register', component: RegisterScreenComponent }, // Route for the register page
+  { path: '', component: UserRegisterComponent },
+  { path: 'user-register', component: UserRegisterComponent },
+  { path: 'login', component: LoginComponent }
 ];
-
-
