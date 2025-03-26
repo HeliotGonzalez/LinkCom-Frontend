@@ -1,0 +1,16 @@
+body
+{
+    background: radial-gradient(circle,#2E3E7F, #5370E5);
+}
+
+.small.text
+{
+    font-size: 8px ;
+}
+
+
+.self-container
+{
+    background-color: white;
+    border-radius: 1%;
+}
