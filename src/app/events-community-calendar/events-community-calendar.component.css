@@ -8,9 +8,26 @@ body
     font-size: 8px ;
 }
 
+img 
+{
+    width: 80%;
+    margin: 20;
+}
+
+.colspan-self
+{
+    text-align: center;
+}
 
 .self-container
 {
     background-color: white;
+    height: 100%;
     border-radius: 1%;
+    align-content: center;
+}
+
+table
+{
+    padding-top:200px;
 }
