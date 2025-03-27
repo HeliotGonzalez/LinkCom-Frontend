@@ -1,0 +1,39 @@
+<div class="register-form-background"></div>
+
+<div class="form-card">
+  <div class="register-form-header">
+    <div class="register-form-title-container text-center">
+      <h1 class="register-form-title">User Register</h1>
+      <h2 class="register-form-subtitle">Fill in your details to register</h2>
+    </div>
+  </div>
+
+  <form class="register-form" (ngSubmit)="onSubmit()">
+    <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
+      <div class="input-container d-flex flex-column">
+        <label for="username-input">Username *</label>
+        <input [(ngModel)]="username" name="username" id="username-input" placeholder="Choose a unique username" required>
+      </div>
+      <div class="input-container d-flex flex-column">
+        <label for="email-input">Email *</label>
+        <input [(ngModel)]="email" name="email" id="email-input" placeholder="Enter your email address" type="email" required>
+      </div>
+      <div class="input-container d-flex flex-column">
+        <label for="password-input">Password *</label>
+        <input [(ngModel)]="password" name="password" id="password-input" placeholder="Choose a secure password" type="password" required>
+      </div>
+      <div class="input-container d-flex flex-column">
+        <label for="confirm-password-input">Confirm Password *</label>
+        <input [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirm your password" type="password" required>
+      </div>
+    </div>
+
+    <div class="register-form-footer d-flex justify-content-center gap-2">
+      <button type="submit" class="form-button normal-button">REGISTER</button>
+    </div>
+  </form>
+
+  <div class="register-form-footer text-center">
+    <p>Already have an account? <a href="/login" class="login-link">Go to login instead</a></p>
+  </div>
+</div>
