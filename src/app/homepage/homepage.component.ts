@@ -1,19 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-interface FeedItem {
-  id: number;
-  type: 'event' | 'news';
-  title: string;
-  content: string;
-  date: Date;
-}
-
-interface Community {
-  id: number;
-  name: string;
-  description: string;
-}
+import { ApiService } from '../services/api-service.service';
+import { FeedItem } from '../interfaces/feed-item';
+import { Community } from '../interfaces/community';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-homepage',
@@ -22,46 +12,48 @@ interface Community {
   imports: [CommonModule]
 })
 export class HomepageComponent implements OnInit {
-  // Datos de ejemplo para el feed (eventos y noticias)
-  allFeedItems: FeedItem[] = [
-    { id: 1, type: 'event', title: 'Conferencia Angular', content: 'Únete a la conferencia anual de Angular.', date: new Date() },
-    { id: 2, type: 'news', title: 'Nueva actualización', content: 'Se ha lanzado una nueva versión de nuestra plataforma.', date: new Date() },
-    { id: 3, type: 'event', title: 'Meetup Tech', content: 'Evento de networking para profesionales tech.', date: new Date() },
-    { id: 4, type: 'news', title: 'Lanzamiento de features', content: 'Descubre las nuevas funcionalidades que hemos implementado.', date: new Date() },
-  ];
-
-  // Items mostrados en el feed (lazy loading)
+  allFeedItems: FeedItem[] = [];
   displayedFeedItems: FeedItem[] = [];
   feedBatchSize: number = 2;
 
-  // Datos de ejemplo para comunidades
-  communities: Community[] = [
-    { id: 1, name: 'Comunidad Angular', description: 'Espacio para compartir conocimientos sobre Angular.' },
-    { id: 2, name: 'Tech Innovators', description: 'Un lugar para innovadores y amantes de la tecnología.' },
-    { id: 3, name: 'Programadores Unidos', description: 'Comunidad para programadores de todas las especialidades.' },
-  ];
+  communities: Community[] = [];
 
-  // Propiedades para el calendario
+  // Calendario
   calendarWeeks: (number | null)[][] = [];
   dayNames: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   todayDay: number = 0;
-  /* 
-    Se simulan eventos en el calendario. 
-    La clave es el número del día y el valor es un array de cadenas con la información de cada evento.
-    Por ejemplo, el día 15 tiene dos eventos y el día 22 uno.
-  */
-  calendarEvents: { [day: number]: string[] } = {
-    15: ["Evento Especial: Reunión de Comunidad", "Otro Evento"],
-    22: ["Meetup Tech"]
-  };
+  calendarEvents: { [day: number]: string[] } = {};
 
-  constructor() { }
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.loadMoreFeed();
+    this.fetchFeed();
+    this.fetchCommunities();
+    this.fetchCalendarEvents();
+
+    // Generar el calendario en sí (estructura de celdas)
     this.generateCalendar();
   }
 
+  // Obtener feed del usuario (eventos + noticias)
+  fetchFeed(): void {
+    // Eventos y noticias
+    this.apiService.getFeed('550e8400-e29b-41d4-a716-446655440000').subscribe({
+      next: (data: FeedItem[]) => {
+        this.allFeedItems = data.map(item => ({
+          ...item,
+          date: new Date(item.date)
+        }));
+        this.loadMoreFeed();
+      },
+      error: (err) => {
+        console.error('Error al obtener feed:', err);
+      }
+    });
+    
+  }
+
+  // Lazy load: ir cargando en batches de feedBatchSize
   loadMoreFeed(): void {
     const nextItems = this.allFeedItems.slice(
       this.displayedFeedItems.length,
@@ -70,10 +62,92 @@ export class HomepageComponent implements OnInit {
     this.displayedFeedItems = this.displayedFeedItems.concat(nextItems);
   }
 
-  joinEvent(eventId: number): void {
-    console.log('Unirse al evento con ID:', eventId);
+  // Obtener comunidades del backend, aquellas a las que el usuario NO pertenece
+  fetchCommunities(): void {
+    this.apiService.getCommunities('550e8400-e29b-41d4-a716-446655440000').subscribe({
+      next: (data: Community[]) => {
+        this.communities = data;
+      },
+      error: (err) => {
+        console.error('Error al obtener comunidades:', err);
+      }
+    });
+  }
+  
+  fetchCalendarEvents(): void {
+    this.apiService.getEvents('550e8400-e29b-41d4-a716-446655440000').subscribe({
+      next: (events: any[]) => {
+        events.forEach(ev => {
+          const day = new Date(ev.dateOfTheEvent).getDate();
+          // Si no existe la entrada para ese día, se crea el array
+          if (!this.calendarEvents[day]) {
+            this.calendarEvents[day] = [];
+          }
+          // Solo se agregan hasta 3 eventos por día
+          if (this.calendarEvents[day].length < 3) {
+            this.calendarEvents[day].push(ev.title);
+          }
+        });
+        console.log('Eventos del calendario:', this.calendarEvents);
+      },
+      error: (err) => {
+        console.error('Error al obtener eventos de calendario:', err);
+      }
+    });
+  }
+  
+
+  // Unirte a un evento
+  joinEvent(eventId: string, communityID: string): void {
+    this.apiService.createUserEvent('550e8400-e29b-41d4-a716-446655440000', eventId, communityID).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Te has unido al evento correctamente.',
+          confirmButtonText: 'OK'
+        });
+
+        this.allFeedItems = this.allFeedItems.filter(item => item.id !== eventId);
+        this.displayedFeedItems = this.displayedFeedItems.filter(item => item.id !== eventId);
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ups',
+          text: 'Ha ocurrido un error al unirte al evento.',
+          confirmButtonText: 'OK'
+        });
+      }
+    });
   }
 
+  // Unirte a una comunidad
+  joinCommunity(communityId: string): void {
+    console.log('communityId', communityId);
+    this.apiService.joinCommunity('550e8400-e29b-41d4-a716-446655440000', communityId).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Te has unido a la comunidad correctamente.',
+          confirmButtonText: 'OK'
+        });
+
+        this.communities = this.communities.filter(c => c.ID !== communityId);
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ups',
+          text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
+          confirmButtonText: 'OK'
+        });
+      }
+    });
+  }
+
+  // Generar la estructura del calendario (solo las celdas)
   generateCalendar(): void {
     const today = new Date();
     this.todayDay = today.getDate();
@@ -91,6 +165,7 @@ export class HomepageComponent implements OnInit {
     for (let i = 0; i < startDay; i++) {
       week.push(null);
     }
+
     // Agregar días del mes
     for (let day = 1; day <= totalDays; day++) {
       week.push(day);
@@ -99,6 +174,7 @@ export class HomepageComponent implements OnInit {
         week = [];
       }
     }
+
     // Completar la última semana
     if (week.length > 0) {
       while (week.length < 7) {

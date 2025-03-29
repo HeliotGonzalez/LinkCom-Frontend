@@ -62,12 +62,15 @@
   }
   
   /* Contenedor para los puntos de evento */
-  .event-dots {
-    margin-top: 2px;
-    display: flex;
-    justify-content: center;
-    gap: 2px;
+  .event-dot {
+    width: 8px;
+    height: 8px;
+    background-color: blue;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 1px;
   }
+  
   
   /* Punto de evento: pequeño círculo azul */
   .event-dot {

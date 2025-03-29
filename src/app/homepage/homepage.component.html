@@ -1,94 +1,95 @@
+<br><br>
+
 <div class="container-fluid py-4">
-    <div class="row">
-      <!-- Columna Izquierda: Feed -->
-      <div class="col-md-8">
-        <div class="feed mb-4">
-          <h2 class="mb-3">Tu Feed</h2>
-          @for(item of displayedFeedItems; track item.id) {
-            <div class="card mb-3 shadow-sm">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h5 class="card-title mb-0">{{ item.title }}</h5>
-                  <small class="text-muted">{{ item.date | date:'short' }}</small>
-                </div>
-                <p class="card-text mt-2">{{ item.content }}</p>
-                @if(item.type === 'event') {
-                  <div class="text-end">
-                    <button class="btn btn-primary" (click)="joinEvent(item.id)">Unirte</button>
-                  </div>
-                }
+  <div class="row">
+    <!-- Columna Izquierda: Feed -->
+    <div class="col-md-8">
+      <div class="feed mb-4">
+        <h2 class="mb-3">Tu Feed</h2>
+        @for(item of displayedFeedItems; track item) {
+          <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">{{ item.title }}</h5>
+                <small class="text-muted">{{ item.date }}</small>
               </div>
+              <p class="card-text mt-2">{{ item.content }}</p>
+              @if(item.type === 'event') {
+                <div class="text-end">
+                  <button class="btn btn-primary" (click)="joinEvent(item.id, item.communityID)">Unirte</button>
+                </div>
+              }
             </div>
-          }
-          <div class="text-center">
-            <button class="btn btn-outline-primary" (click)="loadMoreFeed()">Mostrar más</button>
           </div>
+        }
+        <div class="text-center">
+          <button class="btn btn-outline-primary" (click)="loadMoreFeed()">Mostrar más</button>
         </div>
       </div>
-  
-      <!-- Columna Derecha: Comunidades y Calendario -->
-      <div class="col-md-4">
-        <!-- Una sola tarjeta para comunidades -->
-        <div class="card mb-4 shadow-card">
-          <div class="card-body">
-            <h4 class="mb-3">Comunidades Recomendadas</h4>
-            @for(community of communities; track community.id) {
-              <div class="community-item mb-2">
-                <strong>{{ community.name }}</strong>
-                <p class="mb-1">{{ community.description }}</p>
-                <div class="text-end">
-                  <button class="btn btn-outline-secondary btn-sm">Unirse</button>
-                </div>
-                <hr>
+    </div>
+
+    <!-- Columna Derecha: Comunidades y Calendario -->
+    <div class="col-md-4">
+      <!-- Una sola tarjeta para comunidades -->
+      <div class="card mb-4 shadow-card">
+        <div class="card-body">
+          <h4 class="mb-3">Comunidades Recomendadas</h4>
+          @for(community of communities; track community) {
+            <div class="community-item mb-2">
+              <strong>{{ community.name }}</strong>
+              <p class="mb-1">{{ community.description }}</p>
+              <div class="text-end">
+                <a href="#" class="btn btn-outline-secondary btn-sm" (click)="joinCommunity(community.ID); $event.preventDefault()">Unirse</a>
               </div>
-            }
-          </div>
+              <hr>
+            </div>
+          }
         </div>
-  
-        <!-- Calendario en la parte inferior derecha -->
-        <div class="calendar">
-          <h3 class="mb-3">Calendario</h3>
-          <div class="card">
-            <div class="card-body p-0">
-              <table class="table table-bordered mb-0 text-center">
-                <thead class="table-light">
+      </div>
+
+      <!-- Calendario en la parte inferior derecha -->
+      <div class="calendar">
+        <h3 class="mb-3">Calendario</h3>
+        <div class="card">
+          <div class="card-body p-0">
+            <table class="table table-bordered mb-0 text-center">
+              <thead class="table-light">
+                <tr>
+                  @for(day of dayNames; track day) {
+                    <th>{{ day }}</th>
+                  }
+                </tr>
+              </thead>
+              <tbody>
+                @for(week of calendarWeeks; track week) {
                   <tr>
-                    @for(day of dayNames; track day) {
-                      <th>{{ day }}</th>
+                    @for(day of week; track day) {
+                      <td>
+                        @if(day) {
+                          <div class="day-container">
+                            <span class="day-content {{ day === todayDay ? 'today' : '' }}">
+                              {{ day }}
+                            </span>
+                            @if(calendarEvents[day]) {
+                              <div class="event-dots">
+                                @for(event of calendarEvents[day]; track event) {
+                                  <span class="event-dot" title="{{ event }}"></span>
+                                }
+                              </div>
+                            }
+                          </div>
+                        } @else {
+                          <!-- Celda vacía -->
+                        }
+                      </td>
                     }
                   </tr>
-                </thead>
-                <tbody>
-                  @for(week of calendarWeeks; track week) {
-                    <tr>
-                      @for(day of week; track day) {
-                        <td>
-                          @if(day) {
-                            <div class="day-container">
-                              <span class="day-content {{ day === todayDay ? 'today' : '' }}">
-                                {{ day }}
-                              </span>
-                              @if(calendarEvents[day]) {
-                                <div class="event-dots">
-                                  @for(event of calendarEvents[day]; track event) {
-                                    <span class="event-dot" title="{{ event }}"></span>
-                                  }
-                                </div>
-                              }
-                            </div>
-                          } @else {
-                            <!-- Celda vacía -->
-                          }
-                        </td>
-                      }
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
+                }
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
   </div>
-  
+</div>
