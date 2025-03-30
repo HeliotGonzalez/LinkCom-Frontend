@@ -1,25 +1,16 @@
 /* Fondo semi-transparente para el formulario de registro */
-.register-form-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
-  z-index: -1; /* Lo pone detrás del contenido */
-}
+
 
 /* Estilo de la tarjeta del formulario */
 .form-card {
   width: 40rem; /* Reducido para que el formulario sea más compacto */
-  height: auto; /* Altura automática para ajustarse al contenido */
+  height: 90vh;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background: white;
   display: flex;
   flex-direction: column;
-  margin: 3rem auto;
-  padding: 3rem;
+  padding: 2rem;
   z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
 }
 
@@ -33,13 +24,13 @@
 
 /* Cabecera del formulario de registro */
 .register-form-header {
-  padding: 1rem;
+  padding: 0.5rem;
   text-align: center;
 }
 
 /* Títulos del formulario de registro */
 .register-form-title-container {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .register-form-title {
@@ -59,13 +50,13 @@
   flex-direction: column; /* Organiza los botones y enlaces en columna */
   gap: 1rem;
   justify-content: center;
-  padding-top: 2rem;
+  padding-top: 1.5rem;
 }
 
 /* Estilo de los botones */
 .form-button {
   border-radius: 5px;
-  padding: 0.7rem 2rem; /* Aumenté el padding para que los botones sean más grandes */
+  padding: 0.5rem 1.5rem; /* Aumenté el padding para que los botones sean más grandes */
   font-size: 1.1rem;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -77,11 +68,6 @@
   color: white;
 }
 
-.cancel-button {
-  background: white;
-  border: 2px solid red;
-  color: black;
-}
 
 /* Estilo de los inputs del formulario */
 .register-form-inputs {
@@ -99,7 +85,7 @@ input {
   background: #ececec;
   border-radius: 5px;
   border: 2px solid #2E3E7F;
-  padding: 0.8rem;
+  padding: 0.5rem;
   outline: none;
   transition: box-shadow 0.3s ease, background 0.3s ease;
 }
@@ -116,7 +102,7 @@ input:focus {
 /* Estilo para las etiquetas de los inputs */
 label {
   font-weight: bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
   color: #2E3E7F;
 }
 

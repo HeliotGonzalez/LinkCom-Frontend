@@ -12,12 +12,11 @@ body {
   flex-direction: column;
 }
 
-main {
+body {
   flex: 1;
   height: 100vh;
   display: flex;
-  overflow: hidden;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle, #2E3E7F, #5370E5);
+  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
 }

@@ -19,6 +19,10 @@
         <input [(ngModel)]="email" name="email" id="email-input" placeholder="Enter your email address" type="email" required>
       </div>
       <div class="input-container d-flex flex-column">
+        <label for="description-input">Description *</label>
+        <input [(ngModel)]="description" name="description"  placeholder="Enter a short description" required>
+      </div>
+      <div class="input-container d-flex flex-column">
         <label for="password-input">Password *</label>
         <input [(ngModel)]="password" name="password" id="password-input" placeholder="Choose a secure password" type="password" required>
       </div>

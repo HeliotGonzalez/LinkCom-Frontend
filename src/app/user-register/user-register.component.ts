@@ -1,47 +1,129 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';  // Importación de FormsModule
-import { Router } from '@angular/router';  // Importación de Router si quieres navegar entre rutas
-
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { ApiService } from '../services/api-service.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-user-register',
   imports: [
-    FormsModule,  // Importa FormsModule aquí
+    FormsModule,
   ],
-  templateUrl: './user-register.component.html',  // Asegúrate de tener el archivo HTML adecuado
-  styleUrls: ['./user-register.component.css'],  // Asegúrate de tener el archivo CSS adecuado
-  standalone: true  // Establece el componente como autónomo
+  templateUrl: './user-register.component.html',
+  styleUrls: ['./user-register.component.css'],
+  standalone: true,
 })
 export class UserRegisterComponent {
-  // Define los campos del formulario de registro
   protected username: string = '';
   protected email: string = '';
   protected password: string = '';
+  protected description: string = '';
   protected confirmPassword: string = '';
 
-  // Constructor para inyectar el servicio de Router
-  constructor(private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService) {}
 
-  // Método para manejar el envío del formulario
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {
-      alert("Passwords do not match!");
+      Swal.fire({
+        title: 'Error!',
+        text: 'Passwords do not match. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'Retry',
+        backdrop: false, // Evita que SweetAlert2 cambie el <body>
+        customClass: {
+          popup: 'custom-swal-popup' // Añade una clase personalizada
+        },
+        didOpen: () => {
+          document.body.insertAdjacentHTML(
+            'beforeend',
+            '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+          );
+        },
+        didClose: () => {
+          const blurOverlay = document.getElementById('blur-overlay');
+          if (blurOverlay) blurOverlay.remove();
+        }
+      });
       return;
     }
-    // Lógica para registrar al usuario (puedes conectarlo con tu servicio backend)
-    console.log('User Registered:', { username: this.username, email: this.email });
-    this.router.navigate(['/welcome']);  // Redirige a una página de bienvenida o cualquier otra ruta
+    
+  
+    const payload = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      description: this.description,
+    };
+  
+    console.log('Payload enviado:', payload); // <-- Agregado para depuración
+  
+    const apiUrl = 'http://localhost:3000/user-register';
+    this.http.post(apiUrl, payload).subscribe(
+      (response) => {
+        console.log('User registered successfully:', response);
+        Swal.fire({
+          title: 'Success!',
+          text: 'User registered successfully.',
+          icon: 'success',
+          confirmButtonText: 'Go to login',
+          backdrop: false, // Evita que SweetAlert2 cambie el <body>
+          customClass: {
+            popup: 'custom-swal-popup' // Añade una clase personalizada
+          },
+          didOpen: () => {
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+            );
+          },
+          didClose: () => {
+            const blurOverlay = document.getElementById('blur-overlay');
+            if (blurOverlay) blurOverlay.remove();
+          }
+        });
+        this.router.navigate(['/login']);
+      },
+      (error) => {
+        console.error('Error during registration:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error during registration. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'Retry',
+          backdrop: false, // Evita que SweetAlert2 cambie el <body>
+          customClass: {
+            popup: 'custom-swal-popup' // Añade una clase personalizada
+          },
+          didOpen: () => {
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+            );
+          },
+          didClose: () => {
+            const blurOverlay = document.getElementById('blur-overlay');
+            if (blurOverlay) blurOverlay.remove();
+          }
+        });
+      }
+    );
   }
-
-  // Método para cancelar el registro
-  cancelRegister(): void {
-    // Lógica para cancelar el registro
-    console.log('Registration canceled');
-    this.router.navigate(['/']);  // Redirige al usuario a la página principal o cualquier otra página
-  }
-
-  // Método para establecer el foco en un campo de entrada específico
+  
+  // Method to set focus on a specific input field
   setFocus(event: Event, input: HTMLInputElement) {
     event.preventDefault();
     input.focus();
+  }
+  
+  ngOnInit() {
+    this.apiService.getData().subscribe({
+      next: (response : any) => {
+        console.log('Respuesta recibida:', response);  
+      },
+      error: (erro:any) => {
+        console.log('Respuesta recibida:', erro);  
+      }
+    });
   }
 }
