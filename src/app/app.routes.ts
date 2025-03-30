@@ -24,10 +24,7 @@ export const routes: Routes = [
   {path: 'header', component: HeaderComponent},
   {path: 'homepage', component: HomepageComponent},
   { path: 'user-register', component: UserRegisterComponent },
-  { path: 'login', component: LoginComponent }
-];
-export const routes: Routes = [
-  {path: '', component: FirstStepEventCreationComponent},
+  { path: 'login', component: LoginComponent },
   {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent},
   {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent},
   {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent},

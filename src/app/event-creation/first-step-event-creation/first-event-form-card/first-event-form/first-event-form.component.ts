@@ -25,8 +25,7 @@ export class FirstEventFormComponent {
 
   nextPage(event: Event) {
     event.preventDefault();
-    this.router.navigate(["/secondStepEventCreation"]).then(r => {
-    });
+    this.router.navigate(["/secondStepEventCreation"]).then(r => {});
     this.saveFormData();
   }
 

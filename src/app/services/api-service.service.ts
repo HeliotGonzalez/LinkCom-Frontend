@@ -11,19 +11,15 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api`);
-  }
-
   // Obtener feed (eventos + noticias)
   getFeed(userId: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
   }
 
   // Obtener comunidades a las que NO pertenece el usuario
-  getCommunities(userId: string): Observable<any> {
+  getNonBelongingCommunities(userId: string): Observable<any> {
     console.log('ID: ' + userId);
-    return this.http.get(`${this.baseUrl}/communities?userId=${userId}`);
+    return this.http.get(`${this.baseUrl}/nonBelongingCommunities?userId=${userId}`);
   }
 
   // Obtener eventos para el calendario
@@ -39,7 +35,9 @@ export class ApiService {
 
   // Un usuario se une a una comunidad
   joinCommunity(userID: string, communityID: string): Observable<any> {
-    return this.http.post(`${this.baseUrl}/joinCommunity`, { userID, communityID });
+    return this.http.post(`${this.baseUrl}/joinCommunity`, {userID, communityID});
+  }
+
   createCommunity(userID: string, description: string | null, name: string, isPrivate: boolean, communityInterests: string[]) {
     return this.http.post(`${this.baseUrl}/createCommunity`, { userID, description, name, isPrivate,communityInterests });
   }
