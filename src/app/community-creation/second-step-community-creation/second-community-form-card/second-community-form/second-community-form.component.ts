@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
-import {FormStepsComponent} from '../../../form-steps/form-steps.component';
+import {FormStepsComponent} from '../../../../form-steps/form-steps.component';
 import {Router} from '@angular/router';
-import {CommunityFormService} from "../../../../services/community-form-service/community-form.service";
+import {FormService} from "../../../../services/form-service/form.service";
 import {FormsModule} from "@angular/forms";
 
 @Component({
@@ -18,29 +18,30 @@ export class SecondCommunityFormComponent {
   protected description: string = "";
   protected privateCommunity: boolean = false;
 
-  constructor(private router: Router, private  communityFormService: CommunityFormService) {
+  constructor(private router: Router, private  communityFormService: FormService) {
   }
 
   previousPage() {
     this.router.navigate(["/firstStepCommunityCreation"]).then(r => {});
-    this.saveData();
+    this.saveFormData();
   }
 
-  nextPage() {
+  nextPage(event: Event) {
+    event.preventDefault()
     this.router.navigate(["/thirdStepCommunityCreation"]).then(r => {});
-    this.saveData();
+    this.saveFormData();
   }
 
   ngOnInit() {
     this.communityFormService.data$.subscribe(data => {
-      this.description = data["description"];
-      this.privateCommunity = data["privateCommunity"] ? data["privateCommunity"] : false;
+      this.description = data["communityDescription"];
+      this.privateCommunity = data["communityPrivacy"] ? data["communityPrivacy"] : false;
     });
   }
 
-  private saveData() {
-    this.communityFormService.put("privateCommunity", this.privateCommunity);
-    this.communityFormService.put("description", this.description);
+  protected saveFormData() {
+    this.communityFormService.put("communityDescription", this.description);
+    this.communityFormService.put("communityPrivacy", this.privateCommunity);
     this.communityFormService.update();
   }
 }

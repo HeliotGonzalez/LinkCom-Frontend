@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <div class="d-flex align-items-center">
         <ng-container *ngFor="let step of steps; let i = index">
-            <div class="text-center">
+            <div class="text-center" (click)="emit()">
                 <a [routerLink]="step.route">
                     <div
                             class="community-step-circle rounded-circle border border-primary d-flex align-items-center justify-content-center"

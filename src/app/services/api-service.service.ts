@@ -8,12 +8,23 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private apiUrl = 'http://localhost:3000/api'; // URL del endpoint de Node.js
+  private baseUrl = 'http://localhost:3000';
 
   constructor(private http: HttpClient) { }
 
-  // Método para obtener datos del backend
-  getData() {
-    return this.http.get(this.apiUrl);
+  getData(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/api`);
+  }
+
+  createCommunity(userID: string, description: string | null, name: string, isPrivate: boolean, communityInterests: string[]) {
+    return this.http.post(`${this.baseUrl}/createCommunity`, { userID, description, name, isPrivate,communityInterests });
+  }
+
+  getCommunities(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/communities`);
+  }
+
+  createEvent(title: string, description: string, communityID: string, userID: string, dateOfTheEvent: Date) {
+    return this.http.post(`${this.baseUrl}/createEvent`, { title, description, communityID, userID, dateOfTheEvent })
   }
 }

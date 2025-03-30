@@ -4,7 +4,7 @@ import {BehaviorSubject} from "rxjs";
 @Injectable({
   providedIn: 'root'
 })
-export class CommunityFormService {
+export class FormService {
   private filledFormData: { [key: string]: any } = {};
   private formDataSubject = new BehaviorSubject<{ [key: string]: any }>({});
   data$ = this.formDataSubject.asObservable();

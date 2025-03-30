@@ -1,10 +1,11 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {FormStepsComponent} from '../../../form-steps/form-steps.component';
+import {FormStepsComponent} from '../../../../form-steps/form-steps.component';
 import {Router} from '@angular/router';
-import {CommunityFormService} from "../../../../services/community-form-service/community-form.service";
+import {FormService} from "../../../../services/form-service/form.service";
 import {FormsModule} from "@angular/forms";
 import {InterestTagComponent} from '../../../../interest-tag/interest-tag.component';
 import {NgForOf} from '@angular/common';
+import {ApiService} from "../../../../services/api-service.service";
 
 @Component({
     selector: 'app-first-community-form',
@@ -25,7 +26,7 @@ export class FirstCommunityFormComponent {
     protected newTag: string = "";
     protected interests: string[] = [];
 
-    constructor(private router: Router, private communityFormService: CommunityFormService) {
+    constructor(private router: Router, private communityFormService: FormService, private apiService: ApiService) {
     }
 
     nextPage(event: Event) {
@@ -36,15 +37,15 @@ export class FirstCommunityFormComponent {
     }
 
     protected saveFormData() {
-        this.communityFormService.put("name", this.name);
-        this.communityFormService.put("interests", this.interests);
+        this.communityFormService.put("communityName", this.name);
+        this.communityFormService.put("communityInterests", this.interests);
         this.communityFormService.update();
     }
 
     ngOnInit() {
         this.communityFormService.data$.subscribe(data => {
-            this.name = data["name"] ? data["name"] : "";
-            this.interests = data["interests"] ? data["interests"] : [];
+            this.name = data["communityName"] ? data["communityName"] : "";
+            this.interests = data["communityInterests"] ? data["communityInterests"] : [];
         });
     }
 

@@ -1,8 +1,11 @@
 import {Component, Input} from '@angular/core';
-import {FormStepsComponent} from "../../../form-steps/form-steps.component";
+import {FormStepsComponent} from "../../../../form-steps/form-steps.component";
 import {Router} from '@angular/router';
 import {NgIf, NgOptimizedImage} from '@angular/common';
-import {CommunityFormService} from "../../../../services/community-form-service/community-form.service";
+import {FormService} from "../../../../services/form-service/form.service";
+import {ApiService} from "../../../../services/api-service.service";
+import {firstValueFrom} from "rxjs";
+import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-third-community-form',
@@ -17,7 +20,7 @@ import {CommunityFormService} from "../../../../services/community-form-service/
 export class ThirdCommunityFormComponent {
     protected uploadedImage: string | null = null;
 
-    constructor(private router: Router, private communityFormService: CommunityFormService) {
+    constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
     }
 
     previousPage() {
@@ -25,8 +28,31 @@ export class ThirdCommunityFormComponent {
         this.saveFormData();
     }
 
-    nextPage() {
-        this.router.navigate(["/"]).then(r => {});
+    async nextPage(event: Event) {
+        event.preventDefault();
+
+        const data = await firstValueFrom(this.formService.data$);
+
+        this.apiService.createCommunity(
+            "550e8400-e29b-41d4-a716-446655440000",
+            data["communityDescription"],
+            data["communityName"],
+            data["communityPrivacy"],
+            data["communityInterests"]
+        ).subscribe({
+            next: res => Swal.fire({
+                title: "Success!",
+                text: "Your community has been correctly created!",
+                icon: "success",
+                confirmButtonText: "Continue"
+            }),
+            error: err => Swal.fire({
+                title: "Error!",
+                text: "We could not create your community.",
+                icon: "error",
+                confirmButtonText: "Continue"
+            })
+        });
         this.saveFormData();
     }
 
@@ -55,14 +81,14 @@ export class ThirdCommunityFormComponent {
         }
     }
 
-    private saveFormData() {
-        this.communityFormService.put("uploadedImage", this.uploadedImage);
-        this.communityFormService.update();
+    protected saveFormData() {
+        this.formService.put("communityUploadedImage", this.uploadedImage);
+        this.formService.update();
     }
 
     ngOnInit() {
-        this.communityFormService.data$.subscribe(data => {
-            this.uploadedImage = data["uploadedImage"];
+        this.formService.data$.subscribe(data => {
+            this.uploadedImage = data["communityUploadedImage"];
         });
     }
 }

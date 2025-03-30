@@ -1,5 +1,5 @@
 <div class="community-form-header">
-    <app-form-steps [steps]="[
+    <app-form-steps (saveDataEmitter)="saveFormData()" [steps]="[
     { step: 1, route: '/firstStepCommunityCreation' },
     { step: 2, route: '/secondStepCommunityCreation' },
     { step: 3, route: '/thirdStepCommunityCreation' }
@@ -22,7 +22,7 @@
   </div>
   <div class="community-form-footer d-flex align-items-end justify-content-center">
     <button (click)="previousPage()" class="form-button normal-empty-button">PREVIOUS</button>
-    <button (click)="nextPage()" class="form-button normal-button">NEXT</button>
+    <button (click)="nextPage($event)" class="form-button normal-button">NEXT</button>
   </div>
 </form>
 

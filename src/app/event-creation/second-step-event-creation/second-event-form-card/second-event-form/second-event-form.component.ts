@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {FormStepsComponent} from "../../../../community-creation/form-steps/form-steps.component";
+import {FormStepsComponent} from "../../../../form-steps/form-steps.component";
 import {NgIf} from "@angular/common";
 import {Router} from "@angular/router";
-import {CommunityFormService} from '../../../../services/community-form-service/community-form.service';
+import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -20,7 +20,7 @@ export class SecondEventFormComponent {
   protected uploadedImage: string | null = null;
   protected eventDescription: string | null = "";
 
-  constructor(private router: Router, private formService: CommunityFormService) {
+  constructor(private router: Router, private formService: FormService) {
   }
 
   previousPage() {
@@ -63,7 +63,7 @@ export class SecondEventFormComponent {
     this.eventDescription = this.formService.get("eventDescription");
   }
 
-  private saveFormData() {
+  protected saveFormData() {
     this.formService.put("eventImage", this.uploadedImage);
     this.formService.put("eventDescription", this.eventDescription);
     this.formService.update();

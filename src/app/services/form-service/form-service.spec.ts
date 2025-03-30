@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CommunityFormService } from './community-form.service';
+import { FormService } from './form.service';
 
 describe('CommunityFormServiceService', () => {
-  let service: CommunityFormService;
+  let service: FormService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CommunityFormService);
+    service = TestBed.inject(FormService);
   });
 
   it('should be created', () => {

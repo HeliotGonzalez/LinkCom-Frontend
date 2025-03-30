@@ -14,7 +14,7 @@ import {
 import {SecondStepEventCreationComponent} from "./event-creation/second-step-event-creation/second-step-event-creation.component";
 
 export const routes: Routes = [
-  {path: '', component: FirstStepEventCreationComponent},
+  {path: '', component: FirstStepCommunityCreationComponent},
   {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent},
   {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent},
   {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent},

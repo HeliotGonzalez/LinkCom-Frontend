@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {FormStepsComponent} from '../../../../community-creation/form-steps/form-steps.component';
+import {FormStepsComponent} from '../../../../form-steps/form-steps.component';
 import {Router} from "@angular/router";
-import {CommunityFormService} from '../../../../services/community-form-service/community-form.service';
+import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -20,7 +20,7 @@ export class FirstEventFormComponent {
   protected eventTime: string | null = "15:36";
   protected eventLocation: string | null = "My house";
 
-  constructor(private router: Router, private formService: CommunityFormService) {
+  constructor(private router: Router, private formService: FormService) {
   }
 
   nextPage() {
@@ -29,7 +29,7 @@ export class FirstEventFormComponent {
     this.saveFormData();
   }
 
-  private saveFormData() {
+  protected saveFormData() {
     this.formService.put("eventName", this.eventName);
     this.formService.put("eventDate", this.eventDate);
     this.formService.put("eventTime", this.eventTime);
@@ -47,6 +47,5 @@ export class FirstEventFormComponent {
   setFocus(event: Event, input: HTMLInputElement) {
     event.preventDefault();
     input.focus();
-
   }
 }
