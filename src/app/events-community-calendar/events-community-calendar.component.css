@@ -1,16 +1,31 @@
-body
-{
-    background: radial-gradient(circle,#2E3E7F, #5370E5);
-}
-
-.small.text
-{
-    font-size: 8px ;
-}
-
-
-.self-container
-{
-    background-color: white;
-    border-radius: 1%;
-}
+.calendar-container {
+    padding: 20px;
+  }
+  
+  .navigation {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .navigation button {
+    margin: 0 10px;
+    padding: 5px 15px;
+    font-size: 16px;
+  }
+  
+  .calendars {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .calendar-month {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .today {
+    font-weight: bold;
+    color: red;
+  }
