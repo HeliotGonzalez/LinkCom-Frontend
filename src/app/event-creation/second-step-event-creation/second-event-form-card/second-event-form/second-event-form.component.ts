@@ -4,6 +4,9 @@ import {NgIf} from "@angular/common";
 import {Router} from "@angular/router";
 import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
+import {ApiService} from "../../../../services/api-service.service";
+import {firstValueFrom} from "rxjs";
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-second-event-form',
@@ -18,18 +21,43 @@ import {FormsModule} from '@angular/forms';
 })
 export class SecondEventFormComponent {
   protected uploadedImage: string | null = null;
-  protected eventDescription: string | null = "";
+  protected eventDescription: string = "";
 
-  constructor(private router: Router, private formService: FormService) {
+  constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
   }
 
-  previousPage() {
+  previousPage(event: Event) {
+    event.preventDefault();
     this.router.navigate(["/firstStepEventCreation"]).then(r => {});
     this.saveFormData();
   }
 
-  nextPage() {
-    this.router.navigate(["/firstStepEventCreation"]).then(r => {});
+  async nextPage(event: Event) {
+    event.preventDefault()
+
+    const data = await firstValueFrom(this.formService.data$);
+
+    this.apiService.createEvent(
+        data["eventTitle"],
+        this.eventDescription,
+        "a0c0e447-e231-4b2e-9b12-52b6f556c598",
+        "c97cfff8-009d-449e-8718-fdd16e4974a8",
+        new Date(`${data["eventDate"]}T${data["eventTime"]}`)
+    ).subscribe({
+      next: res => Swal.fire({
+        title: "Success!",
+        text: "Your event has been correctly created!",
+        icon: "success",
+        confirmButtonText: "Continue"
+      }),
+      error: err => Swal.fire({
+        title: "Error!",
+        text: "We could not create your event.",
+        icon: "error",
+        confirmButtonText: "Continue"
+      })
+    });
+
     this.saveFormData();
   }
 

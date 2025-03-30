@@ -75,3 +75,24 @@
   border: 2px solid red;
   color: black;
 }
+
+#interests-suggestions {
+  top: 4rem;
+  position: absolute;
+  width: 100%;
+  border: 1px solid black;
+  background: white;
+  z-index: 1000;
+}
+
+.interest-suggestion-item {
+  padding: 0.5rem;
+  transition: background 0.3s ease;
+  margin: 0.2rem;
+  border-radius: 2px;
+  background: white;
+}
+
+.interest-suggestion-item:hover {
+  background: #eeeeee;
+}

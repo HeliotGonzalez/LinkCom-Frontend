@@ -12,10 +12,6 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/api`);
-  }
-
   createCommunity(userID: string, description: string | null, name: string, isPrivate: boolean, communityInterests: string[]) {
     return this.http.post(`${this.baseUrl}/createCommunity`, { userID, description, name, isPrivate,communityInterests });
   }
@@ -26,5 +22,9 @@ export class ApiService {
 
   createEvent(title: string, description: string, communityID: string, userID: string, dateOfTheEvent: Date) {
     return this.http.post(`${this.baseUrl}/createEvent`, { title, description, communityID, userID, dateOfTheEvent })
+  }
+
+  getInterests() {
+    return this.http.get(`${this.baseUrl}/interests`);
   }
 }
