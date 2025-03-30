@@ -1,0 +1,45 @@
+<header class="bg-primary text-white fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark container-fluid">
+      <!-- LOGO a la izquierda -->
+      <a class="navbar-brand d-flex align-items-center ps-3 ms-5" routerLink="/">
+        <img 
+          src="LogoLinkComBlanco.svg" 
+          alt="Logo" 
+          class="rounded-circle" 
+          style="width: 40px; height: 40px; object-fit: cover;"
+        >
+      </a>
+  
+      <!-- Botón para menú colapsable en pantallas pequeñas -->
+      <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#navbarNav" 
+        aria-controls="navbarNav" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- Enlaces y botón a la derecha -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto me-3">
+          <li class="nav-item">
+            <a class="nav-link active" routerLink="/">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Comunidades</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Calendario</a>
+          </li>
+        </ul>
+        <a class="btn btn-outline-light me-5" routerLink="/login">
+          Login
+        </a>
+      </div>
+    </nav>
+</header>
+  

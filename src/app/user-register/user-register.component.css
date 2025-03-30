@@ -1,0 +1,134 @@
+/* Fondo semi-transparente para el formulario de registro */
+.main{
+  box-sizing: border-box;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
+}
+
+/* Estilo de la tarjeta del formulario */
+.form-card {
+  width: 40rem; /* Reducido para que el formulario sea más compacto */
+  height: 90vh;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
+}
+
+/* Estilo del formulario de registro */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Reducido el espacio entre los campos */
+  flex-grow: 1;
+}
+
+/* Cabecera del formulario de registro */
+.register-form-header {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+/* Títulos del formulario de registro */
+.register-form-title-container {
+  margin-bottom: 0.5rem;
+}
+
+.register-form-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2E3E7F;
+}
+
+.register-form-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Estilo del pie del formulario (botones y enlace) */
+.register-form-footer {
+  display: flex;
+  flex-direction: column; /* Organiza los botones y enlaces en columna */
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 1.5rem;
+}
+
+/* Estilo de los botones */
+.form-button {
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem; /* Aumenté el padding para que los botones sean más grandes */
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.normal-button {
+  background: #2E3E7F;
+  border: 2px solid #2E3E7F;
+  color: white;
+}
+
+
+/* Estilo de los inputs del formulario */
+.register-form-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  background: #ececec;
+  border-radius: 5px;
+  border: 2px solid #2E3E7F;
+  padding: 0.5rem;
+  outline: none;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+input:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+input:focus {
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.5);
+  background: white;
+}
+
+/* Estilo para las etiquetas de los inputs */
+label {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+  color: #2E3E7F;
+}
+
+/* Estilo para el enlace de login en el pie del formulario */
+.register-form-footer .login-link {
+  font-size: 1rem;
+  color: #2E3E7F;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+  color: #1c3d7d; /* Color al pasar el ratón */
+}
+
+

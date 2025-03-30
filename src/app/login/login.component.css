@@ -1,0 +1,143 @@
+.main{
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
+}
+
+/* Fondo semi-transparente del formulario*/
+.login-form-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1; /* Lo pone detrás del contenido */
+}
+
+/* Estilo de la tarjeta del formulario */
+.form-card {
+  width: 40rem; /* Reducido para ajustarse mejor */
+  height: auto; /* Altura automática para adaptarse al contenido */
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  margin: 3rem auto;
+  padding: 3rem;
+  z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
+}
+
+/* Contenedor del formulario de login */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Reducido para acercar los elementos */
+  flex-grow: 1;
+}
+
+/* Cabecera del formulario */
+.login-form-header {
+  padding: 1rem;
+  text-align: center;
+}
+
+/* Títulos del formulario */
+.login-form-title-container {
+  margin-bottom: 1rem;
+}
+
+.login-form-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #2E3E7F;
+}
+
+.login-form-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Estilo del pie del formulario (botones y enlace) */
+.login-form-footer {
+  display: flex;
+  flex-direction: column; /* Organiza los botones y enlaces en columna */
+  gap: 1rem;
+  justify-content: center;
+  padding-top: 2rem;
+}
+
+/* Estilo para los botones */
+.form-button {
+  border-radius: 5px;
+  padding: 0.5rem 1.7rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.normal-button {
+  background: #2E3E7F;
+  border: 2px solid #2E3E7F;
+  color: white;
+}
+
+.cancel-button {
+  background: white;
+  border: 2px solid red;
+  color: black;
+}
+
+/* Estilo para los inputs del formulario */
+.login-form-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Reduce el espacio entre los campos */
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  background: #ececec;
+  border-radius: 5px;
+  border: 2px solid #2E3E7F;
+  padding: 0.8rem;
+  outline: none;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+input:hover {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+input:focus {
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.5);
+  background: white;
+}
+
+/* Estilo para las etiquetas de los inputs */
+label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2E3E7F;
+}
+
+/* Estilo para el enlace en el pie del formulario */
+.login-form-footer .login-link {
+  font-size: 1rem;
+  color: #2E3E7F;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease; /* Añadimos una transición suave para el cambio de color */
+}
+
+.login-link:hover {
+  text-decoration: underline;
+  color: #1c3d7d; /* Color al pasar el ratón */
+}
+
