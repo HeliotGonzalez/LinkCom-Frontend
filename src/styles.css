@@ -4,18 +4,20 @@
   box-sizing: border-box;
 }
 
-/*
 body {
   box-sizing: border-box;
   height: 100vh;
   margin: 0;
   display: flex;
   flex-direction: column;
+}
+
+main {
   flex: 1;
   height: 100vh;
   display: flex;
+  overflow: hidden;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
+  background: radial-gradient(circle, #2E3E7F, #5370E5);
 }
-  */

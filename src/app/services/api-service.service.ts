@@ -40,5 +40,19 @@ export class ApiService {
   // Un usuario se une a una comunidad
   joinCommunity(userID: string, communityID: string): Observable<any> {
     return this.http.post(`${this.baseUrl}/joinCommunity`, { userID, communityID });
+  createCommunity(userID: string, description: string | null, name: string, isPrivate: boolean, communityInterests: string[]) {
+    return this.http.post(`${this.baseUrl}/createCommunity`, { userID, description, name, isPrivate,communityInterests });
+  }
+
+  getCommunities(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/communities`);
+  }
+
+  createEvent(title: string, description: string, communityID: string, userID: string, dateOfTheEvent: Date) {
+    return this.http.post(`${this.baseUrl}/createEvent`, { title, description, communityID, userID, dateOfTheEvent })
+  }
+
+  getInterests() {
+    return this.http.get(`${this.baseUrl}/interests`);
   }
 }
