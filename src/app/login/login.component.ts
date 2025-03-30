@@ -1,23 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../services/api-service.service';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
+import { HeaderVisibilityService } from '../services/header-visibility.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   protected email: string = '';
   protected password: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private authService: AuthService) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private authService: AuthService, private headerService: HeaderVisibilityService) {}
 
   onSubmit(): void {
     if (!this.email || !this.password) {
@@ -56,26 +57,7 @@ export class LoginComponent {
         this.authService.setUserId(response.userID);
         console.log(response.userID);
 
-        Swal.fire({
-          title: 'Success!',
-          text: 'User Logged In successfully.',
-          icon: 'success',
-          confirmButtonText: 'Continue',
-          backdrop: false,
-          customClass: { popup: 'custom-swal-popup' },
-          didOpen: () => {
-            document.body.insertAdjacentHTML(
-              'beforeend',
-              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-            );
-          },
-          didClose: () => {
-            const blurOverlay = document.getElementById('blur-overlay');
-            if (blurOverlay) blurOverlay.remove();
-          }
-        });
-
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/']);
       },
       (error) => {
         console.error('Error during login:', error);
@@ -107,13 +89,10 @@ export class LoginComponent {
   }
 
   ngOnInit() {
-    this.apiService.getData().subscribe({
-      next: (response: any) => {
-        console.log('Respuesta recibida:', response);
-      },
-      error: (error: any) => {
-        console.log('Error recibido:', error);
-      }
-    });
+    this.headerService.hide();
+  }
+
+  ngOnDestroy() {
+    this.headerService.show();
   }
 }

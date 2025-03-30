@@ -1,5 +1,17 @@
 /* Fondo semi-transparente para el formulario de registro */
-
+.main{
+  box-sizing: border-box;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
+}
 
 /* Estilo de la tarjeta del formulario */
 .form-card {
@@ -118,4 +130,5 @@ label {
   text-decoration: underline;
   color: #1c3d7d; /* Color al pasar el ratón */
 }
+
 

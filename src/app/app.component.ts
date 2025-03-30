@@ -1,39 +1,41 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './header/header.component';
+import { CommonModule } from '@angular/common'; 
 import { ApiService } from './services/api-service.service';
-import Swal from 'sweetalert2';
+import { RouterOutlet } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { OnInit } from '@angular/core';
+import { HeaderVisibilityService } from './services/header-visibility.service';
 
 @Component({
-  selector: 'app-landing',
-  standalone: true,
-  imports: [RouterOutlet], // Add RegisterScreenComponent to imports
+  selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  imports: [
+    HeaderComponent,
+    CommonModule,
+    RouterOutlet,
+  ],
 })
-
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'LinkCom-FrontEnd';
   data: any;
   fontSize: any;
-  email: string = ''; // Added email property
+  email: string = '';
+  showHeader = true;
 
-  constructor(private apiService: ApiService, private http: HttpClient, private router: Router) {}
+  constructor(private apiService: ApiService, private http: HttpClient, private headerService: HeaderVisibilityService) {}
 
   ngOnInit() {
-    this.apiService.getData().subscribe({
-      next: (response: any) => {
-        console.log('Respuesta recibida:', response);
-      },
-      error: (erro: any) => {
-        console.log('Respuesta recibida:', erro);
-      }
+    this.headerService.showHeader$.subscribe(show => {
+      setTimeout(() => {
+        this.showHeader = show;
+      });
     });
   }
 
-  // Added email submission method
   onSubmit() {
-    const apiUrl = 'http://localhost:3000/add-email'; // Updated to your local backend API endpoint
+    const apiUrl = 'http://localhost:3000/add-email';
     const payload = { email: this.email };
 
     this.http.post(apiUrl, payload).subscribe(
@@ -48,7 +50,4 @@ export class AppComponent {
     );
   }
 
-  goToRegister() {
-    this.router.navigate(['/register']); // Navigate to the register route
-  }
 }

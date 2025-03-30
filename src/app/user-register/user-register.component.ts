@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api-service.service';
 import Swal from 'sweetalert2';
+import { HeaderVisibilityService } from '../services/header-visibility.service';
+
 @Component({
   selector: 'app-user-register',
   imports: [
@@ -21,7 +23,7 @@ export class UserRegisterComponent {
   protected description: string = '';
   protected confirmPassword: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private headerService: HeaderVisibilityService) {}
 
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {
@@ -117,13 +119,10 @@ export class UserRegisterComponent {
   }
   
   ngOnInit() {
-    this.apiService.getData().subscribe({
-      next: (response : any) => {
-        console.log('Respuesta recibida:', response);  
-      },
-      error: (erro:any) => {
-        console.log('Respuesta recibida:', erro);  
-      }
-    });
+    this.headerService.hide();
+  }
+
+  ngOnDestroy() {
+    this.headerService.show();
   }
 }
