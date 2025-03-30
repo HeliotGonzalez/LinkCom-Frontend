@@ -1,120 +1,30 @@
-<<<<<<< HEAD
-<div class="calendar-container">
+<main class="calendar-container">
   <div class="navigation">
-    <button (click)="prevMonth()">&#8592; Anterior</button>
-    <button (click)="nextMonth()">Siguiente &#8594;</button>
-=======
-<main  >
-  <div class="d-flex justify-content-center self-container col-8">
-    <div class="flex-grow-1">
-        <p><img [src]="img_evento" alt="Imagen del evento"></p>
-        <p> <h2>event name</h2> 
-        <p><div class="small-text">hola</div> evento empieza a las hh:mm el dia dd-MM-yyyy 
-        El evento va de cosas interesantes para gente interesada en cosas
-        Porque no me funciona.
-    </div>
-    <div class="flex-grow-1">
-        <table class="table" style="align-self: center;">
-            <thead>
-              <tr>
-                <th scope="col">Lunes</th>
-                <th scope="col">Martes</th>
-                <th scope="col">Miercoles</th>
-                <th scope="col">Jueves</th>
-                <th scope="col">Viernes</th>
-                <th scope="col">Sabado</th>
-                <th scope="col">Domingo</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td colspan="7" class="colspan-self">Marzo</td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-                <td>4</td>
-                <td>5</td>
-                <td>6</td>
-                <td>7</td>
-              </tr>
-              <tr>
-                <td>8</td>
-                <td>9</td>
-                <td>10</td>
-                <td>11</td>
-                <td>12</td>
-                <td>13</td>
-                <td>14</td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td>16</td>
-                <td>17</td>
-                <td>18</td>
-                <td>19</td>
-                <td>20</td>
-                <td>21</td>
-              </tr>
-              <tr>
-              <td>22</td>
-              <td>23</td>
-              <td>24</td>
-              <td>25</td>
-              <td>26</td>
-              <td>27</td>
-              <td>28</td>
-            </tr>
-            <tr>
-              <td>29</td>
-              <td>30</td>
-              <td>31</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-
-            </tbody>
-          </table>
-    </div>
->>>>>>> a1a76df97ca473a2e312962fa647ee0a35b8316d
+    <button (click)="prevMonth()" class="btn btn-light">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <span class="mx-3 h4">{{ calendarMonth.year }} - {{ calendarMonth.month + 1 }}</span>
+    <button (click)="nextMonth()" class="btn btn-light">
+      <i class="bi bi-arrow-right"></i>
+    </button>
   </div>
 
-  <div class="calendars">
-    <!-- Iterar sobre cada mes a mostrar -->
-     @for (calendar of this.calendarMonths; track calendar){
-      <div class="calendar-month">
-        <h4>{{ calendar.year }} - {{ calendar.month + 1 }}</h4>
-        <table class="table table-bordered text-center">
-          <thead class="table-light">
-            <tr>
-              @for (dayName of this.dayNames; track dayName){
-                <th>
-                  {{dayName}}
-                </th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            @for (week of calendar.weeks; track week)
-            {
-              <tr>
-              @for (day of week; track day)
-              {
-                <td>
-                  <span [ng Class]="{'today': day === today && calendar.month === currentDate.getMonth()}">
-                    {{ day ? day : '' }}
-                  </span>
-                </td>
-              }
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-     }
-
+  <div class="calendar-month">
+    <table class="table table-bordered text-center">
+      <thead class="table-light">
+        <tr>
+          <th *ngFor="let dayName of dayNames">{{ dayName }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let week of calendarMonth.weeks">
+          <td *ngFor="let day of week">
+            <span [ngClass]="{'today': day === today && calendarMonth.month === currentDate.getMonth()}">
+              {{ day ? day : '' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</div>
+</main>
