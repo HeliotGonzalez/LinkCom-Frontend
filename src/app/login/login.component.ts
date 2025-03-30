@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../services/api-service.service';
+import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -16,7 +17,7 @@ export class LoginComponent {
   protected email: string = '';
   protected password: string = '';
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private authService: AuthService) {}
 
   onSubmit(): void {
     if (!this.email || !this.password) {
@@ -50,6 +51,10 @@ export class LoginComponent {
       (response: any) => {
         console.log('User logged in successfully:', response);
         localStorage.setItem('token', response.token);
+
+        this.authService.setToken(response.token);
+        this.authService.setUserId(response.userID);
+        console.log(response.userID);
 
         Swal.fire({
           title: 'Success!',
