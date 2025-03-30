@@ -1,3 +1,5 @@
 import { Routes } from '@angular/router';
-
-export const routes: Routes = [];
+import { ModeratorsManagementComponent } from './moderators-management/moderators-management.component';
+export const routes: Routes = [
+    { path: '', component: ModeratorsManagementComponent }
+];
