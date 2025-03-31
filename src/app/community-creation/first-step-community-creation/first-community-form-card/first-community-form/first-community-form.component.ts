@@ -24,37 +24,37 @@ import Swal from "sweetalert2";
 export class FirstCommunityFormComponent {
     @ViewChild("tagNameInput") tagNameInput!: ElementRef;
 
+    protected formData: FormService | null = null;
     protected name: string = "";
     protected newTag: string = "";
     protected interests: string[] = [];
     protected storedInterests: string[] = [];
     protected interestsCoincidences: string[] = [];
 
-    constructor(private router: Router, private communityFormService: FormService, private apiService: ApiService) {
+    constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
     }
 
     nextPage(event: Event) {
+        event.preventDefault();
         if (this.name === "") {
             Swal.fire("Error!", "All required fields must be filled!", "error");
             return;
         }
-        event.preventDefault();
-        this.saveFormData();
         this.router.navigate(["/secondStepCommunityCreation"]).then(r => {
         });
+        this.saveFormData();
     }
 
     protected saveFormData() {
-        this.communityFormService.put("communityName", this.name);
-        this.communityFormService.put("communityInterests", this.interests);
-        this.communityFormService.update();
+        this.formData!.put("name", this.name);
+        this.formData!.put("interests", this.interests);
+        this.formService.update();
     }
 
     ngOnInit() {
-        this.communityFormService.data$.subscribe(data => {
-            this.name = data["communityName"] ? data["communityName"] : "";
-            this.interests = data["communityInterests"] ? data["communityInterests"] : [];
-        });
+        this.formData = this.formService.createFormEntry("community") as FormService;
+        this.name = this.formData.getOrDefault("name", "");
+        this.interests = this.formData.getOrDefault("interests", "");
         this.apiService.getInterests().subscribe(res => {
             // @ts-ignore
             this.storedInterests = this.storedInterests.concat(res["data"].map(e => e["name"]));
