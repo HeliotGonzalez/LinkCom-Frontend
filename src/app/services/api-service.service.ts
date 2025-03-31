@@ -62,9 +62,7 @@ export class ApiService {
     }
 
     createEvent(data: CreateEventParameters) {
-        console.log(data);
-        return this.http.get(`${this.baseUrl}/getCalendarEvents?userID=${"1"}`);
-        // return this.http.post(`${this.baseUrl}/createEvent`, data);
+        return this.http.post(`${this.baseUrl}/createEvent`, data);
     }
 
     getInterests() {

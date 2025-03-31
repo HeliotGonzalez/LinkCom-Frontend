@@ -6,6 +6,7 @@ import {FormService} from "../../../../services/form-service/form.service";
 import {ApiService} from "../../../../services/api-service.service";
 import Swal from "sweetalert2";
 import {AuthService} from "../../../../services/auth.service";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
 
 @Component({
     selector: 'app-third-community-form',
@@ -22,9 +23,9 @@ export class ThirdCommunityFormComponent {
     protected uploadedImage: string | null = null;
 
     constructor(private router: Router,
-        private formService: FormService,
-        private apiService: ApiService,
-        private authService: AuthService) {
+                private formService: FormService,
+                private apiService: ApiService,
+                private authService: AuthService) {
     }
 
     protected previousPage() {
@@ -39,12 +40,14 @@ export class ThirdCommunityFormComponent {
         this.saveFormData();
 
         this.apiService.createCommunity(
-            { userID: this.authService.getUserUUID(),
+            {
+                userID: this.authService.getUserUUID(),
                 description: this.formData?.get("description"),
                 name: this.formData?.get("name"),
                 isPrivate: this.formData?.get("privacy"),
                 img: this.formData?.get("image"),
-                communityInterests: this.formData?.get("interests") }
+                communityInterests: this.formData?.get("interests")
+            }
         ).subscribe({
             next: res => {
                 Swal.fire({
@@ -53,9 +56,8 @@ export class ThirdCommunityFormComponent {
                     icon: "success",
                     confirmButtonText: "Continue"
                 });
-                if (this.formData?.get("image")) { // @ts-ignore
-                    this.apiService.saveImage(this.formData?.get("image"), res['data']['communityID']);
-                }
+                // @ts-ignore
+                this.storeCommunityImage(res['data']['communityID']);
                 this.formService.remove("community");
             },
             error: err => Swal.fire({
@@ -95,6 +97,32 @@ export class ThirdCommunityFormComponent {
     protected saveFormData() {
         this.formData!.put("image", this.uploadedImage);
         this.formService.update();
+    }
+
+    private storeCommunityImage(communityID: string) {
+        if (this.formData?.get("image")) { // @ts-ignore
+            this.apiService.storeImage(
+                this.formData?.get("image"),
+                `images/communities/${communityID}`
+            ).subscribe({
+                next: () => {
+                    this.apiService.updateCommunityImage(
+                        `images/communities/${communityID}`,
+                        communityID
+                    ).subscribe({
+                        next: res => {
+                            console.log(res);
+                        }
+                    });
+                },
+                error: () => Swal.fire({
+                    title: "Error!",
+                    text: "We could not upload your event image!",
+                    icon: "error",
+                    confirmButtonText: "Continue"
+                })
+            });
+        }
     }
 
     ngOnInit() {

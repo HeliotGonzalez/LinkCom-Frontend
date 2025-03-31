@@ -48,7 +48,7 @@ export class SecondEventFormComponent {
         this.apiService.createEvent({
             title: this.formData?.get("name"),
             description: this.formData?.get("description"),
-            communityID: "aaaa",
+            communityID: "4fa91156-d352-484b-ab62-85eced26d911",
             userID: this.authService.getUserUUID(),
             dateOfTheEvent: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
         }).subscribe({
@@ -60,7 +60,7 @@ export class SecondEventFormComponent {
                     confirmButtonText: "Continue"
                 });
                 // @ts-ignore
-                this.storeEventImage(res['data']['communityID']['eventID']);
+                this.storeEventImage(res['data']['communityID'], res['data']['eventID']);
                 this.formService.remove("event");
             },
             error: err => Swal.fire({
@@ -74,10 +74,17 @@ export class SecondEventFormComponent {
 
     private storeEventImage(communityID: string, eventID: number) {
         if (this.formData?.get("image")) { // @ts-ignore
-            this.apiService.saveImage(
+            this.apiService.storeImage(
                 this.formData?.get("image"),
-                `communities/${communityID}/${eventID}`
+                `images/communities/${communityID}/${eventID}`
             ).subscribe({
+                next: () => {
+                    this.apiService.updateEventImage(
+                        `images/communities/${communityID}/${eventID}`,
+                        communityID,
+                        eventID
+                    ).subscribe();
+                },
                 error: () => Swal.fire({
                     title: "Error!",
                     text: "We could not upload your event image!",
