@@ -31,7 +31,7 @@ export class ModeratorsManagementComponent {
   }
 
   fetchCommunity(): void {
-    this.apiService.getComunnityInfo(this.communityID).subscribe({
+    this.apiService.getCommunityInfo(this.communityID).subscribe({
       next: (res) => {
         this.communityName = res.data[0].name;
       },

@@ -46,15 +46,15 @@ export class ApiService {
     }
 
     storeImage(image: string, directory: string) {
-        return this.http.post(`${this.baseUrl}/storeImage`, { image, directory })
+        return this.http.post(`${this.baseUrl}/storeImage`, {image, directory})
     }
 
     updateCommunityImage(imagePath: string, communityID: string) {
-        return this.http.post(`${this.baseUrl}/updateCommunityImage`, { imagePath, communityID });
+        return this.http.post(`${this.baseUrl}/updateCommunityImage`, {imagePath, communityID});
     }
 
     updateEventImage(imagePath: string, communityID: string, eventID: number) {
-        return this.http.post(`${this.baseUrl}/updateEventImage`, { imagePath, communityID, eventID });
+        return this.http.post(`${this.baseUrl}/updateEventImage`, {imagePath, communityID, eventID});
     }
 
     getCommunities(): Observable<any> {
@@ -65,23 +65,19 @@ export class ApiService {
         return this.http.post(`${this.baseUrl}/createEvent`, data);
     }
 
-  getInterests() {
-    return this.http.get(`${this.baseUrl}/interests`);
-  }
+    getInterests() {
+        return this.http.get(`${this.baseUrl}/interests`);
+    }
 
-  getData() {
-    return this.http.get(this.baseUrl);
-  }
+    getModerators(communityId: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users?communityID=${communityId}`);
+    }
 
-  getModerators(communityId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/users?communityID=${communityId}`);
-  }
+    updateUserRole(communityId: string, userId: string, role: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/updateusers?communityID=${communityId}&userID=${userId}&role=${role}`);
+    }
 
-  updateUserRole(communityId: string, userId: string, role: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/updateusers?communityID=${communityId}&userID=${userId}&role=${role}`);
-  }
-
-  getComunnityInfo(communityId: string): Observable<any> {
-    return this.http.get(`${this.baseUrl}/community?communityID=${communityId}`);
-  }
+    getCommunityInfo(communityId: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/community?communityID=${communityId}`);
+    }
 }
