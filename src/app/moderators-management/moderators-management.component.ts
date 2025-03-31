@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UserCardComponent } from './user-card/user-card.component';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../services/api-service.service';
 
 @Component({
   selector: 'app-moderators-management',
@@ -10,31 +11,63 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./moderators-management.component.css']
 })
 export class ModeratorsManagementComponent {
-  communityName: string = 'LinkCom';
+  communityName: string = '';
   searchText: string = '';
-  filterRole: string = 'ALL';
+  filterRole: string = 'All';
+  members: any[] = [];
+  communityID: string = '550e8400-e29b-41d4-a716-446655441111';
 
-  members = [
-    { name: 'John Doe', role: 'MODERATOR', icon: 'fa-user-gear' },
-    { name: 'Jane Smith', role: 'MEMBER', icon: 'fa-user-plus' },
-    { name: 'Alice Johnson', role: 'MODERATOR', icon: 'fa-user-gear' },
-    { name: 'Bob Brown', role: 'MEMBER', icon: 'fa-user-plus' }
-  ];
+  constructor(private apiService: ApiService) {}
+
+  fetchUsers(): void {
+    this.apiService.getModerators(this.communityID).subscribe({
+      next: (res) => {
+        this.members = res.data;
+      },
+      error: (err) => {
+        console.error('Error al obtener usuarios:', err);
+      }
+    });
+  }
+
+  fetchCommunity(): void {
+    this.apiService.getComunnityInfo(this.communityID).subscribe({
+      next: (res) => {
+        this.communityName = res.data[0].name;
+      },
+      error: (err) => {
+        console.error('Error al obtener comunidad:', err);
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.fetchCommunity();
+    this.fetchUsers();
+  }
 
   get filteredMembers() {
     return this.members
-      .filter(member =>
-        (this.filterRole === 'ALL' || member.role === this.filterRole) &&
-        member.name.toLowerCase().includes(this.searchText.toLowerCase())
-      )
-      .sort((a, b) => a.role === 'MODERATOR' ? -1 : 1);
+      .filter(member => {
+        const roleLower = member.communityRole.toLowerCase();
+        if (roleLower === 'creator') return false;
+        return (this.filterRole.toLowerCase() === 'all' || roleLower === this.filterRole.toLowerCase()) &&
+          member.username.toLowerCase().includes(this.searchText.toLowerCase());
+      })
+      .sort((a, b) => a.communityRole === 'member' ? 1 : -1);
   }
 
-  updateRole(name: string, newRole: string) {
-    const member = this.members.find(m => m.name === name);
+  updateRole(id: number, newRole: string) {
+    const member = this.members.find(m => m.id === id);
     if (member) {
-      member.role = newRole;
-      member.icon = newRole === 'MODERATOR' ? 'fa-user-gear' : 'fa-user-plus';
+      this.apiService.updateUserRole(this.communityID, id.toString(), newRole).subscribe({
+        next: (res) => {
+          member.communityRole = newRole;
+        },
+        error: (err) => {
+          console.error('Error al actualizar el rol:', err);
+        }
+      });
     }
   }
 }

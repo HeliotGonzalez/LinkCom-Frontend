@@ -7,15 +7,16 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./user-card.component.css']
 })
 export class UserCardComponent {
-  @Input() name!: string;
+  @Input() username!: string;
   @Input() role!: string;
-  @Input() icon!: string;
   @Output() roleChanged = new EventEmitter<string>();
 
+  get icon(): string {
+    return this.role === 'moderator' ?  'fa-user-gear' : 'fa-user-plus';
+  }
+
   toggleRole() {
-    const newRole = this.role === 'MEMBER' ? 'MODERATOR' : 'MEMBER';
-    this.role = newRole;
-    this.icon = newRole === 'MEMBER' ? 'fa-user-plus' : 'fa-user-gear';
+    const newRole = this.role === 'moderator' ? 'member' : 'moderator';
     this.roleChanged.emit(newRole);
   }
 }

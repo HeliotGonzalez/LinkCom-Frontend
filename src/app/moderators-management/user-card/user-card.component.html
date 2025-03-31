@@ -3,15 +3,15 @@
       <div class="rounded-circle bg-dark text-light d-flex justify-content-center align-items-center" style="width: 40px; height: 40px;">
         <i class="fa fa-user"></i>
       </div>
-      <span class="ms-3">{{ name }}</span>
+      <span class="ms-3">{{ username }}</span>
     </div>
     <div class="d-flex align-items-center">
-      @if (role !== 'MEMBER') {
+      @if (role !== 'member') {
         <span class="me-2">{{ role }}</span>
       }
       <i class="fa" [class]="icon"></i>
-      <button class="btn btn-sm ms-2" [class]="{'btn-success': role === 'MEMBER', 'btn-danger': role === 'MODERATOR'}" (click)="toggleRole()">
-        <i [class]="role === 'MEMBER' ? 'bi bi-person-plus-fill' : 'bi bi-person-dash-fill'"></i>
+      <button class="btn btn-sm ms-2" [class]="{'btn-success': role === 'member', 'btn-danger': role === 'moderator'}" (click)="toggleRole()">
+        <i [class]="role !== 'moderator' ? 'bi bi-person-plus-fill' : 'bi bi-person-dash-fill'"></i>
       </button>
     </div>
   </div>
