@@ -66,7 +66,7 @@ export class HomepageComponent implements OnInit {
 
   // Obtener comunidades del backend, aquellas a las que el usuario NO pertenece
   fetchCommunities(): void {
-    this.apiService.getCommunities(this.authService.getUserUUID()).subscribe({
+    this.apiService.getNonBelongingCommunities(this.authService.getUserUUID()).subscribe({
       next: (data: Community[]) => {
         this.communities = data;
         for(let community of this.communities){

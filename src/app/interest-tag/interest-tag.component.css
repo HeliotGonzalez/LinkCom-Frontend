@@ -1,0 +1,15 @@
+.interest-tag {
+  background: #2E3E7F;
+  color: white;
+  font-weight: 800;
+  transition: box-shadow 0.3s ease;
+}
+
+.interest-tag:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.interest-tag button {
+  color: white;
+  font-weight: 800;
+}
