@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserCardComponent } from './user-card/user-card.component';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from '../services/api-service.service';
+import { EntitiesIdService } from '../services/entitites-ids-service/entities-id.service';
 
 @Component({
   selector: 'app-moderators-management',
@@ -17,7 +18,7 @@ export class ModeratorsManagementComponent {
   members: any[] = [];
   communityID: string = '';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private entities: EntitiesIdService) {}
 
   fetchUsers(): void {
     this.apiService.getModerators(this.communityID).subscribe({
@@ -42,7 +43,7 @@ export class ModeratorsManagementComponent {
   }
 
   ngOnInit() {
-    this.communityID = localStorage.getItem('communityID') || '550e8400-e29b-41d4-a716-446655441111';
+    this.communityID =  this.entities.getCommunityID();
     this.fetchCommunity();
     this.fetchUsers();
   }
