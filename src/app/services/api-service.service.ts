@@ -53,4 +53,21 @@ export class ApiService {
   getInterests() {
     return this.http.get(`${this.baseUrl}/interests`);
   }
+
+  getData() {
+    return this.http.get(this.baseUrl);
+  }
+
+  getModerators(communityId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/users?communityID=${communityId}`);
+  }
+
+  updateUserRole(communityId: string, userId: string, role: string): Observable<any> {
+    console.log(`Updating user role: communityId=${communityId}, userId=${userId}, role=${role}`);
+    return this.http.get(`${this.baseUrl}/updateusers?communityID=${communityId}&userID=${userId}&role=${role}`);
+  }
+
+  getComunnityInfo(communityId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/community?communityID=${communityId}`);
+  }
 }
