@@ -63,7 +63,6 @@ export class ApiService {
   }
 
   updateUserRole(communityId: string, userId: string, role: string): Observable<any> {
-    console.log(`Updating user role: communityId=${communityId}, userId=${userId}, role=${role}`);
     return this.http.get(`${this.baseUrl}/updateusers?communityID=${communityId}&userID=${userId}&role=${role}`);
   }
 

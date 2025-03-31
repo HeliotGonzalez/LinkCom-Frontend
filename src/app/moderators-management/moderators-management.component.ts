@@ -15,7 +15,7 @@ export class ModeratorsManagementComponent {
   searchText: string = '';
   filterRole: string = 'All';
   members: any[] = [];
-  communityID: string = '550e8400-e29b-41d4-a716-446655441111';
+  communityID: string = '';
 
   constructor(private apiService: ApiService) {}
 
@@ -42,6 +42,7 @@ export class ModeratorsManagementComponent {
   }
 
   ngOnInit() {
+    this.communityID = localStorage.getItem('communityID') || '550e8400-e29b-41d4-a716-446655441111';
     this.fetchCommunity();
     this.fetchUsers();
   }
