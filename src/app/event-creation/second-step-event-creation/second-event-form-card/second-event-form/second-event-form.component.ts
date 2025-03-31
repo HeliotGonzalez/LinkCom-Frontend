@@ -5,9 +5,9 @@ import {Router} from "@angular/router";
 import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
 import {ApiService} from "../../../../services/api-service.service";
-import {firstValueFrom} from "rxjs";
 import Swal from "sweetalert2";
 import {AuthService} from "../../../../services/auth.service";
+import {EntitiesIdService} from "../../../../services/entitites-ids-service/entities-id.service";
 
 @Component({
     selector: 'app-second-event-form',
@@ -25,7 +25,13 @@ export class SecondEventFormComponent {
     protected uploadedImage: string | null = null;
     protected eventDescription: string = "";
 
-    constructor(private router: Router, private formService: FormService, private apiService: ApiService, private authService: AuthService) {
+    constructor(
+        private router: Router,
+        private formService: FormService,
+        private apiService: ApiService,
+        private authService: AuthService,
+        private entitiesService: EntitiesIdService
+    ) {
     }
 
     previousPage(event: Event) {
@@ -48,7 +54,7 @@ export class SecondEventFormComponent {
         this.apiService.createEvent({
             title: this.formData?.get("name"),
             description: this.formData?.get("description"),
-            communityID: "4fa91156-d352-484b-ab62-85eced26d911",
+            communityID: this.entitiesService.getCommunityID(),
             userID: this.authService.getUserUUID(),
             dateOfTheEvent: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
         }).subscribe({

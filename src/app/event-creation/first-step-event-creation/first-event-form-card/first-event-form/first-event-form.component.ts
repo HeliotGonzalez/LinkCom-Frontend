@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {FormStepsComponent} from '../../../../form-steps/form-steps.component';
 import {Router} from "@angular/router";
 import {FormService} from '../../../../services/form-service/form.service';
-import {Form, FormsModule} from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import Swal from "sweetalert2";
 
 @Component({
