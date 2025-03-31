@@ -1,5 +1,5 @@
 export interface Community {
-  id: string;
-  name: Text;
-  description: Text;
+    id: string;
+    name: Text;
+    description: Text;
 }
