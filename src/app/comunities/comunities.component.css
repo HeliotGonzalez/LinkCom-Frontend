@@ -1,0 +1,35 @@
+.container
+{
+    background-color:rgba(255,255,255,0.4);
+    height: 100%;
+
+    
+}
+.card-container
+{
+    background-color: rgba(255,255,255,0.5);
+    height: 15%;
+    width: 100%;
+    opacity: 100%;
+    border-radius:25px;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 25px;
+}
+
+.card-container img {
+    max-height: 100%;
+    height: auto;
+
+    display: block
+  }
+  
+  .btn-personal
+  {
+    margin-left: 10px;
+    border-radius: 25px;
+    width:150px;
+
+
+  }
