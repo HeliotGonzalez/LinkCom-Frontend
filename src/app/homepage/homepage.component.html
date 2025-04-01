@@ -3,9 +3,9 @@
 <div class="container-fluid py-4">
   <div class="row">
     <!-- Columna Izquierda: Feed -->
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="feed mb-4">
-        <h2 class="mb-3">Tu Feed</h2>
+        <h2 class="mb-3 text-center">Feed</h2>
         @for(item of displayedFeedItems; track item) {
           <div class="card mb-3 shadow-sm">
             <div class="card-body">
@@ -33,7 +33,7 @@
       <!-- Una sola tarjeta para comunidades -->
       <div class="card mb-4 shadow-card">
         <div class="card-body">
-          <h4 class="mb-3">Comunidades Recomendadas</h4>
+          <h4 class="mb-3 text-center">Comunidades Recomendadas</h4>
           @for(community of communities; track community) {
             <div class="community-item mb-2">
               <strong>{{ community.name }}</strong>
