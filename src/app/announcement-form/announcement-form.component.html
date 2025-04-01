@@ -1,0 +1,27 @@
+<div class="form-container">
+    <h2>Publicar Anuncio</h2>
+    
+    <label for="title">Título *</label>
+    <input id="title" type="text" class="input-field" #title>
+    
+    <label for="description">Descripción *</label>
+    <textarea id="description" class="textarea-field" #description></textarea>
+    
+    <label for="interests">Intereses *</label>
+    <div class="tags-container">
+      @for (tag of this.tags; track tag) {
+        <span class="tag">{{ tag }} <button>×</button></span>
+      }
+        <input id="interests" type="text" class="tag-input" placeholder="Añadir interés...">
+    </div>
+    
+    <label>Adjuntar documentos</label>
+    <div class="upload-box">
+      ⬆️
+    </div>
+    
+    <div class="buttons">
+      <button class="cancel-btn" (click)="resetForm()">CANCEL</button>
+      <button class="publish-btn" (click)="onSubmit(title, description)">PUBLISH</button>
+    </div>
+  </div>
