@@ -25,8 +25,7 @@ export class HomepageComponent implements OnInit {
     todayDay: number = 0;
     calendarEvents: { [day: number]: string[] } = {};
 
-    constructor(private apiService: ApiService, private authService: AuthService) {
-    }
+    constructor(private apiService: ApiService, private authService: AuthService) {}
 
     ngOnInit(): void {
         this.fetchFeed();
@@ -47,6 +46,11 @@ export class HomepageComponent implements OnInit {
                     ...item,
                     date: new Date(item.date)
                 }));
+                for (let dat of data){
+                    console.log(dat);
+                }
+
+                console.log('Data recibido: ' + data);
                 this.loadMoreFeed();
             },
             error: (err) => {
@@ -63,6 +67,7 @@ export class HomepageComponent implements OnInit {
             this.displayedFeedItems.length + this.feedBatchSize
         );
         this.displayedFeedItems = this.displayedFeedItems.concat(nextItems);
+        console.log('Datos mostrados ' + this.displayedFeedItems);
     }
 
     // Obtener comunidades del backend, aquellas a las que el usuario NO pertenece
@@ -70,9 +75,6 @@ export class HomepageComponent implements OnInit {
         this.apiService.getNonBelongingCommunities(this.authService.getUserUUID()).subscribe({
             next: (data: Community[]) => {
                 this.communities = data;
-                for (let community of this.communities) {
-                    console.log(community);
-                }
             },
             error: (err) => {
                 console.error('Error al obtener comunidades:', err);
@@ -102,30 +104,30 @@ export class HomepageComponent implements OnInit {
         });
     }
 
-    // Unirte a un evento
-    joinEvent(eventId: string, communityID: string): void {
-        this.apiService.createUserEvent(this.authService.getUserUUID(), eventId, communityID).subscribe({
-            next: (response) => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Te has unido al evento correctamente.',
-                    confirmButtonText: 'OK'
-                });
-
-                this.allFeedItems = this.allFeedItems.filter(item => item.id !== eventId);
-                this.displayedFeedItems = this.displayedFeedItems.filter(item => item.id !== eventId);
-            },
-            error: (err) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Ups',
-                    text: 'Ha ocurrido un error al unirte al evento.',
-                    confirmButtonText: 'OK'
-                });
-            }
+  // Unirte a un evento
+  joinEvent(eventId: string, communityID: string): void {
+    this.apiService.createUserEvent(this.authService.getUserUUID(), eventId, communityID).subscribe({
+      next: (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Éxito',
+          text: 'Te has unido al evento correctamente.',
+          confirmButtonText: 'OK'
         });
-    }
+
+        this.allFeedItems = this.allFeedItems.filter(item => item.id !== eventId);
+        this.displayedFeedItems = this.displayedFeedItems.filter(item => item.id !== eventId);
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ups',
+          text: 'Ha ocurrido un error al unirte al evento.',
+          confirmButtonText: 'OK'
+        });
+      }
+    });
+  }
 
     // Unirte a una comunidad
     joinCommunity(communityId: string): void {
@@ -139,18 +141,19 @@ export class HomepageComponent implements OnInit {
                     confirmButtonText: 'OK'
                 });
 
-                this.communities = this.communities.filter(c => c.id !== communityId);
-            },
-            error: (err) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Ups',
-                    text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
-                    confirmButtonText: 'OK'
-                });
-            }
+        // this.communities = this.communities.filter(c => c.id !== communityId);
+        this.ngOnInit();
+      },
+      error: (err) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Ups',
+          text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
+          confirmButtonText: 'OK'
         });
-    }
+      }
+    });
+  }
 
     // Generar la estructura del calendario (solo las celdas)
     generateCalendar(): void {

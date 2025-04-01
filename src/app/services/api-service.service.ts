@@ -33,7 +33,8 @@ export class ApiService {
 
     // Se crea una instancia de EventUser en la base de datos (Usuario que pertenece a un evento)
     createUserEvent(userID: string, eventID: string, communityID: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/createEventUser`, {userID, eventID, communityID});
+        console.log('userID ' + userID + ' eventID: ' + eventID + ' communityID: ' + communityID);
+        return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
     }
 
     // Un usuario se une a una comunidad
