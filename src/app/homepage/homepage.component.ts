@@ -104,56 +104,56 @@ export class HomepageComponent implements OnInit {
         });
     }
 
-  // Unirte a un evento
-  joinEvent(eventId: string, communityID: string): void {
-    this.apiService.createUserEvent(this.authService.getUserUUID(), eventId, communityID).subscribe({
-      next: (response) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Éxito',
-          text: 'Te has unido al evento correctamente.',
-          confirmButtonText: 'OK'
-        });
+    // Unirte a un evento
+    joinEvent(eventId: string, communityID: string): void {
+        this.apiService.createUserEvent(this.authService.getUserUUID(), eventId, communityID).subscribe({
+        next: (response) => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Te has unido al evento correctamente.',
+                confirmButtonText: 'OK'
+            });
 
-        this.allFeedItems = this.allFeedItems.filter(item => item.id !== eventId);
-        this.displayedFeedItems = this.displayedFeedItems.filter(item => item.id !== eventId);
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Ups',
-          text: 'Ha ocurrido un error al unirte al evento.',
-          confirmButtonText: 'OK'
+            this.allFeedItems = this.allFeedItems.filter(item => item.id !== eventId);
+            this.displayedFeedItems = this.displayedFeedItems.filter(item => item.id !== eventId);
+        },
+        error: (err) => {
+            Swal.fire({
+            icon: 'error',
+            title: 'Ups',
+            text: 'Ha ocurrido un error al unirte al evento.',
+            confirmButtonText: 'OK'
+            });
+        }
         });
-      }
-    });
-  }
+    }
 
     // Unirte a una comunidad
     joinCommunity(communityId: string): void {
-        console.log('communityId', communityId);
-        this.apiService.joinCommunity(this.authService.getUserUUID(), communityId).subscribe({
-            next: (response) => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Te has unido a la comunidad correctamente.',
-                    confirmButtonText: 'OK'
-                });
+            console.log('communityId', communityId);
+            this.apiService.joinCommunity(this.authService.getUserUUID(), communityId).subscribe({
+                next: (response) => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Te has unido a la comunidad correctamente.',
+                        confirmButtonText: 'OK'
+                    });
 
-        // this.communities = this.communities.filter(c => c.id !== communityId);
-        this.ngOnInit();
-      },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Ups',
-          text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
-          confirmButtonText: 'OK'
+            // this.communities = this.communities.filter(c => c.id !== communityId);
+            this.ngOnInit();
+        },
+        error: (err) => {
+            Swal.fire({
+            icon: 'error',
+            title: 'Ups',
+            text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
+            confirmButtonText: 'OK'
+            });
+        }
         });
-      }
-    });
-  }
+    }
 
     // Generar la estructura del calendario (solo las celdas)
     generateCalendar(): void {
