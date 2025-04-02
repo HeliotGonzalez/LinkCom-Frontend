@@ -1,7 +1,22 @@
 .calendar-container {
   padding: 20px;
-  max-width: 600px; /* Tamaño mediano */
+  width: 80%;
+  height: 100%;
+  background-color: white;
   margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.calendar-space {
+  display: flex;
+  flex:1;
+  flex-direction: column;
+}
+
+.td-calendar
+{
+  min-height: 30%;
 }
 
 .navigation {
@@ -17,4 +32,8 @@
 .today {
   font-weight: bold;
   color: red;
+}
+
+.small-text {
+  font-size: 10px;
 }

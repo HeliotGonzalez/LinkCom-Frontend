@@ -1,42 +1,68 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ApiService } from '../services/api-service.service';
+import { AuthService } from '../services/auth.service';
+import { FeedItem } from '../interfaces/feed-item';
 interface CalendarMonth {
-  month: number; // 0 = Enero, 11 = Diciembre
+  month: number;
   year: number;
+  monthName: string;
   weeks: (number | null)[][];
 }
 
 @Component({
   selector: 'app-events-community-calendar',
-  standalone: true,  // si usas componentes standalone
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './events-community-calendar.component.html',
   styleUrls: ['./events-community-calendar.component.css']
 })
 export class EventsCommunityCalendarComponent implements OnInit {
-  // Fecha base para generar el calendario (se actualizará al navegar)
   currentDate: Date = new Date();
-  // Nombres de los días
-  dayNames: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-  // Día actual para resaltar (del mes actual)
-  today: number = new Date().getDate();
-  // Objeto que contendrá el mes actual a mostrar
+  currentMonth: number = new Date().getMonth();  
+  currentYear: number = new Date().getFullYear(); 
+  today: number = new Date().getDate();  
   calendarMonth!: CalendarMonth;
-
+  dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  userid:string;
+  events: FeedItem[]=[];
+  constructor(private apiService:ApiService, private authService:AuthService)
+  {
+    this.userid = this.authService.getUserUUID()
+  }
   ngOnInit(): void {
     this.generateCalendarMonth();
+    if (this.userid == 'user_id')
+      {
+        console.log("No existe usuario");
+        return;
+      }
+    this.apiService.getFeed(this.userid).subscribe({
+       next: (data: FeedItem[]) => {
+                      this.events = data.map(item => ({
+                          ...item,
+                          date: new Date(item.date)
+                      }));
+                      for (let dat of data){
+                          console.log(dat);
+                      }
+      
+                      console.log('Data recibido: ' + data);
+                  },
+                  error: (err) => {
+                      console.error('Error al obtener feed:', err);
+                  }
+    });
   }
 
-  // Genera la estructura para el mes actual basado en currentDate
   generateCalendarMonth(): void {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
     const weeks = this.generateCalendarForMonth(year, month);
-    this.calendarMonth = { year, month, weeks };
+    const monthName = this.getMonthName(month);
+    this.calendarMonth = { year, month, monthName, weeks };
   }
 
-  // Genera la estructura (matriz de semanas) para un mes específico
   generateCalendarForMonth(year: number, month: number): (number | null)[][] {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -46,12 +72,10 @@ export class EventsCommunityCalendarComponent implements OnInit {
     const weeks: (number | null)[][] = [];
     let week: (number | null)[] = [];
 
-    // Agregar celdas vacías hasta el primer día del mes
     for (let i = 0; i < startDay; i++) {
       week.push(null);
     }
 
-    // Llenar con los días del mes
     for (let day = 1; day <= totalDays; day++) {
       week.push(day);
       if (week.length === 7) {
@@ -60,17 +84,16 @@ export class EventsCommunityCalendarComponent implements OnInit {
       }
     }
 
-    // Completar la última semana con celdas vacías
     if (week.length > 0) {
       while (week.length < 7) {
         week.push(null);
       }
       weeks.push(week);
     }
+
     return weeks;
   }
 
-  // Navega al mes anterior y actualiza el calendario
   prevMonth(): void {
     this.currentDate = new Date(
       this.currentDate.getFullYear(),
@@ -80,7 +103,6 @@ export class EventsCommunityCalendarComponent implements OnInit {
     this.generateCalendarMonth();
   }
 
-  // Navega al mes siguiente y actualiza el calendario
   nextMonth(): void {
     this.currentDate = new Date(
       this.currentDate.getFullYear(),
@@ -88,5 +110,9 @@ export class EventsCommunityCalendarComponent implements OnInit {
       1
     );
     this.generateCalendarMonth();
+  }
+
+  private getMonthName(month: number): string {
+    return new Date(this.currentDate.getFullYear(), month).toLocaleString('en-US', { month: 'long' });
   }
 }
