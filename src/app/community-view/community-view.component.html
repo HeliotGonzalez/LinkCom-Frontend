@@ -2,7 +2,7 @@
     <div class="d-flex flex-column w-100 align-items-center">
         <div id="community-image-container"
              class="d-flex align-items-center justify-content-center overflow-hidden w-100 bg-white">
-            <img src="LogoLinkComNegro.svg">
+            <img [src]="community?.imagePath">
         </div>
         <div id="community-name-container" class="d-flex align-items-center justify-content-center w-100">
             <h1 class="fw-bold"> {{ community?.name }}'s Community </h1>

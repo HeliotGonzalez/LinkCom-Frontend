@@ -103,4 +103,8 @@ export class ApiService {
     leaveCommunity(userID: string, communityID: string) {
         return this.http.post(`${this.baseUrl}/leaveCommunity`, {userID, communityID});
     }
+
+    getCommunity(communityID: string) {
+        return this.http.get(`${this.baseUrl}/getCommunity?communityID=${communityID}`);
+    }
 }

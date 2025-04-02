@@ -2,7 +2,7 @@ import {booleanAttribute, Component} from '@angular/core';
 import {Community} from "../interfaces/community";
 import {EventViewComponent} from "../event-view/event-view.component";
 import {CommunityEvent} from "../interfaces/CommunityEvent";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
 import Swal from "sweetalert2";
@@ -21,20 +21,19 @@ export class CommunityViewComponent {
     protected community: Community | null = null;
     protected userEvents: CommunityEvent[] | null = [];
 
-    constructor(private router: Router, private apiService: ApiService, private authService: AuthService) {
+    constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.community = {
-            // @ts-ignore
-            name: "Ducks",
-            // @ts-ignore
-            description: "",
-            id: "bc98f5cd-2eb2-497a-8978-1f7179a46df9",
-            userID: "51257452-72a3-4a6f-a6c9-79fa2af11606",
-            isPrivate: true,
-            imagePath: ""
-        };
+        this.route.queryParams.subscribe(params => {
+            this.apiService.getCommunity(params['communityID'])
+                .subscribe({
+                    next: res => {
+                        // @ts-ignore
+                        this.community = res['data'] as Community;
+                    }
+                });
+        });
         // @ts-ignore
         this.apiService.getCommunityEvents(this.community?.id).subscribe(res => {
             // @ts-ignore
@@ -121,4 +120,6 @@ export class CommunityViewComponent {
             }
         });
     }
+
+    protected readonly onabort = onabort;
 }
