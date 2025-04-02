@@ -127,7 +127,12 @@ export class ThirdCommunityFormComponent {
 
     ngOnInit() {
         this.formData = this.formService.get("community") as FormService;
-        console.log(this.formData)
         this.uploadedImage = this.formData.getOrDefault("image", null);
+    }
+
+    changeFormStep(route: string) {
+        this.saveFormData();
+        this.router.navigate([route]).then(r => {
+        });
     }
 }

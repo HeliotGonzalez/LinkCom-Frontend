@@ -2,3 +2,8 @@
     left: 50% !important;
     transform: translateX(-50%);
   }
+
+header {
+    background: linear-gradient(90deg, #2E3E7F, #5370E5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}

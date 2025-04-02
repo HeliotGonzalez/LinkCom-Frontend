@@ -54,7 +54,7 @@ export class SecondEventFormComponent {
         this.apiService.createEvent({
             title: this.formData?.get("name"),
             description: this.formData?.get("description"),
-            communityID: this.entitiesService.getCommunityID(),
+            communityID: this.formData?.get("communityID"),
             userID: this.authService.getUserUUID(),
             dateOfTheEvent: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
         }).subscribe({
@@ -64,10 +64,14 @@ export class SecondEventFormComponent {
                     text: "Your event has been correctly created!",
                     icon: "success",
                     confirmButtonText: "Continue"
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['community'], {queryParams: {communityID: this.formData?.get('communityID')}})
+                        // @ts-ignore
+                        this.storeEventImage(res['data']['communityID'], res['data']['eventID']);
+                        this.formService.remove("event");
+                    }
                 });
-                // @ts-ignore
-                this.storeEventImage(res['data']['communityID'], res['data']['eventID']);
-                this.formService.remove("event");
             },
             error: err => Swal.fire({
                 title: "Error!",

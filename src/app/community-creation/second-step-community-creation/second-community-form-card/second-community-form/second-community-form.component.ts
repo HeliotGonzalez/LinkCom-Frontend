@@ -42,7 +42,6 @@ export class SecondCommunityFormComponent {
 
     ngOnInit() {
         this.formData = this.formService.get("community") as FormService;
-        console.log(this.formData)
         this.description = this.formData.getOrDefault("description", "");
         this.privateCommunity = this.formData.getOrDefault("privacy", false);
     }
@@ -51,5 +50,13 @@ export class SecondCommunityFormComponent {
         this.formData!.put("description", this.description);
         this.formData!.put("privacy", this.privateCommunity);
         this.formService.update();
+    }
+
+    changeFormStep(route: string) {
+        this.saveFormData();
+        if (this.description === "") {
+            Swal.fire("Error!", "All required fields must be filled!", "error");
+            return;
+        }
     }
 }
