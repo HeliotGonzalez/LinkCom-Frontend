@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<br><br><br>
 <main>
     <div class="container col-md-8">
 
@@ -14,26 +15,18 @@
             <hr>
 
   
-            <div class="text-left mb-4">
-              <p>Se encontraron <strong>5</strong> resultados</p>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <p class="mb-0"><strong>{{ commnunities.length }}</strong> communities were found!</p>
+              <a class="btn btn-light" href="firstStepCommunityCreation">
+                <i class="fas fa-plus"></i> Create Community</a>
             </div>
-      <div class="card-container d-flex justify-content-between align-items-start">
-        <img
-          src="https://www.autopista.es/uploads/s1/11/24/74/52/estos-son-los-10-coches-que-se-vendieron-mas-caros-en-la-historia-del-automovil.jpeg"
-          class="img-fluid"
-          style="max-width: 50%; height: auto; margin-right: 1rem;"
-          alt="coche">
-        <div  style="flex-grow: 1; margin-right: 1rem;">
-          <h4>Título del contenido</h4>
-          <button class="btn btn-light btn-personal">hola</button> <button class="btn btn-light btn-personal">adios</button>
-          <p>Texto generico de una clase.</p>
-        </div>
-        <div style="margin-left: 20px;">
-            <button class="btn btn-light btn-personal">unirse</button>
-            <p>1234 members</p>
-        </div>
-      </div>
-
+            
+            @for (community of commnunities; track community.id) {
+              <app-community-card
+                [name]="community.name"
+                [description]="community.description"
+              ></app-community-card>
+            }
     </div>
   </main>
   
