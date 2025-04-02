@@ -108,4 +108,8 @@ export class ApiService {
     getCommunity(communityID: string) {
         return this.http.get(`${this.baseUrl}/getCommunity?communityID=${communityID}`);
     }
+
+    getCommunitiesEventsExcludingUser(userID: string) {
+        return this.http.get(`${this.baseUrl}/communitiesEventsExcludingUser?userID=${userID}`);
+    }
 }
