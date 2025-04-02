@@ -3,9 +3,9 @@
 <div class="container-fluid py-4">
   <div class="row">
     <!-- Columna Izquierda: Feed -->
-    <div class="col-md-8">
+    <div class="col-md-7">
       <div class="feed mb-4">
-        <h2 class="mb-3">Tu Feed</h2>
+        <h2 class="mb-3 text-center">Feed</h2>
         @for(item of displayedFeedItems; track item) {
           <div class="card mb-3 shadow-sm">
             <div class="card-body">
@@ -16,14 +16,14 @@
               <p class="card-text mt-2">{{ item.content }}</p>
               @if(item.type === 'event') {
                 <div class="text-end">
-                  <button class="btn btn-primary" (click)="joinEvent(item.id, item.communityID)">Unirte</button>
+                  <button class="btn btn-primary" (click)="joinEvent(item.id, item.communityID)">Join</button>
                 </div>
               }
             </div>
           </div>
         }
         <div class="text-center">
-          <button class="btn btn-outline-primary" (click)="loadMoreFeed()">Mostrar más</button>
+          <button class="btn btn-outline-primary" (click)="loadMoreFeed()">Show more</button>
         </div>
       </div>
     </div>
@@ -33,13 +33,13 @@
       <!-- Una sola tarjeta para comunidades -->
       <div class="card mb-4 shadow-card">
         <div class="card-body">
-          <h4 class="mb-3">Comunidades Recomendadas</h4>
+          <h4 class="mb-3 text-center">Recommended communities</h4>
           @for(community of communities; track community) {
             <div class="community-item mb-2">
               <strong>{{ community.name }}</strong>
               <p class="mb-1">{{ community.description }}</p>
               <div class="text-end">
-                <a class="btn btn-outline-secondary btn-sm" (click)="joinCommunity(community.id); $event.preventDefault()">Unirse</a>
+                <a class="btn btn-outline-secondary btn-sm" (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
               </div>
               <hr>
             </div>
@@ -49,7 +49,7 @@
 
       <!-- Calendario en la parte inferior derecha -->
       <div class="calendar">
-        <h3 class="mb-3">Calendario</h3>
+        <h3 class="mb-3">Calendar</h3>
         <div class="card">
           <div class="card-body p-0">
             <table class="table table-bordered mb-0 text-center">

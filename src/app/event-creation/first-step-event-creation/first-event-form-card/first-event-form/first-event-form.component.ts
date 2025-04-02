@@ -3,6 +3,7 @@ import {FormStepsComponent} from '../../../../form-steps/form-steps.component';
 import {Router} from "@angular/router";
 import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-first-event-form',
@@ -15,33 +16,40 @@ import {FormsModule} from '@angular/forms';
   styleUrl: './first-event-form.component.css'
 })
 export class FirstEventFormComponent {
-  protected eventName: string | null = "Test event";
-  protected eventDate: string | null = "2025-03-21";
-  protected eventTime: string | null = "15:36";
-  protected eventLocation: string | null = "My house";
+
+  protected formData: FormService | null = null;
+  protected eventName: string | null = "";
+  protected eventDate: string | null = "";
+  protected eventTime: string | null = "";
+  protected eventLocation: string | null = "";
 
   constructor(private router: Router, private formService: FormService) {
   }
 
   nextPage(event: Event) {
     event.preventDefault();
+    if (this.eventName === "" || this.eventName === "" || this.eventLocation === "" || this.eventLocation === "") {
+      Swal.fire("Error!", "All required fields must be filled!", "error");
+      return;
+    }
     this.router.navigate(["/secondStepEventCreation"]).then(r => {});
     this.saveFormData();
   }
 
   protected saveFormData() {
-    this.formService.put("eventName", this.eventName);
-    this.formService.put("eventDate", this.eventDate);
-    this.formService.put("eventTime", this.eventTime);
-    this.formService.put("eventLocation", this.eventLocation);
+    this.formData!.put("name", this.eventName);
+    this.formData!.put("date", this.eventDate);
+    this.formData!.put("time", this.eventTime);
+    this.formData!.put("location", this.eventLocation);
     this.formService.update();
   }
 
   ngOnInit() {
-    this.eventName = this.formService.get("eventName");
-    this.eventDate = this.formService.get("eventDate");
-    this.eventTime = this.formService.get("eventTime");
-    this.eventLocation = this.formService.get("eventLocation");
+    this.formData = this.formService.createFormEntry("event") as FormService;
+    this.eventName = this.formData.getOrDefault("name", "");
+    this.eventDate = this.formData.getOrDefault("date", "");
+    this.eventTime = this.formData.getOrDefault("time", "");
+    this.eventLocation = this.formData.getOrDefault("location", "");
   }
 
   setFocus(event: Event, input: HTMLInputElement) {

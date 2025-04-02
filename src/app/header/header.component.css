@@ -1,0 +1,4 @@
+.dropdown-menu-centered {
+    left: 50% !important;
+    transform: translateX(-50%);
+  }

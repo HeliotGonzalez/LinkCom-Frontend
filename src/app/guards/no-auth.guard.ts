@@ -11,10 +11,11 @@ export class NoAuthGuard implements CanActivate {
   canActivate(): boolean {
     const token = this.authService.getToken();
 
-    if (token && token !== 'null') {
+    if (token !== 'auth_token') {
       this.router.navigate(['/homepage']);
       return false;
     }
+    
     return true;
   }
   

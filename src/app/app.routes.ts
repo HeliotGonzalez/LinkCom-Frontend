@@ -18,7 +18,7 @@ import {
   FirstStepEventCreationComponent
 } from './event-creation/first-step-event-creation/first-step-event-creation.component';
 import {SecondStepEventCreationComponent} from "./event-creation/second-step-event-creation/second-step-event-creation.component";
-import { AnnouncementFormComponent } from './announcement-form/announcement-form.component';
+import {ModeratorsManagementComponent} from "./moderators-management/moderators-management.component";
 
 export const routes: Routes = [
   {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -31,5 +31,5 @@ export const routes: Routes = [
   {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent},
   {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent},
   {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent},
-  {path: 'announcementForm', component: AnnouncementFormComponent}
+  {path: 'moderatorsManagement', component: ModeratorsManagementComponent}
 ];

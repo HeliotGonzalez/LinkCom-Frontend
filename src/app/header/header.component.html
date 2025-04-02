@@ -24,21 +24,33 @@
       </button>
   
       <!-- Enlaces y botón a la derecha -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto me-3">
+      <div class="collapse navbar-collapse text-center" id="navbarNav">
+        <ul class="navbar-nav ms-auto me-3 ">
           <li class="nav-item">
-            <a class="nav-link active" routerLink="/">Inicio</a>
+            <a class="nav-link active" routerLink="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Comunidades</a>
+            <a class="nav-link" href="#">Communities</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Calendario</a>
+            <a class="nav-link" href="#">Calendar</a>
           </li>
         </ul>
-        <a class="btn btn-outline-light me-5" routerLink="/login">
-          Login
-        </a>
+        @if(this.user === 'user_id'){
+          <a class="btn btn-outline-light me-5" routerLink="/login">
+            Login
+          </a>
+        } @else {
+          <div class="dropdown">
+            <a class="dropdown-toggle me-5" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle" style="font-size: 2rem; color: white;"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-centered" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Cerrar sesión</a></li>
+            </ul>
+          </div>
+        }
+
       </div>
     </nav>
 </header>
