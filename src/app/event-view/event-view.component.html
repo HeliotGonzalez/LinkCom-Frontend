@@ -1,11 +1,11 @@
-<article class="event d-flex flex-column">
+<article class="event d-flex flex-column overflow-hidden">
     <div class="event-header d-flex align-items-center gap-2 w-100">
         <h1>{{event?.title}}</h1>
         {{ event?.dateOfTheEvent }}
     </div>
     <div class="event-body d-flex w-100">
-        <div class="w-50">
-            <p>{{ event?.description }}</p>
+        <div class="pe-4 ps-1 w-50 overflow-scroll">
+            <p style="text-align: justify">{{ event?.description }}</p>
         </div>
         <div class="d-flex align-items-center justify-content-center w-50 h-100">
             <img [src]="event?.imagePath" alt="Event image" (click)="openImageDialog()" class="event-image w-100 h-100 object-fit-cover">
@@ -16,5 +16,7 @@
             </app-image-dialog>
         </div>
     </div>
-    <div class="event-footer w-100">Footer</div>
+    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
+        <button class="button">Join</button>
+    </div>
 </article>

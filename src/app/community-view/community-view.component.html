@@ -1,6 +1,7 @@
 <main class="main d-flex flex-column flex-grow-1">
     <div class="d-flex flex-column w-100 align-items-center">
-        <div id="community-image-container" class="d-flex align-items-center justify-content-center overflow-hidden w-100 bg-white">
+        <div id="community-image-container"
+             class="d-flex align-items-center justify-content-center overflow-hidden w-100 bg-white">
             <img src="LogoLinkComNegro.svg">
         </div>
         <div id="community-name-container" class="d-flex align-items-center justify-content-center w-100">
@@ -8,15 +9,19 @@
         </div>
         <div class="d-flex flex-column bg-white w-50">
             <section id="announces-section" class="d-flex flex-column w-100"></section>
-            <div class="d-flex align-items-center justify-content-center gap-5">
-                <button class="button btn-primary mb-5 mt-5" (click)="showEventForm()">Create Event</button>
-                <button class="button btn-primary mb-5 mt-5" (click)="showModeratorsManagement()">Manage moderators</button>
+            <div id="community-body" class="d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-center gap-5">
+                    <button class="button btn-primary mb-5 mt-5" (click)="showEventForm()">Create Event</button>
+                    <button class="button btn-primary mb-5 mt-5" (click)="showModeratorsManagement()">Manage
+                        moderators
+                    </button>
+                </div>
+                <section id="events-section" class="d-flex flex-column w-100">
+                    @for (event of events; track $index) {
+                        <app-event-view [event]="event"></app-event-view>
+                    }
+                </section>
             </div>
-            <section id="events-section" class="d-flex flex-column w-100">
-                @for (event of events; track $index) {
-                    <app-event-view  [event]="event"></app-event-view>
-                }
-            </section>
         </div>
     </div>
 </main>
