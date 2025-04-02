@@ -80,4 +80,8 @@ export class ApiService {
     getCommunityInfo(communityId: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/community?communityID=${communityId}`);
     }
+
+    getCommunityEvents(communityID: string) {
+        return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
+    }
 }
