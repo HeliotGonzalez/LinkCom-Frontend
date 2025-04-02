@@ -36,3 +36,19 @@
 .button:hover {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
+
+.leave-button {
+    border-radius: 5px;
+    padding: 0.5rem 1.7rem;
+    background: white;
+    border: 2px solid #d31f1f;
+    color: darkred;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.leave-button:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    background: #d31f1f;
+    color: white;
+}

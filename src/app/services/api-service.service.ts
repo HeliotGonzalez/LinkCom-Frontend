@@ -4,6 +4,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
+import {ApiResponse} from "../interfaces/ApiResponse";
+import {CommunityEvent} from "../interfaces/CommunityEvent";
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +41,11 @@ export class ApiService {
     // Un usuario se une a una comunidad
     joinCommunity(userID: string, communityID: string): Observable<any> {
         return this.http.post(`${this.baseUrl}/joinCommunity`, {userID, communityID});
+    }
+
+    // Un usuario se une a una comunidad
+    joinEvent(userID: string, communityID: string, eventID: number): Observable<any> {
+        return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
     }
 
     createCommunity(data: CreateCommunityParameters) {
@@ -83,5 +90,17 @@ export class ApiService {
 
     getCommunityEvents(communityID: string) {
         return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
+    }
+
+    getUserEvents(userID: string): Observable<ApiResponse> {
+        return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
+    }
+
+    leaveEvent(userID: string, communityID: string, eventID: number) {
+        return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, communityID, eventID});
+    }
+
+    leaveCommunity(userID: string, communityID: string) {
+        return this.http.post(`${this.baseUrl}/leaveCommunity`, {userID, communityID});
     }
 }

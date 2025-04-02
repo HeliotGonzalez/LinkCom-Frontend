@@ -11,14 +11,15 @@
             <section id="announces-section" class="d-flex flex-column w-100"></section>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex align-items-center justify-content-center gap-5">
-                    <button class="button btn-primary mb-5 mt-5" (click)="showEventForm()">Create Event</button>
-                    <button class="button btn-primary mb-5 mt-5" (click)="showModeratorsManagement()">Manage
-                        moderators
-                    </button>
+                    <button class="button mb-5 mt-5" (click)="showEventForm()">Create Event</button>
+                    @if (isCreator()) {
+                        <button class="button mb-5 mt-5" (click)="showModeratorsManagement()">Manage moderators</button>
+                    }
+                    <button class="leave-button mb-5 mt-5" (click)="leaveCommunity()">Leave Community</button>
                 </div>
                 <section id="events-section" class="d-flex flex-column w-100">
                     @for (event of events; track $index) {
-                        <app-event-view [event]="event"></app-event-view>
+                        <app-event-view [event]="event" [isDisabled]="isUserInEvent(event)"></app-event-view>
                     }
                 </section>
             </div>

@@ -17,6 +17,10 @@
         </div>
     </div>
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
-        <button class="button">Join</button>
+        @if (!isDisabled) {
+            <button class="button" (click)="joinEvent()">Join</button>
+        } @else {
+            <button class="leave-button" (click)="leaveEvent()">Leave</button>
+        }
     </div>
 </article>
