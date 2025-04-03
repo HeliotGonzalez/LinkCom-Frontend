@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
 import { FeedItem } from '../interfaces/feed-item';
+import { Router } from '@angular/router';
+
 interface CalendarMonth {
   month: number;
   year: number;
@@ -19,47 +21,64 @@ interface CalendarMonth {
 })
 export class EventsCommunityCalendarComponent implements OnInit {
   currentDate: Date = new Date();
-  currentMonth: number = new Date().getMonth();  
-  currentYear: number = new Date().getFullYear(); 
-  today: number = new Date().getDate();  
+  currentMonth: number = this.currentDate.getMonth();
+  currentYear: number = this.currentDate.getFullYear();
+  today: number = this.currentDate.getDate();
   calendarMonth!: CalendarMonth;
+
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  userid:string;
-  events: FeedItem[]=[];
-  constructor(private apiService:ApiService, private authService:AuthService)
-  {
-    this.userid = this.authService.getUserUUID()
+  calendarEvents: { [day: number]: string[] } = {};
+  events: FeedItem[] = [];
+  userid: string;
+
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.userid = this.authService.getUserUUID();
   }
+
   ngOnInit(): void {
     this.generateCalendarMonth();
-    if (this.userid == 'user_id')
-      {
-        console.log("No existe usuario");
-        return;
+
+    if (this.userid === 'user_id') {
+      console.log('No existe usuario');
+      return;
+    }
+
+    this.apiService.getEvents(this.userid).subscribe({
+      next: (data: any[]) => {
+        this.events = data;
+        this.calendarEvents = {};
+
+        data.forEach(ev => {
+          const eventDate = new Date(ev.dateOfTheEvent); // Asegúrate que sea el campo correcto
+          const day = eventDate.getDate();
+          const month = eventDate.getMonth();
+          const year = eventDate.getFullYear();
+
+          if (month === this.calendarMonth.month && year === this.calendarMonth.year) {
+            if (!this.calendarEvents[day]) {
+              this.calendarEvents[day] = [];
+            }
+            this.calendarEvents[day].push(ev.title);
+          }
+        });
+
+        console.log('Eventos agrupados por día:', this.calendarEvents);
+      },
+      error: (err) => {
+        console.error('Error al obtener eventos:', err);
       }
-    this.apiService.getFeed(this.userid).subscribe({
-       next: (data: FeedItem[]) => {
-                      this.events = data.map(item => ({
-                          ...item,
-                          date: new Date(item.date)
-                      }));
-                      for (let dat of data){
-                          console.log(dat);
-                      }
-      
-                      console.log('Data recibido: ' + data);
-                  },
-                  error: (err) => {
-                      console.error('Error al obtener feed:', err);
-                  }
     });
   }
 
   generateCalendarMonth(): void {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
-    const weeks = this.generateCalendarForMonth(year, month);
     const monthName = this.getMonthName(month);
+    const weeks = this.generateCalendarForMonth(year, month);
     this.calendarMonth = { year, month, monthName, weeks };
   }
 
@@ -95,24 +114,35 @@ export class EventsCommunityCalendarComponent implements OnInit {
   }
 
   prevMonth(): void {
-    this.currentDate = new Date(
-      this.currentDate.getFullYear(),
-      this.currentDate.getMonth() - 1,
-      1
-    );
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
     this.generateCalendarMonth();
+    this.ngOnInit(); // Recargar eventos del mes nuevo
   }
 
   nextMonth(): void {
-    this.currentDate = new Date(
-      this.currentDate.getFullYear(),
-      this.currentDate.getMonth() + 1,
-      1
-    );
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
     this.generateCalendarMonth();
+    this.ngOnInit(); // Recargar eventos del mes nuevo
   }
 
-  private getMonthName(month: number): string {
+  getMonthName(month: number): string {
     return new Date(this.currentDate.getFullYear(), month).toLocaleString('en-US', { month: 'long' });
+  }
+
+  navigateToEvent(day: number | null): void {
+    if (!day) return;
+
+    const match = this.events.find(ev => {
+      const eventDate = new Date(ev.date); // o ev.date
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === this.calendarMonth.month &&
+        eventDate.getFullYear() === this.calendarMonth.year
+      );
+    });
+
+    if (match) {
+      this.router.navigate(['/event', match.id]);
+    }
   }
 }

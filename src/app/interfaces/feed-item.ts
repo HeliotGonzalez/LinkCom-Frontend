@@ -5,4 +5,5 @@ export interface FeedItem {
     title: string;
     content: string;
     date: Date;
+    dateOfTheEvent: string;
 }
