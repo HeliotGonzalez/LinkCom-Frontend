@@ -1,35 +1,32 @@
-.container
-{
-    background-color:rgba(255,255,255,0.4);
-    height: 100%;
-
-    
-}
-.card-container
-{
-    background-color: rgba(255,255,255,0.5);
-    height: 15%;
-    width: 100%;
-    opacity: 100%;
-    border-radius:25px;
-    padding-left: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-top: 25px;
+.button {
+    border-radius: 5px;
+    padding: 0.5rem 1.7rem;
+    background: white;
+    border: 2px solid #2E3E7F;
+    color: #2E3E7F;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
 }
 
-.card-container img {
-    max-height: 100%;
-    height: auto;
+.button:hover {
+    background: #2E3E7F;
+    border: 2px solid #2E3E7F;
+    color: white;
+}
 
-    display: block
-  }
-  
-  .btn-personal
-  {
-    margin-left: 10px;
-    border-radius: 25px;
-    width:150px;
+.central-card {
+    background: radial-gradient(circle, #2E3E7F, #5370E5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 
+main {
+    background: white;
+}
 
-  }
+.utils-container {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.community-cards-section {
+    background: radial-gradient(circle, #e0dfdf, white);
+}

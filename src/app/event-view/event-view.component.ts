@@ -32,7 +32,7 @@ export class EventViewComponent {
     }
 
     leaveEvent() {
-        this.apiService.leaveEvent(this.authService.getUserUUID(), this.event?.communityID!, this.event?.id!)
+        this.apiService.leaveEvent(this.authService.getUserUUID(), this.event?.id!)
             .subscribe({
                 next: res => {
                     console.log(res);
