@@ -25,6 +25,9 @@ export class ComunitiesComponent {
     protected notJoinedCommunities: Community[] = [];
     protected userCommunitiesIDs: string[] = [];
 
+    protected searchTerm: string = '';
+    private allCommunities: Community[] = [];
+
     constructor(
         private router: Router,
         private apiService: ApiService,
@@ -46,6 +49,7 @@ export class ComunitiesComponent {
                     allCommunities = res;
                     completedRequests++;
                     if (completedRequests === 2) {
+                        this.allCommunities = allCommunities;
                         this.reorderCommunities(allCommunities);
                         resolve();
                     }
@@ -61,6 +65,7 @@ export class ComunitiesComponent {
 
                     completedRequests++;
                     if (completedRequests === 2) {
+                        this.allCommunities = allCommunities;
                         this.reorderCommunities(allCommunities);
                         resolve();
                     }
@@ -70,6 +75,7 @@ export class ComunitiesComponent {
                     this.userCommunitiesIDs = [];
                     completedRequests++;
                     if (completedRequests === 2) {
+                        this.allCommunities = allCommunities;
                         this.reorderCommunities(allCommunities);
                         resolve();
                     }
@@ -84,12 +90,25 @@ export class ComunitiesComponent {
         this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
     }
 
+    filterCommunities(event?: Event): void {
+        if (event) event.preventDefault();
+
+        const term = this.searchTerm.toLowerCase().trim();
+
+        const filtered = this.allCommunities.filter(c =>
+            (String(c.name).toLowerCase().includes(term)) ||
+            (String(c.description).toLowerCase().includes(term))
+        );
+
+        this.reorderCommunities(filtered);
+    }
+
     showCommunityForm() {
         this.router.navigate(['firstStepCommunityCreation']).then();
     }
 
     joinCommunity(community: Community) {
-            console.log('Intentando unirse a la comunidad:', community);
+        console.log('Intentando unirse a la comunidad:', community);
         this.apiService.joinCommunity(this.authService.getUserUUID(), community.id).subscribe({
             next: res => {
                 if (!this.userCommunitiesIDs.includes(community.id)) {
