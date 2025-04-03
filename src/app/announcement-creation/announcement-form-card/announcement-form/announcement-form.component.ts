@@ -22,8 +22,10 @@ export class AnnouncementFormComponent {
     input.value = "";
   }
 
-  removeTag(button: HTMLButtonElement){
-    button.parentElement?.remove();
+  removeTag(event: Event, button: HTMLButtonElement, container: HTMLDivElement){
+    //TO-DO: arreglar método, el evento de formulario prevalece sobre button.remove()
+    event.preventDefault();
+    button.remove();
   }
 
 }
