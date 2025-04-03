@@ -36,7 +36,7 @@ export class ComunitiesComponent {
                 error: (err) => console.error('Error al obtener comunidades:', err),
             });
 
-            this.apiService.getUserCommunities(this.authService.getUserUUID()).subscribe({
+            this.apiService.getUserCommunities('51257452-72a3-4a6f-a6c9-79fa2af11606').subscribe({
                 next: (res) => {
                     // @ts-ignore
                     this.userCommunitiesIDs = (res['data'] || []).map(c => c['id']);
@@ -58,8 +58,9 @@ export class ComunitiesComponent {
     }
 
     joinCommunity(community: Community) {
-        this.apiService.joinCommunity(this.authService.getUserUUID(), community.id).subscribe({
+        this.apiService.joinCommunity("51257452-72a3-4a6f-a6c9-79fa2af11606", community.id).subscribe({
             next: res => {
+                this.userCommunitiesIDs.push(community.id); // Add community ID to the list
                 Swal.fire({
                     title: "Success!",
                     text: `Welcome to ${community?.name} community!`,
@@ -73,7 +74,7 @@ export class ComunitiesComponent {
                     icon: "error"
                 });
             }
-        })
+        });
     }
 
     leaveCommunity(community: Community) {
@@ -86,7 +87,7 @@ export class ComunitiesComponent {
         });
         swalWithBootstrapButtons.fire({
             title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            text: "You can always come back!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Yes, leave!",
@@ -94,15 +95,15 @@ export class ComunitiesComponent {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                this.apiService.leaveCommunity(this.authService.getUserUUID(), community?.id!)
+                this.apiService.leaveCommunity("51257452-72a3-4a6f-a6c9-79fa2af11606", community?.id!)
                     .subscribe({
                         next: res => {
+                            this.userCommunitiesIDs = this.userCommunitiesIDs.filter(id => id !== community.id); // Remove community ID from the list
                             swalWithBootstrapButtons.fire({
                                 title: "Left!",
                                 text: "You have left the community.",
                                 icon: "success"
                             });
-                            this.router.navigate(['homepage']).then(r => {});
                         },
                         error: res => {
                             swalWithBootstrapButtons.fire({
@@ -111,13 +112,13 @@ export class ComunitiesComponent {
                                 icon: "error"
                             });
                         }
-                    })
+                    });
             } else if (
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire({
                     title: "Cancelled",
-                    text: "Your still being with us!",
+                    text: "You're still with us!",
                     icon: "error"
                 });
             }
