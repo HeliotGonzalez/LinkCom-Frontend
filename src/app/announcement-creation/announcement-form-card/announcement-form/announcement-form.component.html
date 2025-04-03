@@ -1,0 +1,26 @@
+<div class="announcement-form-header">
+    <div class="announcement-form-title-container text-center">
+        <h1 class="announcement-form-title">Announcement creation</h1>
+        <h2 class="announcement-form-subtitle">Fill the basic information!</h2>
+    </div>
+</div>
+<form class="announcement-form">
+    <div class="announcement-form-inputs d-flex flex-column gap-5 flex-grow-1">
+        <div class="input-container d-flex flex-column">
+            <label for="announcement-title-input">Announcement Title *</label>
+            <input name="announcement-title" id="announcement-title-input" placeholder="What is the announcement?" required>
+        </div>
+        <div class="input-container d-flex flex-column" id="announcement-textarea-container">
+            <label for="announcement-description-textarea">Announcement Description *</label>
+            <textarea #eventLocationInput name="announcement-description" id="announcement-description-textarea" placeholder="Tell your community more" required></textarea>
+        </div>
+        <div #interestsContainer>
+            <label for="announcement-interests-input">Add interests</label>
+            <input (keydown.enter)="addTag($event, interestsInput, interestsContainer)" class="form-control" type="text" id="announcement-interests-input" placeholder="New tags" data-role="tagsinput" required #interestsInput>
+        </div>
+    </div>
+    <div class="announcement-form-footer d-flex justify-content-center">
+        <button class="form-button cancel-button">CANCEL</button>
+        <button class="form-button normal-button">PUBLISH</button>
+    </div>
+</form>
