@@ -1,39 +1,30 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<main>
-    <div class="container col-md-8">
-
+<main class="main">
+    <div class="d-flex flex-column central-card overflow-hidden w-75 h-100">
+        <div class="utils-container p-3">
             <form class="d-flex justify-content-center my-3" role="search">
-              <div class="input-group w-50">
-                <input type="text" class="form-control rounded-start-pill" placeholder="Buscar..." aria-label="Buscar">
-                <button class="btn btn-light rounded-end-pill" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-              </div>
+            <div class="input-group w-50">
+                    <input type="text" class="form-control rounded-start-pill" placeholder="Buscar..." aria-label="Buscar">
+                    <button class="btn btn-light rounded-end-pill" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
             </form>
-            <hr>
-
-  
-            <div class="text-left mb-4">
-              <p>Se encontraron <strong>5</strong> resultados</p>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="mb-0"><strong>{{ communities?.length }}</strong> communities were found!</p>
+                <button class="button" (click)="showCommunityForm()">
+                    <i class="bi bi-plus-circle"></i> Create Community
+                </button>
             </div>
-      <div class="card-container d-flex justify-content-between align-items-start">
-        <img
-          src="https://www.autopista.es/uploads/s1/11/24/74/52/estos-son-los-10-coches-que-se-vendieron-mas-caros-en-la-historia-del-automovil.jpeg"
-          class="img-fluid"
-          style="max-width: 50%; height: auto; margin-right: 1rem;"
-          alt="coche">
-        <div  style="flex-grow: 1; margin-right: 1rem;">
-          <h4>Título del contenido</h4>
-          <button class="btn btn-light btn-personal">hola</button> <button class="btn btn-light btn-personal">adios</button>
-          <p>Texto generico de una clase.</p>
         </div>
-        <div style="margin-left: 20px;">
-            <button class="btn btn-light btn-personal">unirse</button>
-            <p>1234 members</p>
-        </div>
-      </div>
-
+        <section class="d-flex community-cards-section flex-column overflow-auto p-3 flex-grow-1">
+            @for (community of communities; track $index) {
+                <app-community-card
+                        [community]="community"
+                        [isUserJoined]="userCommunitiesIDs.includes(community.id)"
+                        (joinCommunityEmitter)="joinCommunity($event)"
+                        (leaveCommunityEmitter)="leaveCommunity($event)"
+                ></app-community-card>
+            }
+        </section>
     </div>
-  </main>
-  
+</main>

@@ -1,32 +1,9 @@
-#announces-section {
-    height: 30rem;
-    background: radial-gradient(circle, #e0dfdf, white);
-}
-
-#community-body {
-    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
-}
-
-#community-image-container {
-    height: 20rem;
-}
-
-#community-image-container img {
-    width: 100%;
-    height: auto;
-}
-
-#community-name-container {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    height: 10rem;
+.community-card {
+    border-radius: 10px;
     background: white;
-    z-index: 500;
-}
-
-main {
-    overflow: auto;
-    align-items: unset;
-    justify-content: unset;
+    margin: 1rem 5rem;
+    height: 25rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .button {
