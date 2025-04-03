@@ -8,19 +8,22 @@
     <div class="announcement-form-inputs d-flex flex-column gap-5 flex-grow-1">
         <div class="input-container d-flex flex-column">
             <label for="announcement-title-input">Announcement Title *</label>
-            <input name="announcement-title" id="announcement-title-input" placeholder="What is the announcement?" required>
+            <input name="announcement-title" id="announcement-title-input" placeholder="What is the announcement?" [(ngModel)]="anData.title">
         </div>
         <div class="input-container d-flex flex-column" id="announcement-textarea-container">
             <label for="announcement-description-textarea">Announcement Description *</label>
-            <textarea #eventLocationInput name="announcement-description" id="announcement-description-textarea" placeholder="Tell your community more" required></textarea>
+            <textarea name="announcement-description" id="announcement-description-textarea" placeholder="Tell your community more" [(ngModel)]="anData.description"></textarea>
         </div>
         <div #interestsContainer>
             <label for="announcement-interests-input">Add interests</label>
-            <input (keydown.enter)="addTag($event, interestsInput, interestsContainer)" class="form-control" type="text" id="announcement-interests-input" placeholder="New tags" data-role="tagsinput" required #interestsInput>
+            <input (keydown.enter)="addTag($event, interestsInput)" class="form-control" type="text" id="announcement-interests-input" placeholder="New tags" required #interestsInput>
+            @for (tag of anData.interests; track $index) {
+                <button (click)="removeTag($index)"># {{ tag }} &times;</button>
+            }
         </div>
     </div>
     <div class="announcement-form-footer d-flex justify-content-center">
-        <button class="form-button cancel-button">CANCEL</button>
-        <button class="form-button normal-button">PUBLISH</button>
+        <button class="form-button cancel-button" (click)="exitForm($event)">CANCEL</button>
+        <button class="form-button normal-button" (click)="submitData($event)">PUBLISH</button>
     </div>
 </form>

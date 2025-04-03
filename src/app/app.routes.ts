@@ -41,5 +41,6 @@ export const routes: Routes = [
     {path: 'community', component: CommunityViewComponent},
     {path: 'communities', component: ComunitiesComponent},
     {path: 'calendar', component: EventsCommunityCalendarComponent},
-    {path: 'announcementCreation', component: AnnouncementCreationComponent}
+    {path: 'announcementCreation', component: AnnouncementCreationComponent},
+    {path: 'moderators', component: ModeratorsManagementComponent}
 ];
