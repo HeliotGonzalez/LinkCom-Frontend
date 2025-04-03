@@ -34,6 +34,10 @@ export class FirstCommunityFormComponent {
     constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
     }
 
+    cancel() {
+        this.router.navigate(['communities']);
+    }
+
     nextPage(event: Event) {
         event.preventDefault();
         if (this.name === "") {

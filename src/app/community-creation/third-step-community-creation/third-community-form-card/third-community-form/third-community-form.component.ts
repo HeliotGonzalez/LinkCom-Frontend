@@ -59,6 +59,7 @@ export class ThirdCommunityFormComponent {
                 // @ts-ignore
                 this.storeCommunityImage(res['data']['communityID']);
                 this.formService.remove("community");
+                this.router.navigate(['communities']);
             },
             error: err => Swal.fire({
                 title: "Error!",

@@ -20,37 +20,40 @@ export class CommunityViewComponent {
     protected events: CommunityEvent[] | null = [];
     protected community: Community | null = null;
     protected userEvents: CommunityEvent[] | null = [];
+    protected isUserJoined: boolean = false;
 
     constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private authService: AuthService) {
     }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
+            this.isUserJoined = params['isUserJoined'];
+            console.log(params['isUserJoined'])
+            console.log(this.isUserJoined)
             this.apiService.getCommunity(params['communityID'])
                 .subscribe({
                     next: res => {
                         // @ts-ignore
-                        this.community = res['data'] as Community;
+                        this.community = res['data'][0] as Community;
+                        // @ts-ignore
+                        this.apiService.getCommunityEvents(this.community?.id).subscribe({
+                            next: res => {
+                                // @ts-ignore
+                                for (const evt: CommunityEvent of Object.values(res['data'])) {
+                                    // @ts-ignore
+                                    this.events.push(evt);
+                                }
+                                this.apiService.getUserEvents(this.authService.getUserUUID()).subscribe(res => {
+                                    // @ts-ignore
+                                    for (const evt: CommunityEvent of Object.values(res['data'])) {
+                                        // @ts-ignore
+                                        this.userEvents.push(evt);
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
-        });
-        // @ts-ignore
-        this.apiService.getCommunityEvents(this.community?.id).subscribe(res => {
-            // @ts-ignore
-            // @ts-ignore
-            for (const evt: CommunityEvent of Object.values(res['data'])) {
-                // @ts-ignore
-                this.events.push(evt);
-            }
-        });
-        this.apiService.getUserEvents(this.authService.getUserUUID()).subscribe(res => {
-            // @ts-ignore
-            console.log(res)
-            // @ts-ignore
-            for (const evt: CommunityEvent of Object.values(res['data'])) {
-                // @ts-ignore
-                this.userEvents.push(evt);
-            }
         });
     }
 
@@ -73,7 +76,6 @@ export class CommunityViewComponent {
     }
 
     leaveCommunity() {
-
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "btn btn-success",
@@ -121,5 +123,70 @@ export class CommunityViewComponent {
         });
     }
 
-    protected readonly onabort = onabort;
+    joinCommunity() {
+        this.apiService.joinCommunity(this.authService.getUserUUID(), this.community!.id).subscribe({
+            next: res => {
+                Swal.fire({
+                    title: "Success!",
+                    text: `Welcome to ${this.community?.name} community!`,
+                    icon: "success"
+                });
+            },
+            error: res => {
+                Swal.fire({
+                    title: "An error occurred!",
+                    text: `We could not add you to ${this.community?.name} community! Please, try again later.`,
+                    icon: "error"
+                });
+            }
+        })
+    }
+
+    removeCommunity() {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, remove!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.apiService.removeCommunity(this.community?.id!)
+                    .subscribe({
+                        next: res => {
+                            swalWithBootstrapButtons.fire({
+                                title: "Removed!",
+                                text: "You have removed the community.",
+                                icon: "success"
+                            });
+                            this.router.navigate(['communities']).then(r => {});
+                        },
+                        error: res => {
+                            swalWithBootstrapButtons.fire({
+                                title: "An error occurred!",
+                                text: `We could not process your request: ${res['message']}`,
+                                icon: "error"
+                            });
+                        }
+                    })
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Your still being with us!",
+                    icon: "error"
+                });
+            }
+        });
+    }
 }
