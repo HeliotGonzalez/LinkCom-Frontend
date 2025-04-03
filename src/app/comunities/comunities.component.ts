@@ -36,7 +36,7 @@ export class ComunitiesComponent {
                 error: (err) => console.error('Error al obtener comunidades:', err),
             });
 
-            this.apiService.getUserCommunities('51257452-72a3-4a6f-a6c9-79fa2af11606').subscribe({
+            this.apiService.getUserCommunities(this.authService.getUserUUID()).subscribe({
                 next: (res) => {
                     // @ts-ignore
                     this.userCommunitiesIDs = (res['data'] || []).map(c => c['id']);
@@ -58,9 +58,9 @@ export class ComunitiesComponent {
     }
 
     joinCommunity(community: Community) {
-        this.apiService.joinCommunity("51257452-72a3-4a6f-a6c9-79fa2af11606", community.id).subscribe({
+        this.apiService.joinCommunity(this.authService.getUserUUID(), community.id).subscribe({
             next: res => {
-                this.userCommunitiesIDs.push(community.id); // Add community ID to the list
+                this.userCommunitiesIDs.push(community.id);
                 Swal.fire({
                     title: "Success!",
                     text: `Welcome to ${community?.name} community!`,
@@ -95,10 +95,10 @@ export class ComunitiesComponent {
             reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                this.apiService.leaveCommunity("51257452-72a3-4a6f-a6c9-79fa2af11606", community?.id!)
+                this.apiService.leaveCommunity(this.authService.getUserUUID(), community?.id!)
                     .subscribe({
                         next: res => {
-                            this.userCommunitiesIDs = this.userCommunitiesIDs.filter(id => id !== community.id); // Remove community ID from the list
+                            this.userCommunitiesIDs = this.userCommunitiesIDs.filter(id => id !== community.id);
                             swalWithBootstrapButtons.fire({
                                 title: "Left!",
                                 text: "You have left the community.",
