@@ -62,6 +62,11 @@ export class CommunityViewComponent {
         });
     }
 
+    protected showAnnouncementForm() {
+        this.router.navigate(["/announcementCreation"], {queryParams: {communityID: this.community?.id, communityName: this.community?.name, userID: this.community?.userID}}).then(r => {
+        });
+    }
+
     showModeratorsManagement() {
         this.router.navigate(["/moderatorsManagement"], {queryParams: {communityID: this.community?.id}}).then(r => {
         });

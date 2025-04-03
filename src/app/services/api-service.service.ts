@@ -16,6 +16,7 @@ export class ApiService {
     constructor(private http: HttpClient) {
     }
 
+    
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
@@ -121,4 +122,10 @@ export class ApiService {
     removeCommunity(communityID: string) {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
+
+    createAnnouncement(title: string, body: string, communityID: string, userID: string, communityName: string, publisherID: string) {
+        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
+    }
+
+
 }

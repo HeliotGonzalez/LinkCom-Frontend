@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import { ApiService } from '../../../services/api-service.service';
 import { FeedItem } from '../../../interfaces/feed-item';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 
@@ -15,26 +15,31 @@ import { FormsModule } from '@angular/forms';
 })
 export class AnnouncementFormComponent implements OnInit{
 
-  anData = {
-    title: '',
-    description: '',
-    interests: [] as string[]
-  }
-
-
-  private userId;
-
+  protected title = '';
+  protected body = '';
+  private communityID = '';
+  private userID = '';
+  private communityName = '';
+  private publisherID = '';
+  
   constructor (
     private router: Router,
+    private baseRoute: ActivatedRoute,
     private apiService: ApiService, 
-    private authService: AuthService,
+    private authService: AuthService
   ) {
-    this.userId = authService.getUserUUID();
+    this.publisherID = this.authService.getUserUUID();
   }
 
   ngOnInit(): void {
-    
-    if (this.userId === 'user_id') {
+    this.baseRoute.queryParams.subscribe(params => {
+      this.communityID = params["communityID"];
+      this.communityName = params["communityName"];
+      this.userID = params["userID"];
+    });
+
+
+    if (this.userID === 'user_id') {
       console.error("Usuario no autenticado.")
       Swal.fire({
         icon: 'error',
@@ -55,36 +60,14 @@ export class AnnouncementFormComponent implements OnInit{
     input.focus();
   }
 
-  /*
-  addTag(event: Event, input: HTMLInputElement, container: HTMLDivElement){
-    this.setFocus(event, input);
-    const tag = document.createElement("button");
-    tag.classList.add("tag");
-    tag.innerHTML = `<button (click)="removeTag($event, this, ${container})">#${input.value} &times;</button>`;
-    container.append(tag);
-    input.value = "";
-  }
-  */
-
   addTag(event: Event, input: HTMLInputElement) {
     const value = input.value.trim();
-
-    if (value) {
-      this.anData.interests.push(value);
-      input.value = '';
-    }
-
     event.preventDefault();
   }
 
-  removeTag(index: number){
-    this.anData.interests.splice(index, 1)
-  }
-
   resetForm(){
-    this.anData.title = '';
-    this.anData.description = '';
-    this.anData.interests = [];
+    this.title = '';
+    this.body = '';
   }
 
   exitForm(event: Event) {
@@ -94,16 +77,32 @@ export class AnnouncementFormComponent implements OnInit{
 
   submitData(event: Event){
     event.preventDefault();
-    if (this.anData.title.trim() === '' || this.anData.description.trim() === '') {
+    if (this.title.trim() === '' || this.body.trim() === '') {
       Swal.fire('Error', 'Title and description are required!', 'error');
       return;
     }
 
+    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.userID, this.communityName, this.publisherID).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        Swal.fire({
+          title: "Operation success",
+          icon: "success",
+          confirmButtonText: "Continue"
+        });
+        this.router.navigate(["/community"]);
+      },
+      error: (err: any) => {
+        Swal.fire({
+          title: "Operation error",
+          text: "Database connection error",
+          icon: "error",
+          confirmButtonText: "Continue"
+        });
+        console.log(err);
+      }
+    });
 
-    console.log('Announcement Submitted:', this.anData);
-    Swal.fire('Success', 'Announcement created successfully!', 'success');
-
-    // Reset form
   }
 
 }

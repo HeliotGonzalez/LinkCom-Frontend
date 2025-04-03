@@ -8,18 +8,11 @@
     <div class="announcement-form-inputs d-flex flex-column gap-5 flex-grow-1">
         <div class="input-container d-flex flex-column">
             <label for="announcement-title-input">Announcement Title *</label>
-            <input name="announcement-title" id="announcement-title-input" placeholder="What is the announcement?" [(ngModel)]="anData.title">
+            <input name="announcement-title" id="announcement-title-input" placeholder="What is the announcement?" [(ngModel)]="title">
         </div>
         <div class="input-container d-flex flex-column" id="announcement-textarea-container">
             <label for="announcement-description-textarea">Announcement Description *</label>
-            <textarea name="announcement-description" id="announcement-description-textarea" placeholder="Tell your community more" [(ngModel)]="anData.description"></textarea>
-        </div>
-        <div #interestsContainer>
-            <label for="announcement-interests-input">Add interests</label>
-            <input (keydown.enter)="addTag($event, interestsInput)" class="form-control" type="text" id="announcement-interests-input" placeholder="New tags" required #interestsInput>
-            @for (tag of anData.interests; track $index) {
-                <button (click)="removeTag($index)"># {{ tag }} &times;</button>
-            }
+            <textarea name="announcement-description" id="announcement-description-textarea" placeholder="Tell your community more" [(ngModel)]="body"></textarea>
         </div>
     </div>
     <div class="announcement-form-footer d-flex justify-content-center">
