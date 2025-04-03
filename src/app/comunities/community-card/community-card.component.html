@@ -27,10 +27,12 @@
       <div class="community-card-content-footer d-flex align-items-center h-25 justify-content-center p-2 gap-2">
         @if (isUserJoined) {
           <button class="leave-button" (click)="leaveCommunity()">Leave</button>
+          <button class="button" (click)="viewCommunity()">View</button>
         } @else {
           <button class="button" (click)="joinCommunity()">Join</button>
+          
         }
-        <button class="button" (click)="viewCommunity()">View</button>
+       
       </div>
     </div>
   </article>
