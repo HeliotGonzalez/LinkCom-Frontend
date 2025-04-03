@@ -7,9 +7,14 @@ import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../interfaces/CommunityEvent";
 
+interface GetUserCommunitiesResponse {
+    data: { id: string }[];
+  }
+  
 @Injectable({
     providedIn: 'root'
 })
+
 export class ApiService {
     private baseUrl = 'http://localhost:3000'; // Ajusta si tu backend corre en otro host/puerto
 
@@ -114,8 +119,8 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communitiesEventsExcludingUser?userID=${userID}`);
     }
 
-    getUserCommunities(userID: string) {
-        return this.http.get(`${this.baseUrl}/userCommunities?userID=${userID}`);
+    getUserCommunities(userID: string): Observable<GetUserCommunitiesResponse> {
+        return this.http.get<GetUserCommunitiesResponse>(`${this.baseUrl}/userCommunities?userID=${userID}`);
     }
 
     removeCommunity(communityID: string) {
