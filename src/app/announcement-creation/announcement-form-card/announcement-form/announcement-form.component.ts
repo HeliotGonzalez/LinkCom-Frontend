@@ -90,7 +90,7 @@ export class AnnouncementFormComponent implements OnInit{
           icon: "success",
           confirmButtonText: "Continue"
         });
-        this.router.navigate(["/community"]);
+        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
       },
       error: (err: any) => {
         Swal.fire({
