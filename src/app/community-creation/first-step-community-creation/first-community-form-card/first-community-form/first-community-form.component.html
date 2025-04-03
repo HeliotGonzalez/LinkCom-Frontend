@@ -18,16 +18,18 @@
         <div class="input-container d-flex flex-column" id="interests-input-container">
             <label for="community-interests-input">Community interests</label>
             <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" placeholder="Add your interests!">
-            <div *ngIf="interestsCoincidences.length" id="interests-suggestions">
-                <ng-container *ngFor="let interest of interestsCoincidences">
-                    <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
-                </ng-container>
-            </div>
+            @if (interestsCoincidences.length) {
+                <div id="interests-suggestions">
+                    @for (interest of interestsCoincidences; track $index) {
+                        <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
+                    }
+                </div>
+            }
             <div id="interests-container" class="pt-5">
                 <section id="interests-section" class="d-flex h-100 overflow-scroll p-2 gap-2 flex-wrap">
-                    <ng-container *ngFor="let interest of interests">
+                    @for (interest of interests; track $index) {
                         <app-interest-tag [interestName]="interest" (removeInterestEmitter)="removeInterest($event)"></app-interest-tag>
-                    </ng-container>
+                    }
                 </section>
             </div>
         </div>

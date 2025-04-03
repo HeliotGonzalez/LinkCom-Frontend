@@ -1,0 +1,30 @@
+<main class="calendar-container">
+  <div class="navigation">
+    <button (click)="prevMonth()" class="btn btn-light">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <span class="mx-3 h4">{{ calendarMonth.year }} - {{ calendarMonth.month + 1 }}</span>
+    <button (click)="nextMonth()" class="btn btn-light">
+      <i class="bi bi-arrow-right"></i>
+    </button>
+  </div>
+
+  <div class="calendar-month">
+    <table class="table table-bordered text-center">
+      <thead class="table-light">
+        <tr>
+          <th *ngFor="let dayName of dayNames">{{ dayName }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let week of calendarMonth.weeks">
+          <td *ngFor="let day of week">
+            <span [ngClass]="{'today': day === today && calendarMonth.month === currentDate.getMonth()}">
+              {{ day ? day : '' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
