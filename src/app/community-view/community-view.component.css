@@ -24,18 +24,9 @@
 }
 
 main {
-    all: unset;
-    background: radial-gradient(circle, #2E3E7F, #5370E5);
-}
-
-.main {
-    height: 100vh;
-    overflow-y: auto;
-}
-
-.main > div {
-    flex-grow: 1;
-    width: 100%;
+    overflow: auto;
+    align-items: unset;
+    justify-content: unset;
 }
 
 .button {

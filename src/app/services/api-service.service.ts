@@ -66,6 +66,7 @@ export class ApiService {
     }
 
     getCommunities(): Observable<any> {
+        console.log(`${this.baseUrl}/communities`)
         return this.http.get(`${this.baseUrl}/communities`);
     }
 
@@ -97,8 +98,8 @@ export class ApiService {
         return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
     }
 
-    leaveEvent(userID: string, communityID: string, eventID: number) {
-        return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, communityID, eventID});
+    leaveEvent(userID: string, eventID: number) {
+        return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, eventID});
     }
 
     leaveCommunity(userID: string, communityID: string) {
@@ -106,10 +107,18 @@ export class ApiService {
     }
 
     getCommunity(communityID: string) {
-        return this.http.get(`${this.baseUrl}/getCommunity?communityID=${communityID}`);
+        return this.http.get(`${this.baseUrl}/community?communityID=${communityID}`);
     }
 
     getCommunitiesEventsExcludingUser(userID: string) {
         return this.http.get(`${this.baseUrl}/communitiesEventsExcludingUser?userID=${userID}`);
+    }
+
+    getUserCommunities(userID: string) {
+        return this.http.get(`${this.baseUrl}/userCommunities?userID=${userID}`);
+    }
+
+    removeCommunity(communityID: string) {
+        return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
 }
