@@ -86,4 +86,9 @@
   .event-dot:hover {
     transform: scale(1.2);
   }
+
+  main {
+    overflow: auto;
+    background: unset;
+  }
   
