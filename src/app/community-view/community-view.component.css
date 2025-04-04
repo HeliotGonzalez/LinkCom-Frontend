@@ -1,4 +1,4 @@
-#announces-section {
+#announces-section-container {
     height: 30rem;
     background: radial-gradient(circle, #e0dfdf, white);
 }
@@ -59,4 +59,8 @@ main {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
     background: #d31f1f;
     color: white;
+}
+
+#announces-section {
+    padding-bottom: 2rem;
 }

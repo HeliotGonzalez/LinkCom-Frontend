@@ -79,7 +79,7 @@ export class AnnouncementsListComponent implements OnInit{
 
   exitPage(event: Event) {
     event.preventDefault();
-    this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
+    this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}});
   }
 
 

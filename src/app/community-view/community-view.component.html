@@ -8,9 +8,24 @@
             <h1 class="fw-bold"> {{ community?.name }}'s Community </h1>
         </div>
         <div class="d-flex flex-column bg-white w-50">
-            <section id="announces-section" class="d-flex flex-column w-100">
-                <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!</button>
-            </section>
+            <div id="announces-section-container" class="d-flex flex-column w-100">
+                <section id="announces-section" class="d-flex flex-column align-items-center overflow-scroll">
+                    <div class="d-flex gap-3">
+                        <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!</button>
+                        <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
+                    </div>
+                    @if (announcements.length === 0) {
+                        <p>There is no news yet</p>
+                    } @else {
+                        @for (newAnnounce of announcements; track newAnnounce) {
+                            <app-announcement-card
+                                    [announce]="newAnnounce"
+                                    [imgPath]="this.community!.imagePath"
+                            ></app-announcement-card>
+                        }
+                    }
+                </section>
+            </div>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex flex-column align-items-center justify-content-center">
                     <div class="d-flex gap-5">
@@ -20,7 +35,6 @@
                         } @else {
                             <button class="button mb-5 mt-5" (click)="joinCommunity()">Join Community</button>
                         }
-                        <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
                     </div>
                     <div class="d-flex gap-5">
                         @if (isCreator()) {

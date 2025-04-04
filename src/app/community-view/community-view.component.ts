@@ -6,11 +6,14 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
 import Swal from "sweetalert2";
+import {Announce} from "../interfaces/announce";
+import {AnnouncementCardComponent} from "../announcements-list/announcement-card/announcement-card.component";
 
 @Component({
     selector: 'app-community-view',
     imports: [
-        EventViewComponent
+        EventViewComponent,
+        AnnouncementCardComponent
     ],
     templateUrl: './community-view.component.html',
     standalone: true,
@@ -21,11 +24,37 @@ export class CommunityViewComponent {
     protected community: Community | null = null;
     protected userEvents: CommunityEvent[] | null = [];
     protected isUserJoined: boolean = false;
+    protected announcements: Announce[] = [];
 
     constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private authService: AuthService) {
     }
 
-    ngOnInit() {
+    async fetchAnnouncements() {
+        return new Promise<void>((resolve, reject) => {
+            if(this.community?.id) {
+                reject("CommunityID missing.");
+                return;
+            }
+
+            this.apiService.getAnnouncements(this.community!.id).subscribe({
+                next: (res) => {
+                    if (res) {
+                        console.log(res);
+                        this.announcements = res.data;
+                        resolve();
+                    } else {
+                        reject("No data received");
+                    }
+                },
+                error: (err) => {
+                    console.error("Error fetching announcements", err);
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    async ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.isUserJoined = params['isUserJoined'];
             console.log(params['isUserJoined'])
@@ -35,6 +64,12 @@ export class CommunityViewComponent {
                     next: res => {
                         // @ts-ignore
                         this.community = res['data'][0] as Community;
+                        // @ts-ignore
+                        this.apiService.getAnnouncements(res['data'][0]['id']).subscribe({
+                            next: res => {
+                                this.announcements = res.data.slice(0, 3);
+                            }
+                        });
                         // @ts-ignore
                         this.apiService.getCommunityEvents(this.community?.id).subscribe({
                             next: res => {
