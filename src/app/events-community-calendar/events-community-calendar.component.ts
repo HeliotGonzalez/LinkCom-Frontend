@@ -1,42 +1,87 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ApiService } from '../services/api-service.service';
+import { AuthService } from '../services/auth.service';
+import { FeedItem } from '../interfaces/feed-item';
+import { Router } from '@angular/router';
 
 interface CalendarMonth {
-  month: number; // 0 = Enero, 11 = Diciembre
+  month: number;
   year: number;
+  monthName: string;
   weeks: (number | null)[][];
 }
 
 @Component({
   selector: 'app-events-community-calendar',
-  standalone: true,  // si usas componentes standalone
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './events-community-calendar.component.html',
   styleUrls: ['./events-community-calendar.component.css']
 })
 export class EventsCommunityCalendarComponent implements OnInit {
-  // Fecha base para generar el calendario (se actualizará al navegar)
   currentDate: Date = new Date();
-  // Nombres de los días
-  dayNames: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-  // Día actual para resaltar (del mes actual)
-  today: number = new Date().getDate();
-  // Objeto que contendrá el mes actual a mostrar
+  currentMonth: number = this.currentDate.getMonth();
+  currentYear: number = this.currentDate.getFullYear();
+  today: number = this.currentDate.getDate();
   calendarMonth!: CalendarMonth;
+
+  dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  calendarEvents: { [day: number]: string[] } = {};
+  events: FeedItem[] = [];
+  userid: string;
+
+  constructor(
+    private apiService: ApiService,
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.userid = this.authService.getUserUUID();
+  }
 
   ngOnInit(): void {
     this.generateCalendarMonth();
+
+    if (this.userid === 'user_id') {
+      console.log('No existe usuario');
+      return;
+    }
+
+    this.apiService.getEvents(this.userid).subscribe({
+      next: (data: any[]) => {
+        this.events = data;
+        this.calendarEvents = {};
+
+        data.forEach(ev => {
+          const eventDate = new Date(ev.dateOfTheEvent); // Asegúrate que sea el campo correcto
+          const day = eventDate.getDate();
+          const month = eventDate.getMonth();
+          const year = eventDate.getFullYear();
+
+          if (month === this.calendarMonth.month && year === this.calendarMonth.year) {
+            if (!this.calendarEvents[day]) {
+              this.calendarEvents[day] = [];
+            }
+            this.calendarEvents[day].push(ev.title);
+          }
+        });
+
+        console.log('Eventos agrupados por día:', this.calendarEvents);
+      },
+      error: (err) => {
+        console.error('Error al obtener eventos:', err);
+      }
+    });
   }
 
-  // Genera la estructura para el mes actual basado en currentDate
   generateCalendarMonth(): void {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
+    const monthName = this.getMonthName(month);
     const weeks = this.generateCalendarForMonth(year, month);
-    this.calendarMonth = { year, month, weeks };
+    this.calendarMonth = { year, month, monthName, weeks };
   }
 
-  // Genera la estructura (matriz de semanas) para un mes específico
   generateCalendarForMonth(year: number, month: number): (number | null)[][] {
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
@@ -46,12 +91,10 @@ export class EventsCommunityCalendarComponent implements OnInit {
     const weeks: (number | null)[][] = [];
     let week: (number | null)[] = [];
 
-    // Agregar celdas vacías hasta el primer día del mes
     for (let i = 0; i < startDay; i++) {
       week.push(null);
     }
 
-    // Llenar con los días del mes
     for (let day = 1; day <= totalDays; day++) {
       week.push(day);
       if (week.length === 7) {
@@ -60,33 +103,46 @@ export class EventsCommunityCalendarComponent implements OnInit {
       }
     }
 
-    // Completar la última semana con celdas vacías
     if (week.length > 0) {
       while (week.length < 7) {
         week.push(null);
       }
       weeks.push(week);
     }
+
     return weeks;
   }
 
-  // Navega al mes anterior y actualiza el calendario
   prevMonth(): void {
-    this.currentDate = new Date(
-      this.currentDate.getFullYear(),
-      this.currentDate.getMonth() - 1,
-      1
-    );
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
     this.generateCalendarMonth();
+    this.ngOnInit(); // Recargar eventos del mes nuevo
   }
 
-  // Navega al mes siguiente y actualiza el calendario
   nextMonth(): void {
-    this.currentDate = new Date(
-      this.currentDate.getFullYear(),
-      this.currentDate.getMonth() + 1,
-      1
-    );
+    this.currentDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
     this.generateCalendarMonth();
+    this.ngOnInit(); // Recargar eventos del mes nuevo
+  }
+
+  getMonthName(month: number): string {
+    return new Date(this.currentDate.getFullYear(), month).toLocaleString('en-US', { month: 'long' });
+  }
+
+  navigateToEvent(day: number | null): void {
+    if (!day) return;
+
+    const match = this.events.find(ev => {
+      const eventDate = new Date(ev.date); // o ev.date
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === this.calendarMonth.month &&
+        eventDate.getFullYear() === this.calendarMonth.year
+      );
+    });
+
+    if (match) {
+      this.router.navigate(['/event', match.id]);
+    }
   }
 }
