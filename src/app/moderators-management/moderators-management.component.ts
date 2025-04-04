@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {UserCardComponent} from './user-card/user-card.component';
 import {FormsModule} from '@angular/forms';
 import {ApiService} from '../services/api-service.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-moderators-management',
@@ -18,7 +18,7 @@ export class ModeratorsManagementComponent {
     members: any[] = [];
     communityID: string = '';
 
-    constructor(private route: ActivatedRoute, private apiService: ApiService) {
+    constructor(private route: ActivatedRoute, private apiService: ApiService, private router: Router) {
     }
 
     fetchUsers(): void {
@@ -75,4 +75,10 @@ export class ModeratorsManagementComponent {
             });
         }
     }
+
+    exitPage(event: Event) {
+        event.preventDefault();
+        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}});
+    }
+
 }
