@@ -94,8 +94,8 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
     }
 
-    getUserEvents(userID: string): Observable<ApiResponse> {
-        return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
+    getUserEvents(userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.baseUrl}/userEvents?userID=${userID}`);
     }
 
     leaveEvent(userID: string, eventID: number) {

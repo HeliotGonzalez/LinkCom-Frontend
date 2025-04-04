@@ -6,6 +6,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
 import Swal from "sweetalert2";
+import {combineLatest, of, switchMap, tap} from "rxjs";
+import {ApiResponse} from "../interfaces/ApiResponse";
 
 @Component({
     selector: 'app-community-view',
@@ -17,43 +19,39 @@ import Swal from "sweetalert2";
     styleUrl: './community-view.component.css'
 })
 export class CommunityViewComponent {
-    protected events: CommunityEvent[] | null = [];
+    protected events: CommunityEvent[] = [];
     protected community: Community | null = null;
-    protected userEvents: CommunityEvent[] | null = [];
+    protected userEvents: CommunityEvent[] = [];
     protected isUserJoined: boolean = false;
 
     constructor(private router: Router, private route: ActivatedRoute, private apiService: ApiService, private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            this.isUserJoined = params['isUserJoined'];
-            console.log(params['isUserJoined'])
-            console.log(this.isUserJoined)
-            this.apiService.getCommunity(params['communityID'])
-                .subscribe({
-                    next: res => {
-                        // @ts-ignore
-                        this.community = res['data'][0] as Community;
-                        // @ts-ignore
-                        this.apiService.getCommunityEvents(this.community?.id).subscribe({
-                            next: res => {
-                                // @ts-ignore
-                                for (const evt: CommunityEvent of Object.values(res['data'])) {
-                                    // @ts-ignore
-                                    this.events.push(evt);
-                                }
-                                this.apiService.getUserEvents(this.authService.getUserUUID()).subscribe(res => {
-                                    // @ts-ignore
-                                    for (const evt: CommunityEvent of Object.values(res['data'])) {
-                                        // @ts-ignore
-                                        this.userEvents.push(evt);
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
+        this.route.queryParams.pipe(
+            tap(params => {
+                this.isUserJoined = params['isUserJoined'];
+            }),
+            switchMap(() => {
+                if (!this.community) return of([null, null]);
+                return combineLatest([
+                    this.apiService.getCommunityEvents(this.community.id),
+                    this.apiService.getUserEvents(this.authService.getUserUUID())
+                ]);
+            })
+        ).subscribe(([communityEvents, userEvents]) => {
+            if (communityEvents) {
+                const communityEventsData = (communityEvents as ApiResponse<CommunityEvent>).data
+                for (const evt of Object.values(communityEventsData ?? {})) {
+                    this.events.push(evt as CommunityEvent);
+                }
+            }
+            if (userEvents) {
+                const userEventsData = (userEvents as ApiResponse<CommunityEvent>).data;
+                for (const evt of Object.values(userEventsData ?? {})) {
+                    this.userEvents.push(evt as CommunityEvent);
+                }
+            }
         });
     }
 
@@ -101,7 +99,8 @@ export class CommunityViewComponent {
                                 text: "You have left the community.",
                                 icon: "success"
                             });
-                            this.router.navigate(['homepage']).then(r => {});
+                            this.router.navigate(['homepage']).then(r => {
+                            });
                         },
                         error: res => {
                             swalWithBootstrapButtons.fire({
@@ -168,7 +167,8 @@ export class CommunityViewComponent {
                                 text: "You have removed the community.",
                                 icon: "success"
                             });
-                            this.router.navigate(['communities']).then(r => {});
+                            this.router.navigate(['communities']).then(r => {
+                            });
                         },
                         error: res => {
                             swalWithBootstrapButtons.fire({
