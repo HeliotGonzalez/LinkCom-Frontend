@@ -9,6 +9,7 @@
   }
 
   main {
-      overflow: auto;
-      background: unset;
+    align-items: unset;
+    overflow: auto;
+    background: unset;
   }
