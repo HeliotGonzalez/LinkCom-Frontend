@@ -4,41 +4,41 @@
   <div class="form-card">
     <div class="register-form-header">
       <div class="register-form-title-container text-center">
-        <h1 class="register-form-title">Create una cuenta</h1>
+        <h1 class="register-form-title">Create an account</h1>
       </div>
     </div>
   
     <form class="register-form" (ngSubmit)="onSubmit()">
       <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
         <div class="input-container d-flex flex-column">
-          <label for="username-input">Nombre de usuario *</label>
-          <input [(ngModel)]="username" name="username" id="username-input" placeholder="Elige un nombre de usuario único" required>
+          <label for="username-input">Username *</label>
+          <input [(ngModel)]="username" name="username" id="username-input" placeholder="Select a unique username" required>
         </div>
         <div class="input-container d-flex flex-column">
-          <label for="email-input">Correo electrónico *</label>
-          <input [(ngModel)]="email" name="email" id="email-input" placeholder="Introduce un correo válido" type="email" required>
+          <label for="email-input">Email*</label>
+          <input [(ngModel)]="email" name="email" id="email-input" placeholder="Introduce a valid email" type="email" required>
         </div>
         <div class="input-container d-flex flex-column">
-          <label for="description-input">Descripción *</label>
-          <input [(ngModel)]="description" name="description"  placeholder="Escribe una pequeña descripción" required>
+          <label for="description-input">Description *</label>
+          <input [(ngModel)]="description" name="description"  placeholder="Talk about yourself" required>
         </div>
         <div class="input-container d-flex flex-column">
-          <label for="password-input">Contraseña *</label>
-          <input [(ngModel)]="password" name="password" id="password-input" placeholder="Introduce una contraseña" type="password" required>
+          <label for="password-input">Password *</label>
+          <input [(ngModel)]="password" name="password" id="password-input" placeholder="Create a secure password" type="password" required>
         </div>
         <div class="input-container d-flex flex-column">
-          <label for="confirm-password-input">Confirmar contraseña *</label>
-          <input [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirma tu contraseña" type="password" required>
+          <label for="confirm-password-input">Confirm password *</label>
+          <input [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirm your password" type="password" required>
         </div>
       </div>
   
       <div class="register-form-footer d-flex justify-content-center gap-2">
-        <button type="submit" class="form-button normal-button">Registrarse</button>
+        <button type="submit" class="form-button normal-button">Register</button>
       </div>
     </form>
   
     <div class="register-form-footer text-center">
-      <p>¿Ya tienes una cuenta? <br><a href="/login" class="login-link">Ir al inicio de sesión </a></p>
+      <p>Already have an account?<br><a href="/login" class="login-link">Go to Login</a></p>
     </div>
   </div>  
 </main>
