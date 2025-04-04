@@ -7,10 +7,12 @@
     height: 100%;
     align-items: center;
     overflow: hidden;
+    overflow-y: scroll;
 }
 
 .announcement-list-button {
     position: absolute;
+    position: sticky;
     bottom: 5%;
     background: #2E3E7F;
     border: 2px solid #2E3E7F;
