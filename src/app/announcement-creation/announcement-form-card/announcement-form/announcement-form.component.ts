@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ApiService } from '../../../services/api-service.service';
-import { FeedItem } from '../../../interfaces/feed-item';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -47,7 +46,7 @@ export class AnnouncementFormComponent implements OnInit{
         text: 'User not authenticated',
         confirmButtonText: 'Go back'
       });
-      this.router.navigate(["/communities"]);
+      this.router.navigate([""]);
       return;
     }
 

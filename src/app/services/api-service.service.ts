@@ -132,5 +132,9 @@ export class ApiService {
         return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
     }
 
+    getAnnouncements(communityID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
+    }
+
 
 }

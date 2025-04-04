@@ -1,0 +1,20 @@
+.announcements-list {
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    background: rgba(217, 217, 217, 0.25);
+    width: 1000px;
+    height: 100%;
+    align-items: center;
+    overflow: hidden;
+}
+
+.announcement-list-button {
+    position: absolute;
+    bottom: 5%;
+    background: #2E3E7F;
+    border: 2px solid #2E3E7F;
+    color: white;
+    border-radius: 5px;
+    padding: 0.5rem 1.7rem;
+}
