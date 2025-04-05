@@ -1,27 +1,19 @@
-import {ApiService} from "../services/api-service.service";
-import Swal from "sweetalert2";
-import {Community} from "../interfaces/community";
+import {AlertService} from "../services/alert.service";
+import {ApiResponse} from "../interfaces/ApiResponse";
+import {Observable} from "rxjs";
 
 export class ApiServiceTranslator {
-    constructor(private apiService: ApiService) {
+    constructor(private alertService: AlertService) {
     }
 
-    joinCommunity(community: Community, userID: string) {
-        this.apiService.joinCommunity(userID, community.id).subscribe({
-            next: () => {
-                Swal.fire({
-                    title: "Success!",
-                    text: `Welcome to ${community.name} community!`,
-                    icon: "success"
-                });
+    public dualResponse(response: Observable<any>, successMessage: string, errorMessage: string) {
+        response.subscribe({
+            next: res => {
+                this.alertService.success(successMessage);
             },
-            error: () => {
-                Swal.fire({
-                    title: "An error occurred!",
-                    text: `We could not add you to ${community.name} community! Please, try again later.`,
-                    icon: "error"
-                });
+            error: res => {
+                this.alertService.error(`${errorMessage}: ${(res as ApiResponse<any>).message}`);
             }
-        });
+        })
     }
 }

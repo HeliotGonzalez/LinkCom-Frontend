@@ -4,6 +4,7 @@ import {ApiResponse} from "../../interfaces/ApiResponse";
 import {Community} from "../../interfaces/community";
 import {User} from "../../model/User";
 import {Announce} from "../../interfaces/announce";
+import {CommunityInterest} from "../../interfaces/community-interest";
 import {CommunityRole} from "../../model/CommunityRole";
 import {CommunityUser} from "../../model/CommunityUser";
 
