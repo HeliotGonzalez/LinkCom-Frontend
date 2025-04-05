@@ -5,17 +5,23 @@ import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../model/CommunityEvent";
 
+interface GetUserCommunitiesResponse {
+    data: { id: string }[];
+  }
+  
 @Injectable({
     providedIn: 'root'
 })
+
 export class ApiService {
     private baseUrl = 'http://localhost:3000'; // Ajusta si tu backend corre en otro host/puerto
 
     constructor(private http: HttpClient) {
     }
 
+    
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
@@ -114,11 +120,21 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communitiesEventsExcludingUser?userID=${userID}`);
     }
 
-    getUserCommunities(userID: string) {
-        return this.http.get(`${this.baseUrl}/userCommunities?userID=${userID}`);
+    getUserCommunities(userID: string): Observable<GetUserCommunitiesResponse> {
+        return this.http.get<GetUserCommunitiesResponse>(`${this.baseUrl}/userCommunities?userID=${userID}`);
     }
 
     removeCommunity(communityID: string) {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
+
+    createAnnouncement(title: string, body: string, communityID: string, userID: string, communityName: string, publisherID: string) {
+        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
+    }
+
+    getAnnouncements(communityID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
+    }
+
+
 }

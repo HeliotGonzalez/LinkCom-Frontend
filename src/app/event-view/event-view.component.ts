@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../model/CommunityEvent";
 import {ImageDialogComponent} from "../image-dialog/image-dialog.component";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";

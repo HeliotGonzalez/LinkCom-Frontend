@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../model/CommunityEvent";
 
 
 @Component({
