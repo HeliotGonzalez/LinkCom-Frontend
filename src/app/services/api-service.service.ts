@@ -46,7 +46,7 @@ export class ApiService {
 
     // Un usuario se une a una comunidad
     joinCommunity(userID: string, communityID: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinCommunity`, {userID, communityID});
+        return this.http.post(`${this.baseUrl}/communityUser/joinCommunity`, {userID, communityID});
     }
 
     // Un usuario se une a una comunidad
