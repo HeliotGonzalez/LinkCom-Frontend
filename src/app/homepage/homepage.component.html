@@ -36,45 +36,38 @@
             <div class="calendar">
                 <h3 class="mb-3">Calendar</h3>
                 <div class="card">
-                    <div class="card-body p-0">
-                        <table class="table table-bordered mb-0 text-center">
-                            <thead class="table-light">
-                            <tr>
-                                @for (day of dayNames; track day) {
-                                    <th>{{ day }}</th>
-                                }
-                            </tr>
-                            </thead>
-                            <tbody>
-                                @for (week of calendarWeeks; track week) {
-                                    <tr>
-                                        @for (day of week; track day) {
-                                            <td>
-                                                @if (day) {
-                                                    <div class="day-container">
-                            <span class="day-content {{ day === todayDay ? 'today' : '' }}">
-                              {{ day }}
-                            </span>
-                                                        @if (calendarEvents[day]) {
-                                                            <div class="event-dots">
-                                                                @for (event of calendarEvents[day]; track event) {
-                                                                    <span class="event-dot" title="{{ event }}"></span>
-                                                                }
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                } @else {
-                                                    <!-- Celda vacía -->
-                                                }
-                                            </td>
-                                        }
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                  <div class="card-body p-0">
+                    <table class="table table-bordered mb-0 text-center">
+                      <thead class="table-light">
+                        <tr>
+                          <th *ngFor="let day of dayNames">{{ day }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let week of calendarWeeks">
+                          <td *ngFor="let day of week">
+                            <ng-container *ngIf="day; else emptyCell">
+                              <div class="day-container">
+                                <span class="day-content" [ngClass]="{'today': day === todayDay}">
+                                  {{ day }}
+                                </span>
+                                <ng-container *ngIf="calendarEvents[day]">
+                                  <div class="event-dots">
+                                    <span *ngFor="let event of calendarEvents[day]" class="event-dot" [attr.title]="event"></span>
+                                  </div>
+                                </ng-container>
+                              </div>
+                            </ng-container>
+                            <ng-template #emptyCell>
+                              <!-- Celda vacía -->
+                            </ng-template>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-            </div>
+              </div>              
         </div>
     </div>
 </div>
