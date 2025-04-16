@@ -4,6 +4,6 @@ export interface CommunityEvent {
     description: string;
     communityID: string;
     userID: string;
-    dateOfTheEvent: Date;
+    date: Date;
     imagePath: string;
 }

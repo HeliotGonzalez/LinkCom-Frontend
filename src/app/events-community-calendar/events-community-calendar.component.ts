@@ -53,7 +53,7 @@ export class EventsCommunityCalendarComponent implements OnInit {
         this.calendarEvents = {};
 
         data.forEach(ev => {
-          const eventDate = new Date(ev.dateOfTheEvent); // Asegúrate que sea el campo correcto
+          const eventDate = new Date(ev.date); // Asegúrate que sea el campo correcto
           const day = eventDate.getDate();
           const month = eventDate.getMonth();
           const year = eventDate.getFullYear();

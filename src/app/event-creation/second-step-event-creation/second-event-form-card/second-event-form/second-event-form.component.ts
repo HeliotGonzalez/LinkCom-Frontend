@@ -56,7 +56,7 @@ export class SecondEventFormComponent {
             description: this.formData?.get("description"),
             communityID: this.formData?.get("communityID"),
             userID: this.authService.getUserUUID(),
-            dateOfTheEvent: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
+            date: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
         }).subscribe({
             next: res => {
                 Swal.fire({

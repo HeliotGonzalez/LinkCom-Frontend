@@ -97,7 +97,7 @@ export class HomepageComponent implements OnInit {
         this.apiService.getEvents(this.authService.getUserUUID()).subscribe({
             next: (events: any[]) => {
                 events.forEach(ev => {
-                    const day = new Date(ev.dateOfTheEvent).getDate();
+                    const day = new Date(ev.date).getDate();
                     // Si no existe la entrada para ese día, se crea el array
                     if (!this.calendarEvents[day]) {
                         this.calendarEvents[day] = [];
