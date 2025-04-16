@@ -52,8 +52,64 @@ export class SecondEventFormComponent {
             this.notify.error("All required fields must be filled!");
             return;
         }
+<<<<<<< HEAD
         console.log(await this.buildEvent())
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
+=======
+
+        this.apiService.createEvent({
+            title: this.formData?.get("name"),
+            description: this.formData?.get("description"),
+            communityID: this.formData?.get("communityID"),
+            userID: this.authService.getUserUUID(),
+            date: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
+        }).subscribe({
+            next: res => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Your event has been correctly created!",
+                    icon: "success",
+                    confirmButtonText: "Continue"
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        this.router.navigate(['community'], {queryParams: {communityID: this.formData?.get('communityID')}})
+                        // @ts-ignore
+                        this.storeEventImage(res['data']['communityID'], res['data']['eventID']);
+                        this.formService.remove("event");
+                    }
+                });
+            },
+            error: err => Swal.fire({
+                title: "Error!",
+                text: "We could not create your event.",
+                icon: "error",
+                confirmButtonText: "Continue"
+            })
+        });
+    }
+
+    private storeEventImage(communityID: string, eventID: number) {
+        if (this.formData?.get("image")) { // @ts-ignore
+            this.apiService.storeImage(
+                this.formData?.get("image"),
+                `images/communities/${communityID}/${eventID}`
+            ).subscribe({
+                next: () => {
+                    this.apiService.updateEventImage(
+                        `images/communities/${communityID}/${eventID}`,
+                        communityID,
+                        eventID
+                    ).subscribe();
+                },
+                error: () => Swal.fire({
+                    title: "Error!",
+                    text: "We could not upload your event image!",
+                    icon: "error",
+                    confirmButtonText: "Continue"
+                })
+            });
+        }
+>>>>>>> af94eed (fix: Using a past  column dateOfTheEvent)
     }
 
     private parseDate(date: string, time: string): Date {

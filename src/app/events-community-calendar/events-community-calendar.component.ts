@@ -55,7 +55,11 @@ export class EventsCommunityCalendarComponent implements OnInit {
         this.events = (res as ApiResponse<CommunityEvent>).data;
         this.calendarEvents = {};
 
+<<<<<<< HEAD
         this.events.forEach(ev => {
+=======
+        data.forEach(ev => {
+>>>>>>> af94eed (fix: Using a past  column dateOfTheEvent)
           const eventDate = new Date(ev.date); // Asegúrate que sea el campo correcto
           const day = eventDate.getDate();
           const month = eventDate.getMonth();
