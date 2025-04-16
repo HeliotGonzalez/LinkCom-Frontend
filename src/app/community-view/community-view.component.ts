@@ -3,6 +3,7 @@ import {EventViewComponent} from "../event-view/event-view.component";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {ActivatedRoute} from "@angular/router";
 import {AuthService} from "../services/auth.service";
+<<<<<<< HEAD
 import {Announce} from "../interfaces/announce";
 import {AnnouncementCardComponent} from "../announcements-list/announcement-card/announcement-card.component";
 import {CommunityService} from "../../architecture/services/CommunityService";
@@ -26,6 +27,9 @@ import {EventUser} from "../../architecture/model/EventUser";
 import {BlurPanelComponent} from "../blur-panel/blur-panel.component";
 import {RequestStatus} from "../../architecture/model/RequestStatus";
 import {EventsRequestPanelComponent} from "../events-request-panel/events-request-panel.component";
+=======
+import Swal from "sweetalert2";
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 
 @Component({
     selector: 'app-community-view',
@@ -81,6 +85,11 @@ export class CommunityViewComponent {
 
     private async checkIfIsUserJoined(communityID: string, userID: string) {
         return (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).isUserJoined(communityID, userID))).data[0];
+    }
+    goToEditCommunity() {
+        this.router.navigate(['/editCommunity'], { 
+          queryParams: { communityID: this.community?.id } 
+        });
     }
 
     private async getCommunity(communityID: string) {

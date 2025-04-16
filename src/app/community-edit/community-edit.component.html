@@ -1,0 +1,51 @@
+<div class="container mt-3">
+    <h2>Editar Comunidad</h2>
+    
+    <form [formGroup]="communityForm" (ngSubmit)="onSubmit()">
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label class="form-label fw-bold" for="communityName">Nombre</label>
+        <input
+          id="communityName"
+          class="form-control"
+          formControlName="name"
+          type="text"
+          placeholder="Nombre de la comunidad"
+        />
+      </div>
+  
+      <!-- Descripción -->
+      <div class="mb-3">
+        <label class="form-label fw-bold" for="communityDescription">Descripción</label>
+        <textarea
+          id="communityDescription"
+          class="form-control"
+          formControlName="description"
+          placeholder="Descripción de la comunidad"
+          rows="3"
+        ></textarea>
+      </div>
+  
+      <!-- isPrivate (checkbox o select) -->
+      <div class="mb-3 form-check">
+        <input
+          id="communityPrivate"
+          class="form-check-input"
+          type="checkbox"
+          formControlName="isPrivate"
+        />
+        <label class="form-check-label fw-bold" for="communityPrivate">
+          ¿Comunidad privada?
+        </label>
+      </div>
+  
+      <!-- Imagen -->
+      <div class="mb-3">
+        <label class="form-label fw-bold">Imagen</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/png" />
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    </form>
+  </div>
+  

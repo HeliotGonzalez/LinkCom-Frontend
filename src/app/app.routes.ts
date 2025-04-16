@@ -23,12 +23,16 @@ import {ModeratorsManagementComponent} from "./moderators-management/moderators-
 import {CommunityViewComponent} from "./community-view/community-view.component";
 import {ComunitiesComponent} from './comunities/comunities.component';
 import {EventsCommunityCalendarComponent} from "./events-community-calendar/events-community-calendar.component";
+<<<<<<< HEAD
 import { AnnouncementCreationComponent } from './announcement-creation/announcement-creation.component';
 import { AnnouncementsListComponent } from './announcements-list/announcements-list.component';
 import {CommunityRequestsPanelComponent} from "./community-requests-panel/community-requests-panel.component";
 import { RegisterFirstStepComponent } from './user-register/register-first-step/register-first-step.component';
 import { RegisterSecondStepComponent } from './user-register/register-second-step/register-second-step.component';
 import { RegisterThirdStepComponent } from './user-register/register-third-step/register-third-step.component';
+=======
+import { CommunityEditComponent } from './community-edit/community-edit.component';
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -47,8 +51,12 @@ export const routes: Routes = [
     {path: 'community', component: CommunityViewComponent},
     {path: 'communities', component: ComunitiesComponent},
     {path: 'calendar', component: EventsCommunityCalendarComponent},
+<<<<<<< HEAD
     {path: 'announcementCreation', component: AnnouncementCreationComponent},
     {path: 'moderators', component: ModeratorsManagementComponent},
     {path: 'announcementsList', component: AnnouncementsListComponent},
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent}
+=======
+    {path: 'editCommunity', component: CommunityEditComponent}
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 ];

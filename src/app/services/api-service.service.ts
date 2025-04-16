@@ -5,7 +5,12 @@ import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
+<<<<<<< HEAD
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+=======
+import {CommunityEvent} from "../interfaces/CommunityEvent";
+import { Community } from '../interfaces/community';
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -128,6 +133,7 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
 
+<<<<<<< HEAD
     createAnnouncement(title: string, body: string, communityID: string, publisherID: string) {
         return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, publisherID});
     }
@@ -137,4 +143,23 @@ export class ApiService {
     }
 
 
+=======
+    createAnnouncement(communityID: string, userID: string, title: string, body: string) {
+        console.log('DATOS: ', { communityID, userID, title, body });
+        if (!communityID || communityID.trim() === "") {
+            throw new Error("El communityID es obligatorio y no puede estar vacío.");
+        }
+        return this.http.put(`${this.baseUrl}/announcement`, {
+            communityID,
+            publisherID: userID,
+            title,
+            body
+        });
+    }
+
+    updateCommunity(communityID: string, formData: FormData) {
+        return this.http.patch(`${this.baseUrl}/communities/${communityID}`, formData);
+      }
+      
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 }

@@ -58,6 +58,7 @@
                                 </button>
                             }
                         }
+<<<<<<< HEAD
                         @if (!isCreator()) {
                             @if (isUserJoined) {
                                 <button class="leave-button"
@@ -77,6 +78,14 @@
                                     </button>
                                 }
                             }
+=======
+                    </div>
+                    <div class="d-flex gap-5">
+                        @if (isCreator()) {
+                            <button class="button mb-5" (click)="showModeratorsManagement()">Manage moderators</button>
+                            <button class="button mb-5" (click)="goToEditCommunity()">Edit community</button>
+                            <button class="leave-button mb-5" (click)="removeCommunity()">Remove community</button>
+>>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
                         }
                     </div>
                 </div>
