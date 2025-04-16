@@ -22,6 +22,7 @@
                     <div class="d-flex gap-5">
                         @if (isCreator()) {
                             <button class="button mb-5" (click)="showModeratorsManagement()">Manage moderators</button>
+                            <button class="button mb-5" (click)="goToEditCommunity()">Edit community</button>
                             <button class="leave-button mb-5" (click)="removeCommunity()">Remove community</button>
                         }
                     </div>

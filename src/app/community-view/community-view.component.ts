@@ -5,7 +5,6 @@ import {CommunityEvent} from "../interfaces/CommunityEvent";
 import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
-import { AnnouncementFormComponent } from '../announcement-form/announcement-form.component';
 import Swal from "sweetalert2";
 
 @Component({
@@ -66,6 +65,11 @@ export class CommunityViewComponent {
 
     showModeratorsManagement() {
         this.router.navigate(["/moderatorsManagement"], {queryParams: {communityID: this.community?.id}}).then(r => {
+        });
+    }
+    goToEditCommunity() {
+        this.router.navigate(['/editCommunity'], { 
+          queryParams: { communityID: this.community?.id } 
         });
     }
 

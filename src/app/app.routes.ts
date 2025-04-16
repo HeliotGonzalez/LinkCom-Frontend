@@ -24,6 +24,7 @@ import {ModeratorsManagementComponent} from "./moderators-management/moderators-
 import {CommunityViewComponent} from "./community-view/community-view.component";
 import {ComunitiesComponent} from './comunities/comunities.component';
 import {EventsCommunityCalendarComponent} from "./events-community-calendar/events-community-calendar.component";
+import { CommunityEditComponent } from './community-edit/community-edit.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -39,5 +40,6 @@ export const routes: Routes = [
     {path: 'moderatorsManagement', component: ModeratorsManagementComponent},
     {path: 'community', component: CommunityViewComponent},
     {path: 'communities', component: ComunitiesComponent},
-    {path: 'calendar', component: EventsCommunityCalendarComponent}
+    {path: 'calendar', component: EventsCommunityCalendarComponent},
+    {path: 'editCommunity', component: CommunityEditComponent}
 ];

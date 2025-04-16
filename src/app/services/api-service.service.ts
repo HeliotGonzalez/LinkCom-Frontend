@@ -6,6 +6,7 @@ import {CreateCommunityParameters} from "../interfaces/create-community-paramete
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../interfaces/CommunityEvent";
+import { Community } from '../interfaces/community';
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -126,7 +127,7 @@ export class ApiService {
     removeCommunity(communityID: string) {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
-    
+
     createAnnouncement(communityID: string, userID: string, title: string, body: string) {
         console.log('DATOS: ', { communityID, userID, title, body });
         if (!communityID || communityID.trim() === "") {
@@ -139,4 +140,9 @@ export class ApiService {
             body
         });
     }
+
+    updateCommunity(communityID: string, formData: FormData) {
+        return this.http.patch(`${this.baseUrl}/communities/${communityID}`, formData);
+      }
+      
 }
