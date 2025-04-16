@@ -86,11 +86,17 @@ export class ComunitiesComponent {
     });
   }
 
-  private reorderCommunities(allCommunities: Community[]) {
-    this.joinedCommunities = allCommunities.filter(c => this.userCommunitiesIDs.includes(c.id));
-    this.notJoinedCommunities = allCommunities.filter(c => !this.userCommunitiesIDs.includes(c.id));
+  private reorderCommunities(allCommunities: Community[] | { data: Community[] }) {
+    const communitiesArray: Community[] = Array.isArray(allCommunities) ? allCommunities : allCommunities.data;
+    
+    this.joinedCommunities = communitiesArray.filter(c =>
+      this.userCommunitiesIDs.includes(c.id)
+    );
+    this.notJoinedCommunities = communitiesArray.filter(c =>
+      !this.userCommunitiesIDs.includes(c.id)
+    );
     this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
-  }
+  }  
 
   showCommunityForm() {
     this.router.navigate(['firstStepCommunityCreation']).then();

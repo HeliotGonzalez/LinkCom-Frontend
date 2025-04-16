@@ -14,8 +14,6 @@ import Swal from "sweetalert2";
         FormStepsComponent,
         FormsModule,
         InterestTagComponent,
-        NgForOf,
-        NgIf
     ],
     templateUrl: './first-community-form.component.html',
     standalone: true,

@@ -2,15 +2,17 @@ import {booleanAttribute, Component} from '@angular/core';
 import {Community} from "../interfaces/community";
 import {EventViewComponent} from "../event-view/event-view.component";
 import {CommunityEvent} from "../interfaces/CommunityEvent";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Router, RouterModule} from "@angular/router";
 import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
+import { AnnouncementFormComponent } from '../announcement-form/announcement-form.component';
 import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-community-view',
     imports: [
-        EventViewComponent
+        EventViewComponent,
+        RouterModule
     ],
     templateUrl: './community-view.component.html',
     standalone: true,

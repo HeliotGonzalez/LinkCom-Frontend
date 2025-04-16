@@ -126,4 +126,17 @@ export class ApiService {
     removeCommunity(communityID: string) {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
+    
+    createAnnouncement(communityID: string, userID: string, title: string, body: string) {
+        console.log('DATOS: ', { communityID, userID, title, body });
+        if (!communityID || communityID.trim() === "") {
+            throw new Error("El communityID es obligatorio y no puede estar vacío.");
+        }
+        return this.http.put(`${this.baseUrl}/announcement`, {
+            communityID,
+            publisherID: userID,
+            title,
+            body
+        });
+    }
 }
