@@ -6,7 +6,7 @@ import {Community} from '../interfaces/community';
 import {AuthService} from '../services/auth.service';
 import Swal from 'sweetalert2';
 import {FeedEventCardComponent} from "../feed-event-card/feed-event-card.component";
-import {CommunityEvent} from "../model/CommunityEvent";
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 
 @Component({
     selector: 'app-homepage',

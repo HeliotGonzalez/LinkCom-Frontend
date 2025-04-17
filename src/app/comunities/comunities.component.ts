@@ -1,15 +1,14 @@
-import {Component, Inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CommunityCardComponent} from './community-card/community-card.component';
-import {ApiService} from '../services/api-service.service';
-import {Community} from '../interfaces/community';
 import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
-import Swal from 'sweetalert2';
-import {CommunityService} from "../services/api-services/CommunityService";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {CommunityService} from "../../architecture/services/CommunityService";
 import {forkJoin} from "rxjs";
+import {Notify} from "../services/notify";
+import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {Community} from "../../architecture/model/Community";
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -26,78 +25,26 @@ export class ComunitiesComponent {
     protected communities: Community[] = [];
     protected joinedCommunities: Community[] = [];
     protected notJoinedCommunities: Community[] = [];
-    protected userCommunitiesIDs: string[] = [];
 
     protected searchTerm: string = '';
-    private allCommunities: Community[] = [];
 
     constructor(
         private router: Router,
-        private apiService: ApiService,
-        @Inject('CommunityService') private communityService: CommunityService,
-        private authService: AuthService
+        private serviceFactory: ServiceFactory,
+        private authService: AuthService,
+        private notify: Notify
     ) {
     }
 
     async ngOnInit() {
-        // await this.fetchCommunities();
         forkJoin({
-            joined: this.communityService.getUserCommunities(this.authService.getUserUUID()),
-            notJoined: this.communityService.getCommunitiesExcludingUser(this.authService.getUserUUID())
+            joined: (this.serviceFactory.get('communities') as CommunityService).getUserCommunities(this.authService.getUserUUID()),
+            notJoined: (this.serviceFactory.get('communities') as CommunityService).getCommunitiesExcludingUser(this.authService.getUserUUID())
         }).subscribe(res => {
+            this.joinedCommunities = res.joined.data;
+            this.notJoinedCommunities = res.notJoined.data;
             this.communities = [...res.joined.data, ...res.notJoined.data];
         });
-    }
-
-    async fetchCommunities(): Promise<void> {
-        return new Promise((resolve) => {
-            let completedRequests = 0;
-            let allCommunities: Community[] = [];
-
-            this.apiService.getCommunities().subscribe({
-                next: (res) => {
-                    allCommunities = res;
-                    completedRequests++;
-                    if (completedRequests === 2) {
-                        this.allCommunities = allCommunities;
-                        this.reorderCommunities(allCommunities);
-                        resolve();
-                    }
-                },
-                error: (err) => console.error('Error al obtener comunidades:', err),
-            });
-
-            this.apiService.getUserCommunities(this.authService.getUserUUID()).subscribe({
-                next: (res: GetUserCommunitiesResponse) => {
-                    this.userCommunitiesIDs = Array.isArray(res.data)
-                        ? res.data.map(c => c.id)
-                        : [];
-
-                    completedRequests++;
-                    if (completedRequests === 2) {
-                        this.allCommunities = allCommunities;
-                        this.reorderCommunities(allCommunities);
-                        resolve();
-                    }
-                },
-                error: (err) => {
-                    console.error('Error al obtener comunidades del usuario:', err);
-                    this.userCommunitiesIDs = [];
-                    completedRequests++;
-                    if (completedRequests === 2) {
-                        this.allCommunities = allCommunities;
-                        this.reorderCommunities(allCommunities);
-                        resolve();
-                    }
-                }
-            });
-        });
-    }
-
-    private reorderCommunities(allCommunities: Community[]) {
-        this.joinedCommunities = allCommunities.filter(c => this.userCommunitiesIDs.includes(c.id));
-        this.notJoinedCommunities = allCommunities.filter(c => !this.userCommunitiesIDs.includes(c.id));
-        this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
     }
 
     filterCommunities(event?: Event): void {
@@ -105,12 +52,10 @@ export class ComunitiesComponent {
 
         const term = this.searchTerm.toLowerCase().trim();
 
-        const filtered = this.allCommunities.filter(c =>
+        this.communities = this.communities.filter(c =>
             (String(c.name).toLowerCase().includes(term)) ||
             (String(c.description).toLowerCase().includes(term))
         );
-
-        this.reorderCommunities(filtered);
     }
 
     showCommunityForm() {
@@ -118,64 +63,28 @@ export class ComunitiesComponent {
     }
 
     joinCommunity(community: Community) {
-        console.log('Intentando unirse a la comunidad:', community);
-        this.apiService.joinCommunity(this.authService.getUserUUID(), community.id).subscribe({
-            next: res => {
-                if (!this.userCommunitiesIDs.includes(community.id)) {
-                    this.userCommunitiesIDs.push(community.id);
-                }
-
-                Swal.fire({
-                    title: "Success!",
-                    text: `Welcome to ${community?.name} community!`,
-                    icon: "success"
-                });
-
-                this.reorderCommunities(this.communities);
+        (this.serviceFactory.get('communities') as CommunityService).joinCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+            next: () => {
+                this.notify.success('You have join this community!');
+                this.notJoinedCommunities = this.notJoinedCommunities.filter(c => c.id !== community.id);
+                this.joinedCommunities.push(community);
+                this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities]
             },
-            error: res => {
-                Swal.fire({
-                    title: "An error occurred!",
-                    text: `We could not add you to ${community?.name} community! Please, try again later.`,
-                    icon: "error"
-                });
-            }
+            error: res => this.notify.error(`An error occurred: ${res.message}`)
         });
     }
 
     leaveCommunity(community: Community) {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-        });
-
-        swalWithBootstrapButtons.fire({
-            title: "Are you sure?",
-            text: "You can always come back!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, leave!",
-            cancelButtonText: "No, cancel!",
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                this.apiService.leaveCommunity(this.authService.getUserUUID(), community.id).subscribe({
-                    next: res => {
-                        this.userCommunitiesIDs = this.userCommunitiesIDs.filter(id => id !== community.id);
-                        this.reorderCommunities(this.communities);
-
-                        Swal.fire("Left!", "You have left the community.", "success");
-                    },
-                    error: res => {
-                        Swal.fire("Error!", `We could not process your request: ${res['message']}`, "error");
-                    }
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire("Cancelled", "You're still with us!", "error");
-            }
+        this.notify.confirm(`You will be leaving ${community.name}'s community`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success('You have left this community!');
+                    this.joinedCommunities = this.joinedCommunities.filter(c => c.id !== community.id);
+                    this.notJoinedCommunities.push(community);
+                    this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
         });
     }
 }

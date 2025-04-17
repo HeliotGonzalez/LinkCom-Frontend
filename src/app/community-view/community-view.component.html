@@ -20,7 +20,7 @@
                         @for (newAnnounce of announcements; track newAnnounce) {
                             <app-announcement-card
                                     [announce]="newAnnounce"
-                                    [imgPath]="this.community!.imagePath"
+                                    [imgPath]="this.community!.imagePath!"
                             ></app-announcement-card>
                         }
                     }
