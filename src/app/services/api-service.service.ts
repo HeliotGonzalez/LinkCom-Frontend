@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -51,7 +51,7 @@ export class ApiService {
     }
 
     // Un usuario se une a una comunidad
-    joinEvent(userID: string, communityID: string, eventID: number): Observable<any> {
+    joinEvent(userID: string, communityID: string | undefined, eventID: string | undefined): Observable<any> {
         return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
     }
 
@@ -100,11 +100,11 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
     }
 
-    getUserEvents(userID: string): Observable<ApiResponse> {
-        return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
+    getUserEvents(userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.baseUrl}/userEvents?userID=${userID}`);
     }
 
-    leaveEvent(userID: string, eventID: number) {
+    leaveEvent(userID: string, eventID: string) {
         return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, eventID});
     }
 

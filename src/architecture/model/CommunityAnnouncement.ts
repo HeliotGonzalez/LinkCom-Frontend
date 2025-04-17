@@ -1,10 +1,7 @@
-export interface Announce {
+export interface CommunityAnnouncement {
     id: string;
     title: string;
     body: string;
     communityID: string;
-    userID: string;
-    communityName: string;
     publisherID: string;
-    timestamp: Date;
 }

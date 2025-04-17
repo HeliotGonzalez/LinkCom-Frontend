@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { Community } from '../../interfaces/community';
-import { NgIf } from '@angular/common';
+import {Community} from "../../../architecture/model/Community";
 
 @Component({
   selector: 'app-community-card',
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   templateUrl: './community-card.component.html',
   styleUrl: './community-card.component.css'
 })
