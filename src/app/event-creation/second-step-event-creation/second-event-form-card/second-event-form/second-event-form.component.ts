@@ -51,12 +51,15 @@ export class SecondEventFormComponent {
         this.saveFormData();
 
         if (this.eventDescription === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            this.notify.error("All required fields must be filled!");
             return;
         }
 
         (this.serviceFactory.get('events') as EventService).createEvent(this.buildEvent() as CommunityEvent).subscribe({
-            next: () => this.notify.success('Your event has been created!'),
+            next: () => {
+                this.notify.success('Your event has been created!');
+                this.router.navigate(["/community"], {queryParams: {communityID: this.formData?.get('communityID')}})
+            },
             error: res => this.notify.error(`We could not create your event: ${res.message}`)
         })
     }
