@@ -81,7 +81,10 @@ export class CommunityViewComponent {
     protected async leaveCommunity() {
         this.notify.confirm(`You will be leaving ${this.community?.name}'s community`).then(confirmed => {
             if (confirmed) (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(this.community!.id!, this.authService.getUserUUID()).subscribe({
-                next: () => this.notify.success('You have left this community!'),
+                next: () => {
+                    this.notify.success('You have left this community!');
+                    this.showCommunitiesPage();
+                },
                 error: res => this.notify.error(`An error occurred: ${res.message}`)
             });
         });
@@ -96,12 +99,19 @@ export class CommunityViewComponent {
 
     protected async removeCommunity() {
         this.notify.confirm(`You will not be able to revert this: REMOVE ${this.community?.name}'s community`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(this.community!.id!, this.authService.getUserUUID()).subscribe({
-                next: () => this.notify.success('You have removed this community!'),
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).removeCommunity(this.community!.id!).subscribe({
+                next: () => {
+                    this.notify.success('You have removed this community!');
+                    this.showCommunitiesPage();
+                },
                 error: res => this.notify.error(`An error occurred: ${res.message}`)
             });
             else this.notify.success('Your community is still safe!');
         });
+    }
+
+    private showCommunitiesPage() {
+        this.router.navigate(['/communities']).then();
     }
 
     protected showAnnouncements() {
