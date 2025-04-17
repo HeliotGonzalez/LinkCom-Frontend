@@ -7,5 +7,5 @@ export interface Community {
     isPrivate: boolean;
     creatorID: string;
     imagePath?: string;
-    interests: CommunityInterest[];
+    interests?: CommunityInterest[];
 }

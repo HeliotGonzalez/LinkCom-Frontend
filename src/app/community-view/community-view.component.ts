@@ -46,7 +46,7 @@ export class CommunityViewComponent {
                 this.community = (res as ApiResponse<Community>).data[0];
             });
 
-            this.apiService.getCommunityEvents(params['communityID']).subscribe(res => {
+            (this.serviceFactory.get('communities') as CommunityService).getCommunityEvents(params['communityID']).subscribe(res => {
                 this.events = (res as ApiResponse<CommunityEvent>).data;
             });
 

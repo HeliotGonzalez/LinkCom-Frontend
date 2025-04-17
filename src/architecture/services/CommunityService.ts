@@ -7,10 +7,12 @@ import {Observable} from "rxjs";
 import {CommunityRole} from "../model/CommunityRole";
 import {Service} from "./Service";
 import {Community} from "../model/Community";
+import {CommunityEvent} from "../model/CommunityEvent";
 
 export interface CommunityService extends Service {
     getCommunity(communityID: string): Observable<ApiResponse<Community>>;
     getCommunities(): Observable<ApiResponse<Community>>;
+    getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>>;
     getUserCommunities(userID: string): Observable<ApiResponse<Community>>;
     getCommunitiesExcludingUser(userID: string): Observable<ApiResponse<Community>>;
     getCommunityMembers(communityID: string): Observable<ApiResponse<User>>;

@@ -22,7 +22,7 @@ export class HTTPEventService implements EventService {
     }
 
     createEvent(event: CommunityEvent): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events/create`, event);
+        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events`, event);
     }
 
     removeEvent(eventID: string): Observable<ApiResponse<CommunityEvent>> {

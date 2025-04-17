@@ -8,9 +8,14 @@ import {CommunityUser} from "../../../architecture/model/CommunityUser";
 import {CommunityService} from "../../../architecture/services/CommunityService";
 import {Observable} from "rxjs";
 import {Community} from "../../../architecture/model/Community";
+import { CommunityEvent } from "../../../architecture/model/CommunityEvent";
 
 export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events`);
     }
 
     getCommunity(communityID: string): Observable<ApiResponse<Community>> {
@@ -54,7 +59,10 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     createCommunity(community: Community): Observable<ApiResponse<Community>> {
-        return this.http.put<ApiResponse<Community>>(`${this.url}/communities/create`, community);
+        const interests = community.interests;
+        delete community.interests;
+        const parameters = community;
+        return this.http.put<ApiResponse<Community>>(`${this.url}/communities`, {parameters, interests});
     }
 
     removeCommunity(communityID: string) {
