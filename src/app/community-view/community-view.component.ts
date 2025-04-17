@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {Community} from "../interfaces/community";
 import {EventViewComponent} from "../event-view/event-view.component";
 import {CommunityEvent} from "../model/CommunityEvent";
@@ -8,9 +8,8 @@ import {AuthService} from "../services/auth.service";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {Announce} from "../interfaces/announce";
 import {AnnouncementCardComponent} from "../announcements-list/announcement-card/announcement-card.component";
-import {ApiServiceTranslator} from "../model/ApiServiceTranslator";
-import {CommunityApiService} from "../services/api-services/community-api.service";
-import {AlertService} from "../services/alert.service";
+import {Notify} from "../services/notify";
+import {CommunityService} from "../services/api-services/CommunityService";
 
 @Component({
     selector: 'app-community-view',
@@ -28,17 +27,15 @@ export class CommunityViewComponent {
     protected userEvents: CommunityEvent[] = [];
     protected isUserJoined: boolean = false;
     protected announcements: Announce[] = [];
-    private apiServiceTranslator: ApiServiceTranslator | null;
 
-    constructor(private router: Router, private route: ActivatedRoute, private alertService: AlertService, private communityApi: CommunityApiService, private apiService: ApiService, private authService: AuthService) {
-     this.apiServiceTranslator = new ApiServiceTranslator(this.alertService);
+    constructor(private router: Router, @Inject('CommunityService') private communityService: CommunityService, private route: ActivatedRoute, private notify: Notify, private apiService: ApiService, private authService: AuthService) {
     }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.isUserJoined = params['isUserJoined'];
 
-            this.apiService.getCommunity(params['communityID']).subscribe(res => {
+            this.communityService.getCommunity(params['communityID']).subscribe(res => {
                 this.community = (res as ApiResponse<Community>).data[0];
             });
 
@@ -50,7 +47,7 @@ export class CommunityViewComponent {
                 this.userEvents = (res as ApiResponse<CommunityEvent>).data;
             });
 
-            this.apiService.getAnnouncements(params['communityID']).subscribe(res => {
+            this.communityService.getCommunityAnnouncements(params['communityID']).subscribe(res => {
                 this.announcements = (res as ApiResponse<Announce>).data;
             });
         });
@@ -75,29 +72,27 @@ export class CommunityViewComponent {
     }
 
     protected async leaveCommunity() {
-        const confirm = await this.alertService.confirm(`You will be leaving ${this.community?.name}'s community`);
-        if (confirm) this.apiServiceTranslator!.dualResponse(
-            this.apiService.leaveCommunity(this.authService.getUserUUID(), this.community!.id),
-            `You have left ${this.community?.name}'s community!`,
-            'You still being in this community!'
-        );
+        const confirm = await this.notify.confirm(`You will be leaving ${this.community?.name}'s community`);
+        if (confirm) this.communityService.leaveCommunity(this.community!.id, this.authService.getUserUUID()).subscribe({
+            next: () => this.notify.success('You have left this community!'),
+            error: res => this.notify.error(`An error occurred: ${res.message}`)
+        });
     }
 
     protected joinCommunity() {
-        this.apiServiceTranslator!.dualResponse(
-            this.apiService.joinCommunity(this.authService.getUserUUID(), this.community!.id),
-            `You have joined ${this.community?.name}'s community!`,
-            `We could not add you to this community`
-        );
+        this.communityService.joinCommunity(this.community!.id, this.authService.getUserUUID()).subscribe({
+            next: () => this.notify.success('You have join this community!'),
+            error: res => this.notify.error(`An error occurred: ${res.message}`)
+        });
     }
 
     protected async removeCommunity() {
-        const confirm = await this.alertService.confirm(`You will not be able to revert this: REMOVE ${this.community?.name}'s community`);
-        if (confirm) this.apiServiceTranslator!.dualResponse(
-            this.apiService.leaveCommunity(this.authService.getUserUUID(), this.community!.id),
-            `You have removed ${this.community?.name}'s community!`,
-            'Your community still safe!'
-        );
+        const confirm = await this.notify.confirm(`You will not be able to revert this: REMOVE ${this.community?.name}'s community`);
+        if (confirm) this.communityService.leaveCommunity(this.community!.id, this.authService.getUserUUID()).subscribe({
+            next: () => this.notify.success('You have removed this community!'),
+            error: res => this.notify.error(`An error occurred: ${res.message}`)
+        });
+        else this.notify.success('Your community is still safe!');
     }
 
     protected showAnnouncements() {

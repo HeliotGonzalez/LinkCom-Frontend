@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { CommunityCardComponent } from './community-card/community-card.component';
-import { ApiService } from '../services/api-service.service';
-import { Community } from '../interfaces/community';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import {Component, Inject} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {CommunityCardComponent} from './community-card/community-card.component';
+import {ApiService} from '../services/api-service.service';
+import {Community} from '../interfaces/community';
+import {Router} from '@angular/router';
+import {AuthService} from '../services/auth.service';
 import Swal from 'sweetalert2';
+import {CommunityService} from "../services/api-services/CommunityService";
+import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {forkJoin} from "rxjs";
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -31,12 +34,19 @@ export class ComunitiesComponent {
     constructor(
         private router: Router,
         private apiService: ApiService,
+        @Inject('CommunityService') private communityService: CommunityService,
         private authService: AuthService
-    ) {}
+    ) {
+    }
 
     async ngOnInit() {
-        await this.fetchCommunities();
-        console.log(this.userCommunitiesIDs);
+        // await this.fetchCommunities();
+        forkJoin({
+            joined: this.communityService.getUserCommunities(this.authService.getUserUUID()),
+            notJoined: this.communityService.getCommunitiesExcludingUser(this.authService.getUserUUID())
+        }).subscribe(res => {
+            this.communities = [...res.joined.data, ...res.notJoined.data];
+        });
     }
 
     async fetchCommunities(): Promise<void> {

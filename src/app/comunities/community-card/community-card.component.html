@@ -14,7 +14,7 @@
       </div>
   
       <div class="d-flex flex-column community-card-content-body h-75">
-        <div class="h-75 overflow-scroll">
+        <div class="h-75 overflow-auto">
           <p style="text-align: justify">{{ community.description }}</p>
         </div>
   
@@ -25,12 +25,11 @@
       </div>
   
       <div class="community-card-content-footer d-flex align-items-center h-25 justify-content-center p-2 gap-2">
-        @if (isUserJoined) {
-          <button class="leave-button" (click)="leaveCommunity()">Leave</button>
           <button class="button" (click)="viewCommunity()">View</button>
+          @if (isUserJoined) {
+            <button class="leave-button" (click)="leaveCommunity()">Leave</button>
         } @else {
           <button class="button" (click)="joinCommunity()">Join</button>
-          
         }
        
       </div>

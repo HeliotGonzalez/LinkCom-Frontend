@@ -7,18 +7,32 @@ import {Announce} from "../../interfaces/announce";
 import {CommunityInterest} from "../../interfaces/community-interest";
 import {CommunityRole} from "../../model/CommunityRole";
 import {CommunityUser} from "../../model/CommunityUser";
+import {CommunityService} from "./CommunityService";
+import {Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
 })
-export class CommunityApiService {
+export class HTTPCommunityService implements CommunityService {
     private baseUrl = 'http://localhost:3000';
 
     constructor(private http: HttpClient) {
     }
 
+    getCommunity(communityID: string): Observable<ApiResponse<Community>> {
+        return this.http.get<ApiResponse<Community>>(`${this.baseUrl}/communities/${communityID}`);
+    }
+
     getCommunities() {
         return this.http.get<ApiResponse<Community>>(`${this.baseUrl}/communities`);
+    }
+
+    getUserCommunities(userID: string) {
+        return this.http.get<ApiResponse<Community>>(`${this.baseUrl}/users/${userID}/communities`)
+    }
+
+    getCommunitiesExcludingUser(userID: string) {
+        return this.http.get<ApiResponse<Community>>(`${this.baseUrl}/communities/excluding/${userID}`)
     }
 
     getCommunityMembers(communityID: string) {
@@ -29,7 +43,7 @@ export class CommunityApiService {
         return this.http.get<ApiResponse<CommunityInterest>>(`${this.baseUrl}/communityInterests?communityID=${communityID}`);
     }
 
-    getCommunityAnnounces(communityID: string) {
+    getCommunityAnnouncements(communityID: string) {
         return this.http.get<ApiResponse<Announce>>(`${this.baseUrl}/communityInterests?communityID=${communityID}`);
     }
 
@@ -37,8 +51,8 @@ export class CommunityApiService {
         return this.http.put<ApiResponse<CommunityUser>>(`${this.baseUrl}/changeUserCommunityRole`, { communityID, userID, role });
     }
 
-    joinCommunity(community: Community) {
-        return this.http.post<ApiResponse<Community>>(`${this.baseUrl}/joinCommunity`, { community });
+    joinCommunity(communityID: string) {
+        return this.http.post<ApiResponse<Community>>(`${this.baseUrl}/joinCommunity`, { communityID });
     }
 
     leaveCommunity(communityID: string, userID: string) {

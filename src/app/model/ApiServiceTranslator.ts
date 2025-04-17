@@ -1,9 +1,9 @@
-import {AlertService} from "../services/alert.service";
+import {Notify} from "../services/notify";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {Observable} from "rxjs";
 
 export class ApiServiceTranslator {
-    constructor(private alertService: AlertService) {
+    constructor(private alertService: Notify) {
     }
 
     public dualResponse(response: Observable<any>, successMessage: string, errorMessage: string) {

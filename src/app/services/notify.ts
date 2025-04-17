@@ -4,7 +4,7 @@ import Swal, {SweetAlertOptions} from "sweetalert2";
 @Injectable({
     providedIn: 'root'
 })
-export class AlertService {
+export class Notify {
 
     constructor() {
     }

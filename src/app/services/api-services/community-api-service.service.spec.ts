@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CommunityApiService } from './community-api.service';
+import { HTTPCommunityService } from './h-t-t-p-community.service';
 
 describe('CommunityApiServiceService', () => {
-  let service: CommunityApiService;
+  let service: HTTPCommunityService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CommunityApiService);
+    service = TestBed.inject(HTTPCommunityService);
   });
 
   it('should be created', () => {
