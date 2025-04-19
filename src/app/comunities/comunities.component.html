@@ -31,13 +31,14 @@
         </div>
 
         <!-- Lista de comunidades -->
-        <section class="d-flex community-cards-section flex-column overflow-y-auto overflow-x-hidden p-3 flex-grow-1">
+        <section class="communities-section d-flex community-cards-section flex-column overflow-y-auto overflow-x-hidden p-3 flex-grow-1" (scrollend)="loadCommunities()">
             @for (community of communities; track community.id) {
                 <app-community-card
                         [community]="community"
                         [isUserJoined]="joinedCommunities.includes(community)"
                         (joinCommunityEmitter)="joinCommunity($event)"
                         (leaveCommunityEmitter)="leaveCommunity($event)"
+                        (removeCommunityEmitter)="removeCommunity($event)"
                 ></app-community-card>
             }
         </section>

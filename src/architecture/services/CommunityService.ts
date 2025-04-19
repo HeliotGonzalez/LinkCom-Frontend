@@ -10,14 +10,20 @@ import {Community} from "../model/Community";
 import {CommunityEvent} from "../model/CommunityEvent";
 
 export interface CommunityService extends Service {
+    getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
+    getUserCommunitiesFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
     getCommunity(communityID: string): Observable<ApiResponse<Community>>;
     getCommunities(): Observable<ApiResponse<Community>>;
+    getCommunitiesPaginated(limit: number, offset: number): Observable<ApiResponse<Community>>;
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>>;
+    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<Community>>
     getUserCommunities(userID: string): Observable<ApiResponse<Community>>;
     getCommunitiesExcludingUser(userID: string): Observable<ApiResponse<Community>>;
     getCommunityMembers(communityID: string): Observable<ApiResponse<User>>;
     getCommunityInterests(communityID: string): Observable<ApiResponse<CommunityInterest>>;
     getCommunityAnnouncements(communityID: string): Observable<ApiResponse<Announce>>;
+    getCommunityModerators(communityID: string): Observable<ApiResponse<User>>;
+    isUserModerator(communityID: string, userID: string): Observable<ApiResponse<User>>;
     changeUserCommunityRole(communityID: string, userID: string, role: CommunityRole): Observable<ApiResponse<CommunityUser>>;
     joinCommunity(communityID: string, userID: string): Observable<ApiResponse<Community>>;
     leaveCommunity(communityID: string, userID: string): Observable<ApiResponse<Community>>;

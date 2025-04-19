@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {CommunityRole} from "../../../architecture/model/CommunityRole";
 
 @Component({
   selector: 'app-user-card',
@@ -8,15 +9,17 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class UserCardComponent {
   @Input() username!: string;
-  @Input() role!: string;
-  @Output() roleChanged = new EventEmitter<string>();
+  @Input() role!: CommunityRole;
+  @Output() roleChanged = new EventEmitter<CommunityRole>();
 
   get icon(): string {
-    return this.role === 'moderator' ?  'fa-user-gear' : 'fa-user-plus';
+    return this.role === CommunityRole.MODERATOR ?  'fa-user-gear' : 'fa-user-plus';
   }
 
   toggleRole() {
-    const newRole = this.role === 'moderator' ? 'member' : 'moderator';
+    const newRole: CommunityRole = this.role === CommunityRole.MODERATOR ? CommunityRole.MEMBER : CommunityRole.MODERATOR;
     this.roleChanged.emit(newRole);
   }
+
+  protected readonly CommunityRole = CommunityRole;
 }

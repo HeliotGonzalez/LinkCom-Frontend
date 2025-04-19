@@ -41,7 +41,11 @@ export class ThirdCommunityFormComponent {
         event.preventDefault();
         this.saveFormData();
         (this.serviceFactory.get('communities') as CommunityService).createCommunity(this.buildCommunity()).subscribe({
-            next: () => this.notify.success('Your community has been created!'),
+            next: () => {
+                this.notify.success('Your community has been created!');
+                this.formService.remove('community');
+                this.router.navigate(['communities']);
+            },
             error: () => this.notify.error('We could not create your community. Try again later!')
         });
     }

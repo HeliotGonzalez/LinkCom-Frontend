@@ -6,6 +6,11 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+.community-card-content-header {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 .button {
     border-radius: 5px;
     padding: 0.5rem 1.7rem;

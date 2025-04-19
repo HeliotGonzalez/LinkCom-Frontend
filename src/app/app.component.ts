@@ -9,6 +9,7 @@ import {HeaderVisibilityService} from './services/header-visibility.service';
 import {ServiceFactory} from "./services/api-services/ServiceFactory.service";
 import {HTTPCommunityService} from "./services/api-services/HTTPCommunity.service";
 import {HTTPEventService} from "./services/api-services/HTTPEventService";
+import {HTTPUserService} from "./services/api-services/HTTPUserService";
 
 @Component({
     selector: 'app-root',
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit {
         this.serviceFactory
             .put('communities', new HTTPCommunityService(this.http, this.url))
             .put('events', new HTTPEventService(this.http, this.url))
+            .put('users', new HTTPUserService(this.http, this.url))
     }
 
     onSubmit() {

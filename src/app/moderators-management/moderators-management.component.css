@@ -1,7 +1,8 @@
 #users-container {
-    max-width: 700px;
-    background: #5370E5;
-    min-height: 300px;
+    width: 50%;
+    height: 86%;
+    max-height: 55rem;
+    background: linear-gradient(45deg, #2E3E7F, #5370E5);
 }
 
 main {
@@ -13,7 +14,6 @@ main {
 }
 
 .moderators-management-button {
-    
     bottom: 10%;
     justify-self: center;
     background: #2E3E7F;

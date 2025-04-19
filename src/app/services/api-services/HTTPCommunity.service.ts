@@ -14,6 +14,28 @@ export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]) {
+        return this.http.get<ApiResponse<Community>>(`${this.url}/communities/excluding/${userID}?id=in;${communityIDs}`)
+    }
+    getUserCommunitiesFrom(userID: string, communityIDs: string[]) {
+        return this.http.get<ApiResponse<Community>>(`${this.url}/users/${userID}/communities?communityID=in;${communityIDs}`)
+    }
+
+    getCommunitiesPaginated(limit: number, offset: number): Observable<ApiResponse<Community>> {
+        return this.http.get<ApiResponse<Community>>(`${this.url}/communities?${limit}=pagination;${offset}`);
+    }
+
+    getCommunityModerators(communityID: string): Observable<ApiResponse<User>> {
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator`)
+    }
+    isUserModerator(communityID: string, userID: string): Observable<ApiResponse<User>> {
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members?communityRole=moderator&userID=${userID}`)
+    }
+
+    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<Community>> {
+        return this.http.get<ApiResponse<Community>>(`${this.url}/users/${userID}/communities?communityID=${communityID}`)
+    }
+
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>> {
         return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events`);
     }
@@ -34,7 +56,7 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.get<ApiResponse<Community>>(`${this.url}/communities/excluding/${userID}`)
     }
 
-    getCommunityMembers(communityID: string) {
+    getCommunityMembers(communityID: string): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members`);
     }
 

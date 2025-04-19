@@ -10,10 +10,6 @@ import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {Community} from "../../architecture/model/Community";
 
-interface GetUserCommunitiesResponse {
-    data: { id: string }[];
-}
-
 @Component({
     selector: 'app-comunities',
     standalone: true,
@@ -25,7 +21,9 @@ export class ComunitiesComponent {
     protected communities: Community[] = [];
     protected joinedCommunities: Community[] = [];
     protected notJoinedCommunities: Community[] = [];
-
+    protected limit = 2;
+    protected offset: number = 0;
+    protected maxReached: boolean = false;
     protected searchTerm: string = '';
 
     constructor(
@@ -37,14 +35,11 @@ export class ComunitiesComponent {
     }
 
     async ngOnInit() {
-        forkJoin({
-            joined: (this.serviceFactory.get('communities') as CommunityService).getUserCommunities(this.authService.getUserUUID()),
-            notJoined: (this.serviceFactory.get('communities') as CommunityService).getCommunitiesExcludingUser(this.authService.getUserUUID())
-        }).subscribe(res => {
-            this.joinedCommunities = res.joined.data;
-            this.notJoinedCommunities = res.notJoined.data;
-            this.communities = [...res.joined.data, ...res.notJoined.data];
-        });
+        this.loadCommunities();
+    }
+
+    private getCommunitiesIDsFrom(data: Community[]) {
+        return data.map(c => c.id!);
     }
 
     filterCommunities(event?: Event): void {
@@ -85,6 +80,36 @@ export class ComunitiesComponent {
                 },
                 error: res => this.notify.error(`An error occurred: ${res.message}`)
             });
+        });
+    }
+
+    loadCommunities() {
+        if (this.maxReached) return;
+        (this.serviceFactory.get('communities') as CommunityService).getCommunitiesPaginated(this.limit, this.offset).subscribe(res => {
+            const communitiesIDs = this.getCommunitiesIDsFrom(res.data);
+            forkJoin({
+                joined: (this.serviceFactory.get('communities') as CommunityService).getUserCommunitiesFrom(this.authService.getUserUUID(), communitiesIDs),
+                notJoined: (this.serviceFactory.get('communities') as CommunityService).getCommunitiesExcludingUserFrom(this.authService.getUserUUID(), communitiesIDs)
+            }).subscribe(res => {
+                this.joinedCommunities = this.joinedCommunities.concat(res.joined.data);
+                this.notJoinedCommunities = this.notJoinedCommunities.concat(res.notJoined.data);
+                if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;
+                else this.maxReached = true;
+                this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
+            });
+        });
+    }
+
+    removeCommunity(community: Community) {
+        this.notify.confirm(`You will not be able to revert this: REMOVE ${community.name}'s community`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).removeCommunity(community.id!).subscribe({
+                next: () => {
+                    this.notify.success('You have removed this community!');
+                    this.loadCommunities();
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+            else this.notify.success('Your community is still safe!');
         });
     }
 }

@@ -9,9 +9,10 @@
         </div>
         <div class="d-flex flex-column bg-white w-50">
             <div id="announces-section-container" class="d-flex flex-column w-100">
-                <section id="announces-section" class="d-flex flex-column align-items-center overflow-scroll">
+                <section id="announces-section" class="d-flex flex-column align-items-center h-100 overflow-auto">
                     <div class="d-flex gap-3">
-                        <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!</button>
+                        <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!
+                        </button>
                         <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
                     </div>
                     @if (announcements.length === 0) {
@@ -28,18 +29,19 @@
             </div>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex flex-column align-items-center justify-content-center">
-                    <div class="d-flex gap-5">
-                        <button class="button mb-5 mt-5" (click)="showEventForm()">Create Event</button>
-                        @if (isUserJoined) {
-                            <button class="leave-button mb-5 mt-5" (click)="leaveCommunity()">Leave Community</button>
+                    <div class="d-flex gap-3 p-3">
+                        <button class="button" (click)="showEventForm()">Create Event</button>
+                        @if (!isCreator()) {
+                            @if (isUserJoined) {
+                                <button class="leave-button" (click)="leaveCommunity()">Leave Community
+                                </button>
+                            } @else {
+                                <button class="button" (click)="joinCommunity()">Join Community</button>
+                            }
                         } @else {
-                            <button class="button mb-5 mt-5" (click)="joinCommunity()">Join Community</button>
-                        }
-                    </div>
-                    <div class="d-flex gap-5">
-                        @if (isCreator()) {
-                            <button class="button mb-5" (click)="showModeratorsManagement()">Manage moderators</button>
-                            <button class="leave-button mb-5" (click)="removeCommunity()">Remove community</button>
+                            <button class="button" (click)="showModeratorsManagement()">Manage moderators</button>
+                            <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
+                            <button class="leave-button" (click)="removeCommunity()">Remove community</button>
                         }
                     </div>
                 </div>

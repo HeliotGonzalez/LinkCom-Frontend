@@ -38,12 +38,14 @@ export class EventViewComponent {
     }
 
     leaveEvent() {
-        (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
-            next: () => {
-                this.notify.success(`You have joined ${this.event?.title}`);
-                this.isDisabled = false;
-            },
-            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success(`You have left ${this.event?.title}`);
+                    this.isDisabled = false;
+                },
+                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+            });
         });
     }
 

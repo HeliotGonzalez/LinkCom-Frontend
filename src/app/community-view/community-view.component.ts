@@ -27,6 +27,7 @@ export class CommunityViewComponent {
     protected community: Community | null = null;
     protected userEvents: CommunityEvent[] = [];
     protected isUserJoined: boolean = false;
+    protected isUserModerator: boolean = false;
     protected announcements: Announce[] = [];
 
     constructor(
@@ -40,7 +41,13 @@ export class CommunityViewComponent {
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-            this.isUserJoined = params['isUserJoined'];
+            (this.serviceFactory.get('communities') as CommunityService).isUserJoined(params['communityID'], this.authService.getUserUUID()).subscribe(res => {
+                this.isUserJoined = res.data.length > 0;
+            });
+
+            (this.serviceFactory.get('communities') as CommunityService).isUserModerator(params['communityID'], this.authService.getUserUUID()).subscribe(res => {
+                this.isUserModerator = res.data.length > 0;
+            });
 
             (this.serviceFactory.get('communities') as CommunityService).getCommunity(params['communityID']).subscribe(res => {
                 this.community = (res as ApiResponse<Community>).data[0];
@@ -121,6 +128,11 @@ export class CommunityViewComponent {
 
     protected showAnnouncementForm() {
         this.router.navigate(["/announcementCreation"], {queryParams: {communityID: this.community?.id}}).then(r => {
+        });
+    }
+
+    showRequestsPanel() {
+        this.router.navigate(["/communityRequestsPanel"], {queryParams: {communityID: this.community?.id}}).then(r => {
         });
     }
 }

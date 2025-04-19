@@ -32,33 +32,33 @@ main {
 .button {
     border-radius: 5px;
     padding: 0.5rem 1.7rem;
-    background: white;
+    background: #2E3E7F;
     border: 2px solid #2E3E7F;
-    color: #2E3E7F;
+    color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
 }
 
 .button:hover {
-    background: #2E3E7F;
+    background: white;
     border: 2px solid #2E3E7F;
-    color: white;
+    color: #2E3E7F;
 }
 
 .leave-button {
     border-radius: 5px;
     padding: 0.5rem 1.7rem;
-    background: white;
+    background: #d31f1f;
+    color: white;
     border: 2px solid #d31f1f;
-    color: darkred;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 
 .leave-button:hover {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    background: #d31f1f;
-    color: white;
+    color: darkred;
+    background: white;
 }
 
 #announces-section {
