@@ -58,15 +58,22 @@ export class ComunitiesComponent {
     }
 
     joinCommunity(community: Community) {
-        (this.serviceFactory.get('communities') as CommunityService).joinCommunity(community.id!, this.authService.getUserUUID()).subscribe({
-            next: () => {
-                this.notify.success('You have join this community!');
-                this.notJoinedCommunities = this.notJoinedCommunities.filter(c => c.id !== community.id);
-                this.joinedCommunities.push(community);
-                this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities]
-            },
-            error: res => this.notify.error(`An error occurred: ${res.message}`)
-        });
+        if (community.isPrivate) {
+            (this.serviceFactory.get('communities') as CommunityService).requestJoinToCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => this.notify.success('The request has been sent! Now you have to wait for a response'),
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        } else {
+            (this.serviceFactory.get('communities') as CommunityService).joinCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success('You have join this community!');
+                    this.notJoinedCommunities = this.notJoinedCommunities.filter(c => c.id !== community.id);
+                    this.joinedCommunities.push(community);
+                    this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities]
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        }
     }
 
     leaveCommunity(community: Community) {

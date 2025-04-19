@@ -44,23 +44,18 @@ export class CommunityViewComponent {
             (this.serviceFactory.get('communities') as CommunityService).isUserJoined(params['communityID'], this.authService.getUserUUID()).subscribe(res => {
                 this.isUserJoined = res.data.length > 0;
             });
-
             (this.serviceFactory.get('communities') as CommunityService).isUserModerator(params['communityID'], this.authService.getUserUUID()).subscribe(res => {
                 this.isUserModerator = res.data.length > 0;
             });
-
             (this.serviceFactory.get('communities') as CommunityService).getCommunity(params['communityID']).subscribe(res => {
                 this.community = (res as ApiResponse<Community>).data[0];
             });
-
             (this.serviceFactory.get('communities') as CommunityService).getCommunityEvents(params['communityID']).subscribe(res => {
                 this.events = (res as ApiResponse<CommunityEvent>).data;
             });
-
             this.apiService.getUserEvents(this.authService.getUserUUID()).subscribe(res => {
                 this.userEvents = (res as ApiResponse<CommunityEvent>).data;
             });
-
             (this.serviceFactory.get('communities') as CommunityService).getCommunityAnnouncements(params['communityID']).subscribe(res => {
                 this.announcements = (res as ApiResponse<Announce>).data;
             });
@@ -98,10 +93,17 @@ export class CommunityViewComponent {
     }
 
     protected joinCommunity() {
-        (this.serviceFactory.get('communities') as CommunityService).joinCommunity(this.community!.id!, this.authService.getUserUUID()).subscribe({
-            next: () => this.notify.success('You have join this community!'),
-            error: res => this.notify.error(`An error occurred: ${res.message}`)
-        });
+        if (this.community?.isPrivate) {
+            (this.serviceFactory.get('communities') as CommunityService).requestJoinToCommunity(this.community!.id!, this.authService.getUserUUID()).subscribe({
+                next: () => this.notify.success('The request has been sent! Now you have to wait for a response'),
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        } else {
+            (this.serviceFactory.get('communities') as CommunityService).joinCommunity(this.community!.id!, this.authService.getUserUUID()).subscribe({
+                next: () => this.notify.success('You have join this community!'),
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        }
     }
 
     protected async removeCommunity() {

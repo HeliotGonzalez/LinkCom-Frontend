@@ -10,6 +10,7 @@ import {Community} from "../model/Community";
 import {CommunityEvent} from "../model/CommunityEvent";
 
 export interface CommunityService extends Service {
+    requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>>
     getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
     getUserCommunitiesFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
     getCommunity(communityID: string): Observable<ApiResponse<Community>>;

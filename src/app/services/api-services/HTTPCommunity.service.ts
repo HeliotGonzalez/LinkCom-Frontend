@@ -14,6 +14,10 @@ export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(`${this.url}/communities/${communityID}/joinRequest`, {userID});
+    }
+
     getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]) {
         return this.http.get<ApiResponse<Community>>(`${this.url}/communities/excluding/${userID}?id=in;${communityIDs}`)
     }
