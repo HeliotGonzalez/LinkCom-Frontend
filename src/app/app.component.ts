@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from './header/header.component';
 import {CommonModule} from '@angular/common';
-import {ApiService} from './services/api-service.service';
 import {RouterOutlet} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {OnInit} from '@angular/core';
@@ -10,6 +9,9 @@ import {ServiceFactory} from "./services/api-services/ServiceFactory.service";
 import {HTTPCommunityService} from "./services/api-services/HTTPCommunity.service";
 import {HTTPEventService} from "./services/api-services/HTTPEventService";
 import {HTTPUserService} from "./services/api-services/HTTPUserService";
+import {WebSocketFactory} from "./services/api-services/WebSocketFactory.service";
+import {io} from "socket.io-client";
+import {WebSocketService} from "../architecture/io/WebSocketService";
 
 @Component({
     selector: 'app-root',
@@ -27,9 +29,15 @@ export class AppComponent implements OnInit {
     fontSize: any;
     email: string = '';
     showHeader = true;
-    url = 'http://localhost:3000'
+    url = 'http://localhost:3000';
+    socketUrl = 'http://localhost:3001';
 
-    constructor(private apiService: ApiService, private http: HttpClient, private headerService: HeaderVisibilityService, private serviceFactory: ServiceFactory) {
+    constructor(
+        private http: HttpClient,
+        private headerService: HeaderVisibilityService,
+        private serviceFactory: ServiceFactory,
+        private socketFactory: WebSocketFactory
+    ) {
     }
 
     ngOnInit() {
@@ -39,6 +47,7 @@ export class AppComponent implements OnInit {
             });
         });
         this.fillServiceFactory();
+        this.fillSocketFactory();
     }
 
     private fillServiceFactory() {
@@ -46,6 +55,15 @@ export class AppComponent implements OnInit {
             .put('communities', new HTTPCommunityService(this.http, this.url))
             .put('events', new HTTPEventService(this.http, this.url))
             .put('users', new HTTPUserService(this.http, this.url))
+    }
+
+    private fillSocketFactory() {
+        const socket = io(this.socketUrl);
+        this.socketFactory
+            .put('Communities', new WebSocketService(socket, 'Communities'))
+            .put('Community', new WebSocketService(socket, 'Community'))
+            .put('CommunityUser', new WebSocketService(socket, 'CommunityUser'))
+            .put('JoinRequests', new WebSocketService(socket, 'JoinRequests'))
     }
 
     onSubmit() {
@@ -63,5 +81,4 @@ export class AppComponent implements OnInit {
             }
         );
     }
-
 }

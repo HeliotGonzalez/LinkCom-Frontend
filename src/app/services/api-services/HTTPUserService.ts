@@ -9,6 +9,10 @@ export class HTTPUserService implements UserService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    getUsers(userID: string[]): Observable<ApiResponse<User>> {
+        return this.http.get<ApiResponse<User>>(`${this.url}/users?id=in;${userID}`);
+    }
+
     getUser(userID: string): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/users/${userID}`);
     }

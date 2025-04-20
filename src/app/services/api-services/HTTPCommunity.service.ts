@@ -9,9 +9,19 @@ import {CommunityService} from "../../../architecture/services/CommunityService"
 import {Observable} from "rxjs";
 import {Community} from "../../../architecture/model/Community";
 import { CommunityEvent } from "../../../architecture/model/CommunityEvent";
+import { JoinRequest } from "../../../architecture/model/JoinRequest";
+import { RequestStatus } from "../../../architecture/model/RequestStatus";
 
 export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    updateJoinRequest(joinRequestID: string, decidedBy: string, decidedAt: Date, status: RequestStatus): Observable<ApiResponse<JoinRequest>> {
+        return this.http.patch<ApiResponse<JoinRequest>>(`${this.url}/communities/${joinRequestID}/update`, {decidedBy, decidedAt, status});
+    }
+
+    getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>> {
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/${communityID}/joinRequests`);
     }
 
     requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>> {
@@ -21,6 +31,7 @@ export class HTTPCommunityService implements CommunityService {
     getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]) {
         return this.http.get<ApiResponse<Community>>(`${this.url}/communities/excluding/${userID}?id=in;${communityIDs}`)
     }
+
     getUserCommunitiesFrom(userID: string, communityIDs: string[]) {
         return this.http.get<ApiResponse<Community>>(`${this.url}/users/${userID}/communities?communityID=in;${communityIDs}`)
     }

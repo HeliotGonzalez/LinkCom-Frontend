@@ -14,23 +14,9 @@
         </div>
         <div class="requests-section-container w-100 overflow-hidden">
             <section class="requests-section d-flex flex-column w-100 p-5 gap-3 h-100 overflow-auto">
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
-                <app-community-request></app-community-request>
+                @for (user of users; track user.id) {
+                    <app-community-request (rejectRequestEmitter)="rejectRequest($event)" (acceptRequestEmitter)="acceptRequest($event)" [user]="user"></app-community-request>
+                }
             </section>
         </div>
     </div>

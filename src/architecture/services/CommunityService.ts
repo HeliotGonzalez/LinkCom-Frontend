@@ -8,9 +8,13 @@ import {CommunityRole} from "../model/CommunityRole";
 import {Service} from "./Service";
 import {Community} from "../model/Community";
 import {CommunityEvent} from "../model/CommunityEvent";
+import {JoinRequest} from "../model/JoinRequest";
+import {RequestStatus} from "../model/RequestStatus";
 
 export interface CommunityService extends Service {
-    requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>>
+    updateJoinRequest(joinRequestID: string, decidedBy: string, decidedAt: Date, status: RequestStatus): Observable<ApiResponse<JoinRequest>>;
+    requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>>;
+    getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>>;
     getCommunitiesExcludingUserFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
     getUserCommunitiesFrom(userID: string, communityIDs: string[]): Observable<ApiResponse<Community>>;
     getCommunity(communityID: string): Observable<ApiResponse<Community>>;
