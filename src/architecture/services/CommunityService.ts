@@ -12,6 +12,8 @@ import {JoinRequest} from "../model/JoinRequest";
 import {RequestStatus} from "../model/RequestStatus";
 
 export interface CommunityService extends Service {
+    cancelRequest(communityID: string, userID: string): Observable<ApiResponse<JoinRequest>>;
+    getUserJoinRequestOf(userID: string, communitiesIDs: string[]): Observable<ApiResponse<JoinRequest>>;
     updateJoinRequest(joinRequestID: string, decidedBy: string, decidedAt: Date, status: RequestStatus): Observable<ApiResponse<JoinRequest>>;
     requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>>;
     getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>>;

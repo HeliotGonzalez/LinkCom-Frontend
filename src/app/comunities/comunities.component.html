@@ -35,10 +35,12 @@
             @for (community of communities; track community.id) {
                 <app-community-card
                         [community]="community"
-                        [isUserJoined]="joinedCommunities.includes(community)"
+                        [isUserJoined]="booleanAttribute(joinedCommunities[community.id!])"
+                        [isRequested]="Object.keys(requests).includes(community.id!)"
                         (joinCommunityEmitter)="joinCommunity($event)"
                         (leaveCommunityEmitter)="leaveCommunity($event)"
                         (removeCommunityEmitter)="removeCommunity($event)"
+                        (cancelRequestEmitter)="cancelRequest($event)"
                 ></app-community-card>
             }
         </section>

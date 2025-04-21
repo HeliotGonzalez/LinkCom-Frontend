@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommunityRequestComponent} from "../community-request/community-request.component";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {Community} from "../../architecture/model/Community";
@@ -10,10 +10,23 @@ import {JoinRequest} from "../../architecture/model/JoinRequest";
 import {UserService} from "../../architecture/services/UserService";
 import {AuthService} from "../services/auth.service";
 import {RequestStatus} from "../../architecture/model/RequestStatus";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
     selector: 'app-community-requests-panel',
+    animations: [
+        trigger('fadeDialog', [
+            state('void', style({ opacity: 0, transform: 'scale(0.95)' })),
+            state('*', style({ opacity: 1, transform: 'scale(1)' })),
+            transition(':enter', [
+                style({ opacity: 0, transform: 'scale(0.95)' }),
+                animate('200ms ease-out')
+            ]),
+            transition(':leave', [
+                animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.95)' }))
+            ])
+        ])
+    ],
     imports: [
         CommunityRequestComponent
     ],
@@ -21,12 +34,13 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
     styleUrl: './community-requests-panel.component.css'
 })
 export class CommunityRequestsPanelComponent {
+    @Input() isVisible!: boolean;
+    @Output() eventEmitter = new EventEmitter();
     protected community: Community | null = null;
     protected users: User[] = [];
     protected requests: JoinRequest[] = [];
 
     constructor(
-        private router: Router,
         private route: ActivatedRoute,
         private serviceFactory: ServiceFactory,
         private socketFactory: WebSocketFactory,
@@ -55,11 +69,6 @@ export class CommunityRequestsPanelComponent {
         });
     }
 
-    closePanel() {
-        this.route.queryParams.subscribe(params => this.router.navigate(["/community"], {queryParams: {communityID: params['communityID']}}).then(r => {
-        }))
-    }
-
     rejectRequest(user: User) {
         const request = this.requests.find(r => r.userID === user.id);
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
@@ -73,5 +82,9 @@ export class CommunityRequestsPanelComponent {
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
             request?.id!, this.auth.getUserUUID(), new Date(), RequestStatus.ACCEPTED
         ).subscribe();
+    }
+
+    close() {
+        this.eventEmitter.emit();
     }
 }

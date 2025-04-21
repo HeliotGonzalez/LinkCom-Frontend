@@ -13,9 +13,11 @@ import {AuthService} from "../../services/auth.service";
 export class CommunityCardComponent {
     @Input() community!: Community;
     @Input() isUserJoined: boolean = false;
+    @Input() isRequested: boolean = false;
     @Output() joinCommunityEmitter = new EventEmitter<Community>();
     @Output() leaveCommunityEmitter = new EventEmitter<Community>();
     @Output() removeCommunityEmitter = new EventEmitter<Community>();
+    @Output() cancelRequestEmitter = new EventEmitter<Community>();
 
     constructor(
         private router: Router,
@@ -46,5 +48,9 @@ export class CommunityCardComponent {
 
     isCreator() {
         return this.community.creatorID === this.auth.getUserUUID();
+    }
+
+    cancelRequest() {
+        this.cancelRequestEmitter.emit(this.community);
     }
 }

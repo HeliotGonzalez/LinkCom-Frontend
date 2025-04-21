@@ -9,12 +9,16 @@ export class Notify {
     constructor() {
     }
 
+    info(title: string, msg: string) {
+        Swal.fire(title, msg, 'info');
+    }
+
     success(msg: string) {
         Swal.fire('Success!', msg, 'success');
     }
 
-    error(msg: string) {
-        Swal.fire('An error occurred!', msg, 'error');
+    error(msg: string, title: string = 'An error occurred') {
+        Swal.fire(title, msg, 'error');
     }
 
     async confirm(message: string): Promise<boolean> {

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Type} from '@angular/core';
 import {EventViewComponent} from "../event-view/event-view.component";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -11,12 +11,14 @@ import {Notify} from "../services/notify";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {Community} from "../../architecture/model/Community";
+import {CommunityRequestsPanelComponent} from "../community-requests-panel/community-requests-panel.component";
 
 @Component({
     selector: 'app-community-view',
     imports: [
         EventViewComponent,
-        AnnouncementCardComponent
+        AnnouncementCardComponent,
+        CommunityRequestsPanelComponent
     ],
     templateUrl: './community-view.component.html',
     standalone: true,
@@ -29,6 +31,8 @@ export class CommunityViewComponent {
     protected isUserJoined: boolean = false;
     protected isUserModerator: boolean = false;
     protected announcements: Announce[] = [];
+    requestsPanel: Type<any> = CommunityRequestsPanelComponent;
+    requestPanelVisible: boolean = false;
 
     constructor(
         private router: Router,
@@ -134,7 +138,10 @@ export class CommunityViewComponent {
     }
 
     showRequestsPanel() {
-        this.router.navigate(["/communityRequestsPanel"], {queryParams: {communityID: this.community?.id}}).then(r => {
-        });
+        this.requestPanelVisible = true;
+    }
+
+    closeRequestPanel() {
+        this.requestPanelVisible = false;
     }
 }

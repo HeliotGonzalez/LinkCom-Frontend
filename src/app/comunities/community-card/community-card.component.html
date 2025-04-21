@@ -28,19 +28,28 @@
                 <section class="h-25"></section>
             </div>
         </div>
-        <div class="community-card-content-footer d-flex align-items-center h-25 justify-content-center p-2 gap-2">
-            <button class="button" (click)="viewCommunity()">View</button>
-
-            @if (isUserJoined) {
-                @if (isCreator()) {
-                    <button class="leave-button" (click)="removeCommunity()">Remove</button>
+        <div class="community-card-content-footer d-flex flex-column align-items-center h-25 justify-content-center p-2 gap-2">
+            <div class="d-flex align-items-center justify-content-center p-2 gap-2">
+                <button class="button" (click)="viewCommunity()">View</button>
+                @if (isUserJoined) {
+                    @if (isCreator()) {
+                        <button class="leave-button" (click)="removeCommunity()">Remove</button>
+                    } @else {
+                        <button class="leave-button" (click)="leaveCommunity()">Leave</button>
+                    }
                 } @else {
-                    <button class="leave-button" (click)="leaveCommunity()">Leave</button>
+                    @if (isRequested) {
+                        <button class="leave-button" (click)="cancelRequest()">Cancel</button>
+                    } @else {
+                        <button class="button" (click)="joinCommunity()">Join</button>
+                    }
                 }
-            } @else {
-                <button class="button" (click)="joinCommunity()">Join</button>
-            }
-
+            </div>
+            <div class="d-flex text-center">
+                @if (isRequested) {
+                    <span style="font-size: 0.7rem" class="fw-lighter">JOIN REQUEST SENT</span>
+                }
+            </div>
         </div>
     </div>
 </article>

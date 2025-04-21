@@ -16,12 +16,20 @@ export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    cancelRequest(communityID: string, userID: string): Observable<ApiResponse<JoinRequest>> {
+        return this.http.delete<ApiResponse<JoinRequest>>(`${this.url}/communities/${communityID}/${userID}/cancelRequest`);
+    }
+
+    getUserJoinRequestOf(userID: string, communitiesIDs: string[]): Observable<ApiResponse<JoinRequest>> {
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests/given?userID=${userID}&communityID=in;${communitiesIDs}`);
+    }
+
     updateJoinRequest(joinRequestID: string, decidedBy: string, decidedAt: Date, status: RequestStatus): Observable<ApiResponse<JoinRequest>> {
         return this.http.patch<ApiResponse<JoinRequest>>(`${this.url}/communities/${joinRequestID}/update`, {decidedBy, decidedAt, status});
     }
 
     getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>> {
-        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/${communityID}/joinRequests`);
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests?id=${communityID}`);
     }
 
     requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>> {
