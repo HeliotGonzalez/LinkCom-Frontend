@@ -28,9 +28,9 @@ export class ApiService {
     }
 
     // Obtener comunidades a las que NO pertenece el usuario
-    getNonBelongingCommunities(userId: string): Observable<any> {
-        console.log('ID: ' + userId);
-        return this.http.get(`${this.baseUrl}/nonBelongingCommunities?userId=${userId}`);
+    getNonBelongingCommunities(userID: string): Observable<any> {
+        console.log('ID: ' + userID);
+        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities?userId=${userID}`);
     }
 
     // Obtener eventos para el calendario
@@ -46,8 +46,8 @@ export class ApiService {
     }
 
     // Un usuario se une a una comunidad
-    joinCommunity(userID: string, communityID: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinCommunity`, {userID, communityID});
+    joinCommunity(userID: string, communityId: string): Observable<any> {
+        return this.http.put(`${this.baseUrl}/communities/${communityId}/join`, { userID });
     }
 
     // Un usuario se une a una comunidad
