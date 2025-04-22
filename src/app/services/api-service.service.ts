@@ -52,7 +52,7 @@ export class ApiService {
 
     // Un usuario se une a una comunidad
     joinEvent(userID: string, communityID: string | undefined, eventID: string | undefined): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
+        return this.http.put(`${this.baseUrl}/events/${eventID}/join`, {userID, communityID});
     }
 
     createCommunity(data: CreateCommunityParameters) {
