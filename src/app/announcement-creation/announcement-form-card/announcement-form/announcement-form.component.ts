@@ -81,7 +81,7 @@ export class AnnouncementFormComponent implements OnInit{
       return;
     }
 
-    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.userID, this.communityName, this.publisherID).subscribe({
+    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.publisherID).subscribe({
       next: (response: any) => {
         console.log(response);
         Swal.fire({
