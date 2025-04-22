@@ -1,0 +1,38 @@
+<div class="form-card">
+
+  <div class="stepper-container">
+    <div class="stepper">
+      <div class="stepper-step ">
+        <div class="step-number">1</div>
+      </div>
+      <div class="stepper-step">
+        <div class="step-number">2</div>
+      </div>
+      <div class="stepper-step current">
+        <div class="step-number">3</div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="register-form-header">
+      <div class="register-form-title-container text-center">
+        <h1 class="register-form-title">User Register</h1>
+        <h2 class="register-form-subtitle">Almost done! Your registration is in process.</h2>
+      </div>
+    </div>
+  
+    <form class="register-form">
+      <!-- Mensaje de proceso -->
+      <div class="message-container text-center">
+        <p class="process-message">EN PROCESO AUN</p>
+      </div>
+  
+      <!-- Pie de formulario con un botón que no hace nada por ahora -->
+      <div class="register-form-footer d-flex justify-content-center gap-2 mt-3">
+        <button type="button" class="form-button normal-button" disabled>Processing...</button>
+        <button (click)="goToSecondStep()" type="button" class="form-button normal-button">Back</button>
+      </div>
+    </form>
+  </div>
+  

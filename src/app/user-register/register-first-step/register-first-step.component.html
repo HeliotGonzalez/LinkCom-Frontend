@@ -1,6 +1,21 @@
 <div class="register-form-background"></div>
 
 <div class="form-card">
+  <!-- Stepper -->
+  <div class="stepper-container">
+    <div class="stepper">
+      <div class="stepper-step current">
+        <div class="step-number">1</div>
+      </div>
+      <div class="stepper-step">
+        <div class="step-number">2</div>
+      </div>
+      <div class="stepper-step">
+        <div class="step-number">3</div>
+      </div>
+    </div>
+  </div>
+
   <div class="register-form-header">
     <div class="register-form-title-container text-center">
       <h1 class="register-form-title">User Register</h1>
@@ -8,7 +23,7 @@
     </div>
   </div>
 
-  <form class="register-form" (ngSubmit)="onSubmit()">
+  <form class="register-form">
     <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
       <div class="input-container d-flex flex-column">
         <label for="username-input">Username *</label>
@@ -17,10 +32,6 @@
       <div class="input-container d-flex flex-column">
         <label for="email-input">Email *</label>
         <input [(ngModel)]="email" name="email" id="email-input" placeholder="Enter your email address" type="email" required>
-      </div>
-      <div class="input-container d-flex flex-column">
-        <label for="description-input">Description *</label>
-        <input [(ngModel)]="description" name="description"  placeholder="Enter a short description" required>
       </div>
       <div class="input-container d-flex flex-column">
         <label for="password-input">Password *</label>
@@ -33,7 +44,7 @@
     </div>
 
     <div class="register-form-footer d-flex justify-content-center gap-2">
-      <button type="submit" class="form-button normal-button">REGISTER</button>
+      <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
     </div>
   </form>
 
