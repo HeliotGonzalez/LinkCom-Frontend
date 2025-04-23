@@ -16,14 +16,14 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
     selector: 'app-community-requests-panel',
     animations: [
         trigger('fadeDialog', [
-            state('void', style({ opacity: 0, transform: 'scale(0.95)' })),
-            state('*', style({ opacity: 1, transform: 'scale(1)' })),
+            state('void', style({opacity: 0, transform: 'scale(0.95)'})),
+            state('*', style({opacity: 1, transform: 'scale(1)'})),
             transition(':enter', [
-                style({ opacity: 0, transform: 'scale(0.95)' }),
+                style({opacity: 0, transform: 'scale(0.95)'}),
                 animate('200ms ease-out')
             ]),
             transition(':leave', [
-                animate('150ms ease-in', style({ opacity: 0, transform: 'scale(0.95)' }))
+                animate('150ms ease-in', style({opacity: 0, transform: 'scale(0.95)'}))
             ])
         ])
     ],
@@ -31,6 +31,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
         CommunityRequestComponent
     ],
     templateUrl: './community-requests-panel.component.html',
+    standalone: true,
     styleUrl: './community-requests-panel.component.css'
 })
 export class CommunityRequestsPanelComponent {
@@ -59,11 +60,14 @@ export class CommunityRequestsPanelComponent {
                 socket.onUpdate().subscribe(res => this.fetchRequests());
             });
         });
+        this.socketFactory.get('JoinRequests').onInsert().subscribe(() => this.fetchRequests());
+        this.socketFactory.get('JoinRequests').onUpdate().subscribe(() => this.fetchRequests());
+        this.socketFactory.get('JoinRequests').onDelete().subscribe(() => this.fetchRequests());
     }
 
     fetchRequests() {
         (this.serviceFactory.get('communities') as CommunityService).getCommunityJoinRequests(this.community?.id!).subscribe(res => {
-            this.requests = res.data.filter(r => r.status === RequestStatus.PENDING)
+            this.requests = res.data.filter(r => r.status === RequestStatus.PENDING);
             const usersIDs = this.requests.map(r => r.userID);
             (this.serviceFactory.get('users') as UserService).getUsers(usersIDs).subscribe(res => this.users = res.data);
         });

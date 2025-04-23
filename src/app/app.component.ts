@@ -22,6 +22,7 @@ import {WebSocketService} from "../architecture/io/WebSocketService";
         CommonModule,
         RouterOutlet,
     ],
+    standalone: true
 })
 export class AppComponent implements OnInit {
     title = 'LinkCom-FrontEnd';

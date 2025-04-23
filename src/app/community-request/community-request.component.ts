@@ -5,6 +5,7 @@ import {User} from "../../architecture/model/User";
     selector: 'app-community-request',
     imports: [],
     templateUrl: './community-request.component.html',
+    standalone: true,
     styleUrl: './community-request.component.css'
 })
 export class CommunityRequestComponent {
