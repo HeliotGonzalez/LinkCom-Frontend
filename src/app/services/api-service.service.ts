@@ -36,7 +36,7 @@ export class ApiService {
     // Obtener eventos para el calendario
     getEvents(userID: string): Observable<any> {
         console.log('ID: ' + userID);
-        return this.http.get(`${this.baseUrl}/getCalendarEvents?userID=${userID}`);
+        return this.http.get(`${this.baseUrl}/users/${userID}/events`);
     }
 
     // Se crea una instancia de EventUser en la base de datos (Usuario que pertenece a un evento)
