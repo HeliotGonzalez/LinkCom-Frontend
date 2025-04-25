@@ -1,190 +1,183 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { CommunityCardComponent } from './community-card/community-card.component';
-import { ApiService } from '../services/api-service.service';
-import { Community } from '../interfaces/community';
-import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
-import Swal from 'sweetalert2';
-
-interface GetUserCommunitiesResponse {
-  data: { id: string }[];
-}
+import {booleanAttribute, Component} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {CommunityCardComponent} from './community-card/community-card.component';
+import {Router} from '@angular/router';
+import {AuthService} from '../services/auth.service';
+import {CommunityService} from "../../architecture/services/CommunityService";
+import {forkJoin} from "rxjs";
+import {Notify} from "../services/notify";
+import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {Community} from "../../architecture/model/Community";
+import {WebSocketFactory} from "../services/api-services/WebSocketFactory.service";
+import {JoinRequest} from "../../architecture/model/JoinRequest";
+import {RequestStatus} from "../../architecture/model/RequestStatus";
 
 @Component({
-  selector: 'app-comunities',
-  standalone: true,
-  imports: [FormsModule, CommonModule, CommunityCardComponent],
-  templateUrl: './comunities.component.html',
-  styleUrl: './comunities.component.css'
+    selector: 'app-comunities',
+    standalone: true,
+    imports: [FormsModule, CommonModule, CommunityCardComponent],
+    templateUrl: './comunities.component.html',
+    styleUrl: './comunities.component.css'
 })
 export class ComunitiesComponent {
-  protected communities: Community[] = [];
-  protected joinedCommunities: Community[] = [];
-  protected notJoinedCommunities: Community[] = [];
-  protected userCommunitiesIDs: string[] = [];
-  protected userID: string = '';
+    protected communities: {[key: string]: Community} = {};
+    protected joinedCommunities: {[key: string]: Community} = {};
+    protected notJoinedCommunities: {[key: string]: Community} = {};
+    protected requests: {[key: string]: JoinRequest} = {};
+    protected limit = 2;
+    protected offset: number = 0;
+    protected maxReached: boolean = false;
+    protected searchTerm: string = '';
 
-  constructor(
-    private router: Router,
-    private apiService: ApiService,
-    private authService: AuthService
-  ) {}
-
-  async ngOnInit() {
-    this.userID = this.authService.getUserUUID();
-    console.log('[DEBUG] Usuario conectado UUID:', this.userID);
-
-    if (!this.userID) {
-      console.error('❌ No se ha podido obtener el UUID del usuario. Aborta carga de comunidades.');
-      return;
+    constructor(
+        private router: Router,
+        private serviceFactory: ServiceFactory,
+        private authService: AuthService,
+        private notify: Notify,
+        private socketFactory: WebSocketFactory
+    ) {
     }
 
-    await this.fetchCommunities();
-  }
-
-  async fetchCommunities(): Promise<void> {
-    return new Promise((resolve) => {
-      let completedRequests = 0;
-      let allCommunities: Community[] = [];
-
-      this.apiService.getCommunities().subscribe({
-        next: (res) => {
-          allCommunities = res;
-          completedRequests++;
-          if (completedRequests === 2) {
-            this.reorderCommunities(allCommunities);
-            resolve();
-          }
-        },
-        error: (err) => console.error('Error al obtener comunidades:', err),
-      });
-
-      this.apiService.getUserCommunities(this.userID).subscribe({
-        next: (res: GetUserCommunitiesResponse) => {
-          this.userCommunitiesIDs = Array.isArray(res.data)
-            ? res.data.map((c) => c.id)
-            : [];
-
-          completedRequests++;
-          if (completedRequests === 2) {
-            this.reorderCommunities(allCommunities);
-            resolve();
-          }
-        },
-        error: (err) => {
-          console.error('Error al obtener comunidades del usuario:', err);
-          this.userCommunitiesIDs = [];
-          completedRequests++;
-          if (completedRequests === 2) {
-            this.reorderCommunities(allCommunities);
-            resolve();
-          }
-        },
-      });
-    });
-  }
-
-  private reorderCommunities(allCommunities: Community[] | { data: Community[] }) {
-    const communitiesArray: Community[] = Array.isArray(allCommunities) ? allCommunities : allCommunities.data;
-    
-    this.joinedCommunities = communitiesArray.filter(c =>
-      this.userCommunitiesIDs.includes(c.id)
-    );
-    this.notJoinedCommunities = communitiesArray.filter(c =>
-      !this.userCommunitiesIDs.includes(c.id)
-    );
-    this.communities = [...this.joinedCommunities, ...this.notJoinedCommunities];
-  }  
-
-  showCommunityForm() {
-    this.router.navigate(['firstStepCommunityCreation']).then();
-  }
-
-  joinCommunity(community: Community) {
-    if (!this.userID) {
-      console.error('❌ userID es undefined al intentar unirse');
-      return;
+    ngOnInit() {
+        this.loadCommunities();
+        const communitiesSocket = this.socketFactory.get('Communities');
+        const requestsSocket = this.socketFactory.get('JoinRequests');
+        communitiesSocket.onUpdate().subscribe(res => this.onUpdateCommunity(res.new as Community));
+        communitiesSocket.onDelete().subscribe(res => this.onDeleteCommunity(res.new as Community));
+        requestsSocket.onInsert().subscribe(res => this.onInsertRequest(res.new as JoinRequest));
+        requestsSocket.onUpdate().subscribe(res => this.onUpdateRequests(res.new as JoinRequest));
+        requestsSocket.onDelete().subscribe(res => this.onDeleteRequests(res.old as JoinRequest));
     }
 
-    if (this.userCommunitiesIDs.includes(community.id)) {
-      Swal.fire({
-        title: "Ya estás dentro",
-        text: `Ya eres miembro de ${community.name}.`,
-        icon: "info"
-      });
-      return;
-    }
-
-    console.log('[DEBUG] Join:', { userID: this.userID, communityID: community.id });
-
-    this.apiService.joinCommunity(this.userID, community.id).subscribe({
-      next: res => {
-        this.userCommunitiesIDs.push(community.id);
-        this.reorderCommunities(this.communities);
-
-        Swal.fire({
-          title: "¡Unido!",
-          text: `Bienvenido a ${community.name}!`,
-          icon: "success"
+    private onUpdateCommunity(community: Community) {
+        (this.serviceFactory.get('communities') as CommunityService).getCommunity(community.id!).subscribe(res => {
+            this.communities[community.id!] = res.data[0];
+            this.joinedCommunities[community.id!] = res.data[0];
+            this.notJoinedCommunities[community.id!] = res.data[0];
         });
-      },
-      error: res => {
-        Swal.fire({
-          title: "Error",
-          text: `No se pudo unir a ${community.name}.`,
-          icon: "error"
-        });
-      }
-    });
-  }
-
-  leaveCommunity(community: Community) {
-    if (!this.userID) {
-      console.error('❌ userID es undefined al intentar salir');
-      return;
     }
 
-    if (!this.userCommunitiesIDs.includes(community.id)) {
-      Swal.fire({
-        title: "No estás dentro",
-        text: `No eres miembro de ${community.name}.`,
-        icon: "info"
-      });
-      return;
+    private onDeleteCommunity(community: Community) {
+        delete this.communities[community.id!];
     }
 
-    const swalWithBootstrapButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger"
-      },
-      buttonsStyling: false
-    });
+    private getCommunitiesIDsFrom(data: Community[]) {
+        return data.map(c => c.id!);
+    }
 
-    swalWithBootstrapButtons.fire({
-      title: "¿Estás seguro?",
-      text: "¡Puedes volver cuando quieras!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, salir",
-      cancelButtonText: "No, cancelar",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.apiService.leaveCommunity(this.userID, community.id).subscribe({
-          next: res => {
-            this.userCommunitiesIDs = this.userCommunitiesIDs.filter(id => id !== community.id);
-            this.reorderCommunities(this.communities);
+    filterCommunities(event?: Event): void {
+        if (event) event.preventDefault();
 
-            Swal.fire("¡Saliste!", `Ya no formas parte de ${community.name}.`, "success");
-          },
-          error: res => {
-            Swal.fire("Error", `No se pudo salir de ${community.name}.`, "error");
-          }
+        const term = this.searchTerm.toLowerCase().trim();
+
+        this.communities = Object.fromEntries(Object.entries(this.communities).filter(([id, community]) => (String(community.name).toLowerCase().includes(term)) ||
+            (String(community.description).toLowerCase().includes(term))))
+    }
+
+    showCommunityForm() {
+        this.router.navigate(['firstStepCommunityCreation']).then();
+    }
+
+    joinCommunity(community: Community) {
+        if (community.isPrivate) {
+            (this.serviceFactory.get('communities') as CommunityService).requestJoinToCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => this.notify.info('Request sent!', 'The request has been sent! Now you have to wait for a response'),
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        } else {
+            (this.serviceFactory.get('communities') as CommunityService).joinCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success('You have join this community!');
+                    this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, community);
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+        }
+    }
+
+    leaveCommunity(community: Community) {
+        this.notify.confirm(`You will be leaving ${community.name}'s community`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success('You have left this community!');
+                    this.applyCommunitiesChanges(this.notJoinedCommunities, this.joinedCommunities, community);
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
         });
-      }
-    });
-  }
+    }
+
+    loadCommunities() {
+        if (this.maxReached) return;
+        (this.serviceFactory.get('communities') as CommunityService).getCommunitiesPaginated(this.limit, this.offset).subscribe(res => {
+            const communitiesIDs = this.getCommunitiesIDsFrom(res.data);
+            forkJoin({
+                joined: (this.serviceFactory.get('communities') as CommunityService).getUserCommunitiesFrom(this.authService.getUserUUID(), communitiesIDs),
+                notJoined: (this.serviceFactory.get('communities') as CommunityService).getCommunitiesExcludingUserFrom(this.authService.getUserUUID(), communitiesIDs)
+            }).subscribe(res => {
+                res.joined.data.forEach(c => this.joinedCommunities[c.id!] = c);
+                res.notJoined.data.forEach(c => this.notJoinedCommunities[c.id!] = c);
+                (this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(this.authService.getUserUUID(), Object.keys(this.notJoinedCommunities)).subscribe(res => {
+                    res.data.forEach(r => this.requests[r.communityID!] = r);
+                })
+                this.communities = this.orderCommunities();
+                if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;
+                else this.maxReached = true;
+            });
+        });
+    }
+
+    private applyCommunitiesChanges(addingList: {[key: string]: Community}, removingList: {[key: string]: Community}, community: Community) {
+        addingList[community.id!] = community;
+        delete removingList[community.id!];
+        this.communities = this.orderCommunities();
+    }
+
+    private orderCommunities() {
+        return {...this.joinedCommunities, ...this.notJoinedCommunities};
+    }
+
+    removeCommunity(community: Community) {
+        this.notify.confirm(`You will not be able to revert this: REMOVE ${community.name}'s community`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).removeCommunity(community.id!).subscribe({
+                next: () => {
+                    this.notify.success('You have removed this community!');
+                    this.loadCommunities();
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+            else this.notify.success('Your community is still safe!');
+        });
+    }
+
+    protected readonly booleanAttribute = booleanAttribute;
+
+    cancelRequest(community: Community) {
+        this.notify.confirm(`Your join request will disappear!`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).cancelRequest(community.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success('You have canceled this join request!');
+                    this.loadCommunities();
+                },
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
+            });
+            else this.notify.error('Your request is still being processed', 'Process interrupted!');
+        });
+    }
+
+    protected readonly Object = Object;
+
+    private onInsertRequest(request: JoinRequest) {
+        this.requests[request.communityID] = request;
+    }
+
+    private onUpdateRequests(request: JoinRequest) {
+        if (request.status === RequestStatus.ACCEPTED) this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, this.communities[request.communityID!])
+        delete this.requests[request.communityID];
+    }
+
+    private onDeleteRequests(request: JoinRequest) {
+        this.requests = Object.fromEntries(Object.entries(this.requests).filter(([, r]) => r.id !== request.id));
+    }
 }

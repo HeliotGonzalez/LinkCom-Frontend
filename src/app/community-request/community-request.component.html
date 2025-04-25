@@ -1,0 +1,9 @@
+<article class="request d-flex bg-white w-100 p-3">
+    <div class="w-75 d-flex align-items-center fs-5">
+        {{user?.username}}
+    </div>
+    <div class="d-flex justify-content-end w-25 gap-2">
+        <button (click)="rejectRequest()" class="icon-button"><i class="bi-x-lg fw-bolder fs-5"></i></button>
+        <button (click)="acceptRequest()" class="icon-button"><i class="bi-check-lg fw-bolder fs-3"></i></button>
+    </div>
+</article>

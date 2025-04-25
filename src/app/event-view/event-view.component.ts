@@ -1,8 +1,10 @@
 import {Component, Input} from '@angular/core';
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {ImageDialogComponent} from "../image-dialog/image-dialog.component";
-import {ApiService} from "../services/api-service.service";
 import {AuthService} from "../services/auth.service";
+import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {EventService} from "../../architecture/services/EventService";
+import {Notify} from "../services/notify";
 
 @Component({
     selector: 'app-event-view',
@@ -18,27 +20,33 @@ export class EventViewComponent {
     @Input() isDisabled: boolean = true;
     protected isDialogVisible: boolean = false;
 
-    constructor(private apiService: ApiService, private authService: AuthService) {
+    constructor(
+        private authService: AuthService,
+        private serviceFactory: ServiceFactory,
+        private notify: Notify
+    ) {
     }
 
     joinEvent() {
-        this.apiService.joinEvent(this.authService.getUserUUID(), this.event?.communityID!, this.event?.id!)
-            .subscribe({
-                next: res => {
-                    console.log(res);
-                    this.isDisabled = true;
-                }
-            });
+        (this.serviceFactory.get('events') as EventService).joinEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
+            next: () => {
+                this.notify.success(`You have joined ${this.event?.title}`);
+                this.isDisabled = true;
+            },
+            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        });
     }
 
     leaveEvent() {
-        this.apiService.leaveEvent(this.authService.getUserUUID(), this.event?.id!)
-            .subscribe({
-                next: res => {
-                    console.log(res);
+        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success(`You have left ${this.event?.title}`);
                     this.isDisabled = false;
-                }
+                },
+                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
             });
+        });
     }
 
     openImageDialog() {

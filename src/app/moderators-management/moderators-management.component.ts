@@ -1,8 +1,12 @@
 import {Component} from '@angular/core';
 import {UserCardComponent} from './user-card/user-card.component';
 import {FormsModule} from '@angular/forms';
-import {ApiService} from '../services/api-service.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {CommunityService} from "../../architecture/services/CommunityService";
+import {forkJoin} from "rxjs";
+import {User} from "../../architecture/model/User";
+import {CommunityRole} from "../../architecture/model/CommunityRole";
 
 @Component({
     selector: 'app-moderators-management',
@@ -14,65 +18,69 @@ import {ActivatedRoute} from "@angular/router";
 export class ModeratorsManagementComponent {
     communityName: string = '';
     searchText: string = '';
-    filterRole: string = 'All';
-    members: any[] = [];
+    allMembers: User[] = [];
+    members: User[] = [];
+    moderators: User[] = [];
     communityID: string = '';
+    filter: string = 'all';
 
-    constructor(private route: ActivatedRoute, private apiService: ApiService) {
+    constructor(
+        private route: ActivatedRoute,
+        private serviceFactory: ServiceFactory,
+        private router: Router
+    ) {
     }
 
     fetchUsers(): void {
-        this.apiService.getModerators(this.communityID).subscribe({
-            next: (res) => {
-                this.members = res.data;
-            },
-            error: (err) => {
-                console.error('Error al obtener usuarios:', err);
-            }
-        });
-    }
-
-    fetchCommunity(): void {
-        this.apiService.getCommunityInfo(this.communityID).subscribe({
-            next: (res) => {
-                this.communityName = res.data[0].name;
-            },
-            error: (err) => {
-                console.error('Error al obtener comunidad:', err);
-            }
+        forkJoin({
+            members: (this.serviceFactory.get('communities') as CommunityService).getCommunityMembers(this.communityID),
+            moderators: (this.serviceFactory.get('communities') as CommunityService).getCommunityModerators(this.communityID)
+        }).subscribe(res => {
+            this.moderators = res.moderators.data;
+            this.members = res.members.data;
+            this.allMembers = [...res.moderators.data, ...res.members.data];
         });
     }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
             this.communityID = params['communityID'];
+            this.fetchUsers();
         });
-        this.fetchCommunity();
-        this.fetchUsers();
     }
 
-    get filteredMembers() {
-        return this.members
-            .filter(member => {
-                const roleLower = member.communityRole.toLowerCase();
-                if (roleLower === 'creator') return false;
-                return (this.filterRole.toLowerCase() === 'all' || roleLower === this.filterRole.toLowerCase()) &&
-                    member.username.toLowerCase().includes(this.searchText.toLowerCase());
-            })
-            .sort((a, b) => a.communityRole === 'member' ? 1 : -1);
+    updateRole(id: string, newRole: CommunityRole) {
+        const member = this.allMembers.find(m => m.id === id)!;
+        (this.serviceFactory.get('communities') as CommunityService).changeUserCommunityRole(this.communityID, member.id, newRole).subscribe(res => {
+            if (res.data[0].communityRole === CommunityRole.MEMBER) {
+                this.moderators = this.moderators.filter(m => m.id !== member.id);
+                this.members.push(member);
+            } else {
+                this.members = this.members.filter(m => m.id !== member.id);
+                this.moderators.push(member);
+            }
+            this.allMembers = [...this.moderators, ...this.members];
+        })
     }
 
-    updateRole(id: number, newRole: string) {
-        const member = this.members.find(m => m.id === id);
-        if (member) {
-            this.apiService.updateUserRole(this.communityID, id.toString(), newRole).subscribe({
-                next: (res) => {
-                    member.communityRole = newRole;
-                },
-                error: (err) => {
-                    console.error('Error al actualizar el rol:', err);
-                }
-            });
+    exitPage(event: Event) {
+        event.preventDefault();
+        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}}).then();
+    }
+
+    filterMembers() {
+        switch (this.filter) {
+            case 'moderator':
+                this.allMembers = this.moderators;
+                break;
+            case 'member':
+                this.allMembers = this.members;
+                break;
+            case 'all':
+                this.allMembers = [...this.moderators, ...this.members]
+                break;
         }
     }
+
+    protected readonly CommunityRole = CommunityRole;
 }

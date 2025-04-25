@@ -7,7 +7,10 @@ import {FormsModule} from '@angular/forms';
 import {ApiService} from "../../../../services/api-service.service";
 import Swal from "sweetalert2";
 import {AuthService} from "../../../../services/auth.service";
-import {EntitiesIdService} from "../../../../services/entitites-ids-service/entities-id.service";
+import {ServiceFactory} from "../../../../services/api-services/ServiceFactory.service";
+import {EventService} from "../../../../../architecture/services/EventService";
+import {CommunityEvent} from "../../../../../architecture/model/CommunityEvent";
+import {Notify} from "../../../../services/notify";
 
 @Component({
     selector: 'app-second-event-form',
@@ -28,9 +31,10 @@ export class SecondEventFormComponent {
     constructor(
         private router: Router,
         private formService: FormService,
+        private serviceFactory: ServiceFactory,
         private apiService: ApiService,
         private authService: AuthService,
-        private entitiesService: EntitiesIdService
+        private notify: Notify
     ) {
     }
 
@@ -47,62 +51,17 @@ export class SecondEventFormComponent {
         this.saveFormData();
 
         if (this.eventDescription === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            this.notify.error("All required fields must be filled!");
             return;
         }
 
-        this.apiService.createEvent({
-            title: this.formData?.get("name"),
-            description: this.formData?.get("description"),
-            communityID: this.formData?.get("communityID"),
-            userID: this.authService.getUserUUID(),
-            date: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
-        }).subscribe({
-            next: res => {
-                Swal.fire({
-                    title: "Success!",
-                    text: "Your event has been correctly created!",
-                    icon: "success",
-                    confirmButtonText: "Continue"
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        this.router.navigate(['community'], {queryParams: {communityID: this.formData?.get('communityID')}})
-                        // @ts-ignore
-                        this.storeEventImage(res['data']['communityID'], res['data']['eventID']);
-                        this.formService.remove("event");
-                    }
-                });
+        (this.serviceFactory.get('events') as EventService).createEvent(this.buildEvent() as CommunityEvent).subscribe({
+            next: () => {
+                this.notify.success('Your event has been created!');
+                this.router.navigate(["/community"], {queryParams: {communityID: this.formData?.get('communityID')}})
             },
-            error: err => Swal.fire({
-                title: "Error!",
-                text: "We could not create your event.",
-                icon: "error",
-                confirmButtonText: "Continue"
-            })
-        });
-    }
-
-    private storeEventImage(communityID: string, eventID: number) {
-        if (this.formData?.get("image")) { // @ts-ignore
-            this.apiService.storeImage(
-                this.formData?.get("image"),
-                `images/communities/${communityID}/${eventID}`
-            ).subscribe({
-                next: () => {
-                    this.apiService.updateEventImage(
-                        `images/communities/${communityID}/${eventID}`,
-                        communityID,
-                        eventID
-                    ).subscribe();
-                },
-                error: () => Swal.fire({
-                    title: "Error!",
-                    text: "We could not upload your event image!",
-                    icon: "error",
-                    confirmButtonText: "Continue"
-                })
-            });
-        }
+            error: res => this.notify.error(`We could not create your event: ${res.message}`)
+        })
     }
 
     private parseDate(date: string, time: string): Date {
@@ -144,5 +103,17 @@ export class SecondEventFormComponent {
         this.formData!.put("image", this.uploadedImage);
         this.formData!.put("description", this.eventDescription);
         this.formService.update();
+    }
+
+    private buildEvent() {
+        return {
+            title: this.formData?.get("name"),
+            description: this.formData?.get("description"),
+            date: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
+            location: this.formData?.get("location"),
+            creatorID: this.authService.getUserUUID(),
+            communityID: this.formData?.get("communityID"),
+            imagePath: this.formData?.get("image")
+        }
     }
 }

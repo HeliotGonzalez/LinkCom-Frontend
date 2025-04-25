@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {FormService} from "../../../../services/form-service/form.service";
 import {FormsModule} from "@angular/forms";
 import {InterestTagComponent} from '../../../../interest-tag/interest-tag.component';
-import {NgForOf, NgIf} from '@angular/common';
 import {ApiService} from "../../../../services/api-service.service";
 import Swal from "sweetalert2";
 
@@ -13,7 +12,7 @@ import Swal from "sweetalert2";
     imports: [
         FormStepsComponent,
         FormsModule,
-        InterestTagComponent,
+        InterestTagComponent
     ],
     templateUrl: './first-community-form.component.html',
     standalone: true,

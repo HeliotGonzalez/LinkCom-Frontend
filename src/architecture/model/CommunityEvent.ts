@@ -1,9 +1,10 @@
 export interface CommunityEvent {
-    id: number;
+    id?: string;
     title: string;
     description: string;
-    communityID: string;
-    userID: string;
     date: Date;
+    location: string;
+    creatorID: string;
+    communityID: string;
     imagePath: string;
 }

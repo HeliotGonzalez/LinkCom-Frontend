@@ -24,7 +24,9 @@ import {ModeratorsManagementComponent} from "./moderators-management/moderators-
 import {CommunityViewComponent} from "./community-view/community-view.component";
 import {ComunitiesComponent} from './comunities/comunities.component';
 import {EventsCommunityCalendarComponent} from "./events-community-calendar/events-community-calendar.component";
-import { CommunityEditComponent } from './community-edit/community-edit.component';
+import { AnnouncementCreationComponent } from './announcement-creation/announcement-creation.component';
+import { AnnouncementsListComponent } from './announcements-list/announcements-list.component';
+import {CommunityRequestsPanelComponent} from "./community-requests-panel/community-requests-panel.component";
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -41,5 +43,8 @@ export const routes: Routes = [
     {path: 'community', component: CommunityViewComponent},
     {path: 'communities', component: ComunitiesComponent},
     {path: 'calendar', component: EventsCommunityCalendarComponent},
-    {path: 'editCommunity', component: CommunityEditComponent}
+    {path: 'announcementCreation', component: AnnouncementCreationComponent},
+    {path: 'moderators', component: ModeratorsManagementComponent},
+    {path: 'announcementsList', component: AnnouncementsListComponent},
+    {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent}
 ];

@@ -5,8 +5,7 @@ import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
-import {CommunityEvent} from "../interfaces/CommunityEvent";
-import { Community } from '../interfaces/community';
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -22,15 +21,16 @@ export class ApiService {
     constructor(private http: HttpClient) {
     }
 
+    
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
     }
 
     // Obtener comunidades a las que NO pertenece el usuario
-    getNonBelongingCommunities(userId: string): Observable<any> {
-        console.log('ID: ' + userId);
-        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities?userId=${userId}`);
+    getNonBelongingCommunities(userID: string): Observable<any> {
+        console.log('ID: ' + userID);
+        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities?userId=${userID}`);
     }
 
     // Obtener eventos para el calendario
@@ -46,13 +46,13 @@ export class ApiService {
     }
 
     // Un usuario se une a una comunidad
-    joinCommunity(userID: string, communityID: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/communityUser/joinCommunity`, {userID, communityID});
+    joinCommunity(userID: string, communityId: string): Observable<any> {
+        return this.http.put(`${this.baseUrl}/communities/${communityId}/join`, { userID });
     }
 
     // Un usuario se une a una comunidad
-    joinEvent(userID: string, communityID: string, eventID: number): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
+    joinEvent(userID: string, communityID: string | undefined, eventID: string | undefined): Observable<any> {
+        return this.http.put(`${this.baseUrl}/events/${eventID}/join`, {userID, communityID});
     }
 
     createCommunity(data: CreateCommunityParameters) {
@@ -100,11 +100,11 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
     }
 
-    getUserEvents(userID: string): Observable<ApiResponse> {
-        return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
+    getUserEvents(userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.baseUrl}/userEvents?userID=${userID}`);
     }
 
-    leaveEvent(userID: string, eventID: number) {
+    leaveEvent(userID: string, eventID: string) {
         return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, eventID});
     }
 
@@ -128,21 +128,13 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
 
-    createAnnouncement(communityID: string, userID: string, title: string, body: string) {
-        console.log('DATOS: ', { communityID, userID, title, body });
-        if (!communityID || communityID.trim() === "") {
-            throw new Error("El communityID es obligatorio y no puede estar vacío.");
-        }
-        return this.http.put(`${this.baseUrl}/announcement`, {
-            communityID,
-            publisherID: userID,
-            title,
-            body
-        });
+    createAnnouncement(title: string, body: string, communityID: string, userID: string, communityName: string, publisherID: string) {
+        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
     }
 
-    updateCommunity(communityID: string, formData: FormData) {
-        return this.http.patch(`${this.baseUrl}/communities/${communityID}`, formData);
-      }
-      
+    getAnnouncements(communityID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
+    }
+
+
 }

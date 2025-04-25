@@ -42,28 +42,36 @@
                             <tr>
                             <th *ngFor="let day of dayNames">{{ day }}</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let week of calendarWeeks">
-                            <td *ngFor="let day of week">
-                                <ng-container *ngIf="day; else emptyCell">
-                                <div class="day-container">
-                                    <span class="day-content" [ngClass]="{'today': day === todayDay}">
-                                    {{ day }}
-                                    </span>
-                                    <ng-container *ngIf="calendarEvents[day]">
-                                    <div class="event-dots">
-                                        <span *ngFor="let event of calendarEvents[day]" class="event-dot" [attr.title]="event"></span>
-                                    </div>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let week of calendarWeeks">
+                                  <td *ngFor="let day of week">
+                                    <ng-container *ngIf="day; else emptyCell">
+                                      <div class="day-container">
+                                        <span
+                                          class="day-content"
+                                          [ngClass]="{ today: day === todayDay }"
+                                        >
+                                          {{ day }}
+                                        </span>
+                              
+                                        <div
+                                          *ngIf="calendarEvents[day]?.length"
+                                          class="event-dots"
+                                        >
+                                          <span
+                                            *ngFor="let event of calendarEvents[day]"
+                                            class="event-dot"
+                                            [title]="event"
+                                          ></span>
+                                        </div>
+                                      </div>
                                     </ng-container>
-                                </div>
-                                </ng-container>
-                                <ng-template #emptyCell>
-                                <!-- Celda vacía -->
-                                </ng-template>
-                            </td>
-                            </tr>
-                        </tbody>
+                                    <ng-template #emptyCell><!-- Celda vacía --></ng-template>
+                                  </td>
+                                </tr>
+                              </tbody>
+                              
                         </table>
                     </div>
                     </div>
