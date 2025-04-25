@@ -4,10 +4,11 @@ import { ApiService } from '../../services/api-service.service';
 import { Announce } from '../../interfaces/announce';
 
 @Component({
-  selector: 'app-announcement-card',
-  imports: [],
-  templateUrl: './announcement-card.component.html',
-  styleUrl: './announcement-card.component.css'
+    selector: 'app-announcement-card',
+    imports: [],
+    templateUrl: './announcement-card.component.html',
+    standalone: true,
+    styleUrl: './announcement-card.component.css'
 })
 export class AnnouncementCardComponent {
   

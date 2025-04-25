@@ -29,7 +29,7 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>> {
-        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests?id=${communityID}`);
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests/given?communityID=${communityID}`);
     }
 
     requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>> {

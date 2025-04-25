@@ -11,7 +11,7 @@ import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {Community} from "../../architecture/model/Community";
 import {WebSocketFactory} from "../services/api-services/WebSocketFactory.service";
 import {JoinRequest} from "../../architecture/model/JoinRequest";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {RequestStatus} from "../../architecture/model/RequestStatus";
 
 @Component({
     selector: 'app-comunities',
@@ -21,7 +21,7 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
     styleUrl: './comunities.component.css'
 })
 export class ComunitiesComponent {
-    protected communities: Community[] = [];
+    protected communities: {[key: string]: Community} = {};
     protected joinedCommunities: {[key: string]: Community} = {};
     protected notJoinedCommunities: {[key: string]: Community} = {};
     protected requests: {[key: string]: JoinRequest} = {};
@@ -39,24 +39,27 @@ export class ComunitiesComponent {
     ) {
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.loadCommunities();
-        const socket = this.socketFactory.get('Communities');
-        socket.onUpdate().subscribe(res => this.onUpdateCommunity(res.new as Community));
-        socket.onDelete().subscribe(res => this.onDeleteCommunity(res.new as Community));
+        const communitiesSocket = this.socketFactory.get('Communities');
+        const requestsSocket = this.socketFactory.get('JoinRequests');
+        communitiesSocket.onUpdate().subscribe(res => this.onUpdateCommunity(res.new as Community));
+        communitiesSocket.onDelete().subscribe(res => this.onDeleteCommunity(res.new as Community));
+        requestsSocket.onInsert().subscribe(res => this.onInsertRequest(res.new as JoinRequest));
+        requestsSocket.onUpdate().subscribe(res => this.onUpdateRequests(res.new as JoinRequest));
+        requestsSocket.onDelete().subscribe(res => this.onDeleteRequests(res.old as JoinRequest));
     }
 
     private onUpdateCommunity(community: Community) {
         (this.serviceFactory.get('communities') as CommunityService).getCommunity(community.id!).subscribe(res => {
-            const updateCommunity = this.communities.find(c => c.id === community.id);
-            this.communities[this.communities.indexOf(updateCommunity!)] = res.data[0];
+            this.communities[community.id!] = res.data[0];
             this.joinedCommunities[community.id!] = res.data[0];
             this.notJoinedCommunities[community.id!] = res.data[0];
         });
     }
 
     private onDeleteCommunity(community: Community) {
-        this.communities = this.communities.filter(c => c.id !== community.id);
+        delete this.communities[community.id!];
     }
 
     private getCommunitiesIDsFrom(data: Community[]) {
@@ -68,10 +71,8 @@ export class ComunitiesComponent {
 
         const term = this.searchTerm.toLowerCase().trim();
 
-        this.communities = this.communities.filter(c =>
-            (String(c.name).toLowerCase().includes(term)) ||
-            (String(c.description).toLowerCase().includes(term))
-        );
+        this.communities = Object.fromEntries(Object.entries(this.communities).filter(([id, community]) => (String(community.name).toLowerCase().includes(term)) ||
+            (String(community.description).toLowerCase().includes(term))))
     }
 
     showCommunityForm() {
@@ -119,7 +120,6 @@ export class ComunitiesComponent {
                 res.notJoined.data.forEach(c => this.notJoinedCommunities[c.id!] = c);
                 (this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(this.authService.getUserUUID(), Object.keys(this.notJoinedCommunities)).subscribe(res => {
                     res.data.forEach(r => this.requests[r.communityID!] = r);
-                    console.log(this.requests)
                 })
                 this.communities = this.orderCommunities();
                 if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;
@@ -135,7 +135,7 @@ export class ComunitiesComponent {
     }
 
     private orderCommunities() {
-        return Object.values(this.joinedCommunities).concat(Object.values(this.notJoinedCommunities))
+        return {...this.joinedCommunities, ...this.notJoinedCommunities};
     }
 
     removeCommunity(community: Community) {
@@ -167,4 +167,17 @@ export class ComunitiesComponent {
     }
 
     protected readonly Object = Object;
+
+    private onInsertRequest(request: JoinRequest) {
+        this.requests[request.communityID] = request;
+    }
+
+    private onUpdateRequests(request: JoinRequest) {
+        if (request.status === RequestStatus.ACCEPTED) this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, this.communities[request.communityID!])
+        delete this.requests[request.communityID];
+    }
+
+    private onDeleteRequests(request: JoinRequest) {
+        this.requests = Object.fromEntries(Object.entries(this.requests).filter(([, r]) => r.id !== request.id));
+    }
 }
