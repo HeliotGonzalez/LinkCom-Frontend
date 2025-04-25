@@ -10,6 +10,7 @@ import {Community} from "../model/Community";
 import {CommunityEvent} from "../model/CommunityEvent";
 import {JoinRequest} from "../model/JoinRequest";
 import {RequestStatus} from "../model/RequestStatus";
+import { CommunityAnnouncement } from "../model/CommunityAnnouncement";
 
 export interface CommunityService extends Service {
     cancelRequest(communityID: string, userID: string): Observable<ApiResponse<JoinRequest>>;
@@ -36,4 +37,5 @@ export interface CommunityService extends Service {
     leaveCommunity(communityID: string, userID: string): Observable<ApiResponse<Community>>;
     createCommunity(community: Community): Observable<ApiResponse<Community>>;
     removeCommunity(communityID: string): Observable<ApiResponse<Community>>;
+    createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>>;
 }

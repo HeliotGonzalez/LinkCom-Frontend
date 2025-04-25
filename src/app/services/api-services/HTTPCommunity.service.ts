@@ -11,6 +11,7 @@ import {Community} from "../../../architecture/model/Community";
 import { CommunityEvent } from "../../../architecture/model/CommunityEvent";
 import { JoinRequest } from "../../../architecture/model/JoinRequest";
 import { RequestStatus } from "../../../architecture/model/RequestStatus";
+import { CommunityAnnouncement } from "../../../architecture/model/CommunityAnnouncement";
 
 export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
@@ -112,5 +113,9 @@ export class HTTPCommunityService implements CommunityService {
 
     removeCommunity(communityID: string) {
         return this.http.delete<ApiResponse<Community>>(`${this.url}/communities/${communityID}`);
+    }
+
+    createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>> {
+        return this.http.post<ApiResponse<CommunityAnnouncement>>(`${this.url}/communities/${announcement.communityID}/createAnnouncement`, announcement);
     }
 }

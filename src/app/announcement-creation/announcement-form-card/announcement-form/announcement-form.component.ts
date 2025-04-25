@@ -4,6 +4,7 @@ import { ApiService } from '../../../services/api-service.service';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
 
 
 @Component({
@@ -18,13 +19,13 @@ export class AnnouncementFormComponent implements OnInit{
   protected body = '';
   private communityID = '';
   private userID = '';
-  private communityName = '';
   private publisherID = '';
   
   constructor (
     private router: Router,
     private baseRoute: ActivatedRoute,
-    private apiService: ApiService, 
+    //private apiService: ApiService,
+    private serviceFactory: ServiceFactory, 
     private authService: AuthService
   ) {
     this.publisherID = this.authService.getUserUUID();
@@ -33,7 +34,6 @@ export class AnnouncementFormComponent implements OnInit{
   ngOnInit(): void {
     this.baseRoute.queryParams.subscribe(params => {
       this.communityID = params["communityID"];
-      this.communityName = params["communityName"];
       this.userID = params["userID"];
     });
 
@@ -81,6 +81,7 @@ export class AnnouncementFormComponent implements OnInit{
       return;
     }
 
+    /*
     this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.publisherID).subscribe({
       next: (response: any) => {
         console.log(response);
@@ -100,8 +101,6 @@ export class AnnouncementFormComponent implements OnInit{
         });
         console.log(err);
       }
-    });
-
+    });*/
   }
-
 }

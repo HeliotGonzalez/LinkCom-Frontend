@@ -1,5 +1,5 @@
 export interface CommunityAnnouncement {
-    id: string;
+    id?: string;
     title: string;
     body: string;
     communityID: string;
