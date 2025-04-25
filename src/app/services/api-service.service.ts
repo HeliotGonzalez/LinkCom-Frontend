@@ -136,5 +136,10 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
-
+    updateCommunity(id: string, data: any): Observable<any> {
+        return this.http.patch<any>(
+          `${this.baseUrl}/communities/${id}`,
+          data
+        );
+    }
 }

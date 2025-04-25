@@ -75,6 +75,12 @@ export class CommunityViewComponent {
         this.router.navigate(["/moderatorsManagement"], {queryParams: {communityID: this.community?.id}}).then(r => {
         });
     }
+
+    protected editCommunity() {
+        this.router.navigate(["/editCommunity"], {queryParams: {communityID: this.community?.id}}).then(r => {
+        });
+    }
+
     goToEditCommunity() {
         this.router.navigate(['/editCommunity'], { 
           queryParams: { communityID: this.community?.id } 

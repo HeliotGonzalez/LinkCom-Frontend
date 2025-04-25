@@ -69,15 +69,15 @@ export class CommunityEditComponent implements OnInit {
       const formValue = this.communityForm.value;
       // Usamos FormData para enviar datos y archivo
       const formData = new FormData();
-      formData.append("name", formValue.name);
-      formData.append("description", formValue.description);
-      formData.append("isPrivate", formValue.isPrivate);
+      let name = formValue.name;
+      let description = formValue.description;
+      let isPrivate = formValue.isPrivate;
       if (this.fileToUpload) {
         // El campo debe llamarse "image" para coincidir con upload.single("image")
         formData.append("image", this.fileToUpload, this.fileToUpload.name);
       }
       // Llamamos al método del ApiService para actualizar la comunidad
-      this.apiService.updateCommunity(this.communityID, formData).subscribe({
+      this.apiService.updateCommunity(this.communityID, {name, description, isPrivate}).subscribe({
         next: res => {
             Swal.fire({
               icon: 'success',
