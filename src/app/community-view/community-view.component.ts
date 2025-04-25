@@ -86,6 +86,12 @@ export class CommunityViewComponent {
     private async checkIfIsUserJoined(communityID: string, userID: string) {
         return (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).isUserJoined(communityID, userID))).data[0];
     }
+
+    protected editCommunity() {
+        this.router.navigate(["/editCommunity"], {queryParams: {communityID: this.community?.id}}).then(r => {
+        });
+    }
+
     goToEditCommunity() {
         this.router.navigate(['/editCommunity'], { 
           queryParams: { communityID: this.community?.id } 

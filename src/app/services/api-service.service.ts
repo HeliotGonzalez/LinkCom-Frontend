@@ -142,6 +142,7 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
+<<<<<<< HEAD
 
 =======
     createAnnouncement(communityID: string, userID: string, title: string, body: string) {
@@ -162,4 +163,12 @@ export class ApiService {
       }
       
 >>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
+=======
+    updateCommunity(id: string, data: any): Observable<any> {
+        return this.http.patch<any>(
+          `${this.baseUrl}/communities/${id}`,
+          data
+        );
+    }
+>>>>>>> a55b898 (feat: Community edit)
 }
