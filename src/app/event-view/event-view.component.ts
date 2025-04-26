@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {ImageDialogComponent} from "../image-dialog/image-dialog.component";
 import {AuthService} from "../services/auth.service";
@@ -18,6 +18,8 @@ import {Notify} from "../services/notify";
 export class EventViewComponent {
     @Input() event: CommunityEvent | null = null;
     @Input() isDisabled: boolean = true;
+    @Output() joinEventEmitter = new EventEmitter();
+    @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
 
     constructor(
@@ -28,25 +30,11 @@ export class EventViewComponent {
     }
 
     joinEvent() {
-        (this.serviceFactory.get('events') as EventService).joinEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
-            next: () => {
-                this.notify.success(`You have joined ${this.event?.title}`);
-                this.isDisabled = true;
-            },
-            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
-        });
+        this.joinEventEmitter.emit();
     }
 
     leaveEvent() {
-        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
-                next: () => {
-                    this.notify.success(`You have left ${this.event?.title}`);
-                    this.isDisabled = false;
-                },
-                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
-            });
-        });
+        this.leaveEventEmitter.emit();
     }
 
     openImageDialog() {

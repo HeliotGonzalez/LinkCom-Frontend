@@ -11,6 +11,7 @@ import {ServiceFactory} from "../../../../services/api-services/ServiceFactory.s
 import {EventService} from "../../../../../architecture/services/EventService";
 import {CommunityEvent} from "../../../../../architecture/model/CommunityEvent";
 import {Notify} from "../../../../services/notify";
+import {CreateEventCommand} from "../../../../commands/CreateEventCommand";
 
 @Component({
     selector: 'app-second-event-form',
@@ -47,21 +48,12 @@ export class SecondEventFormComponent {
 
     async nextPage(event: Event) {
         event.preventDefault();
-
         this.saveFormData();
-
         if (this.eventDescription === "") {
             this.notify.error("All required fields must be filled!");
             return;
         }
-
-        (this.serviceFactory.get('events') as EventService).createEvent(this.buildEvent() as CommunityEvent).subscribe({
-            next: () => {
-                this.notify.success('Your event has been created!');
-                this.router.navigate(["/community"], {queryParams: {communityID: this.formData?.get('communityID')}})
-            },
-            error: res => this.notify.error(`We could not create your event: ${res.message}`)
-        })
+        CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(this.buildEvent()).build().execute();
     }
 
     private parseDate(date: string, time: string): Date {
