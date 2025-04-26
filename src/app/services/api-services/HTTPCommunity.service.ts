@@ -56,8 +56,8 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members?communityRole=moderator&userID=${userID}`)
     }
 
-    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<Community>> {
-        return this.http.get<ApiResponse<Community>>(`${this.url}/users/${userID}/communities?communityID=${communityID}`)
+    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<boolean>> {
+        return this.http.get<ApiResponse<boolean>>(`${this.url}/users/${userID}/communities?communityID=${communityID}`)
     }
 
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>> {

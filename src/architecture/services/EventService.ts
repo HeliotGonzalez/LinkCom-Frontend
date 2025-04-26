@@ -11,6 +11,7 @@ export interface EventService extends Service {
     getMembers(eventID: string): Observable<ApiResponse<User>>;
     createEvent(event: CommunityEvent): Observable<ApiResponse<CommunityEvent>>;
     removeEvent(eventID: string): Observable<ApiResponse<CommunityEvent>>;
-    joinEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>
-    leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>
+    joinEvent(communityID: string, eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
+    leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
+    getUserCommunityEvents(communityID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
 }

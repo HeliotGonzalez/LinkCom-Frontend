@@ -4,6 +4,8 @@ import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
 import { FeedItem } from '../interfaces/feed-item';
 import { Router } from '@angular/router';
+import {ApiResponse} from "../interfaces/ApiResponse";
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 
 interface CalendarMonth {
   month: number;
@@ -28,7 +30,7 @@ export class EventsCommunityCalendarComponent implements OnInit {
 
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   calendarEvents: { [day: number]: string[] } = {};
-  events: FeedItem[] = [];
+  events: CommunityEvent[] = [];
   userid: string;
 
   constructor(
@@ -47,13 +49,14 @@ export class EventsCommunityCalendarComponent implements OnInit {
       return;
     }
 
-    this.apiService.getEvents(this.userid).subscribe({
-      next: (data: any[]) => {
-        this.events = data;
+    this.apiService.getEvents(this.authService.getUserUUID()).subscribe({
+      next: res => {
+        console.log(res);
+        this.events = (res as ApiResponse<CommunityEvent>).data;
         this.calendarEvents = {};
 
-        data.forEach(ev => {
-          const eventDate = new Date(ev.dateOfTheEvent); // Asegúrate que sea el campo correcto
+        this.events.forEach(ev => {
+          const eventDate = new Date(ev.date); // Asegúrate que sea el campo correcto
           const day = eventDate.getDate();
           const month = eventDate.getMonth();
           const year = eventDate.getFullYear();
@@ -62,6 +65,9 @@ export class EventsCommunityCalendarComponent implements OnInit {
             if (!this.calendarEvents[day]) {
               this.calendarEvents[day] = [];
             }
+
+            console.log(this.calendarEvents[day])
+
             this.calendarEvents[day].push(ev.title);
           }
         });

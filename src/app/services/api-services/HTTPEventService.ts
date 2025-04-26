@@ -9,6 +9,10 @@ export class HTTPEventService implements EventService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    getUserCommunityEvents(communityID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/events/joined/${userID}?communityID=${communityID}`);
+    }
+
     getEvents(): Observable<ApiResponse<CommunityEvent>> {
         return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/events`);
     }
@@ -29,8 +33,8 @@ export class HTTPEventService implements EventService {
         return this.http.delete<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/delete`);
     }
 
-    joinEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/join`, {userID});
+    joinEvent(communityID: string, eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/join`, {communityID, userID});
     }
 
     leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {

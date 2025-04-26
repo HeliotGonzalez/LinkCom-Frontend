@@ -24,7 +24,7 @@
                 <p class="mb-0">
                     <strong>{{ Object.keys(communities).length }}</strong> communities were found!
                 </p>
-                <button class="button" (click)="showCommunityForm()">
+                <button class="button" (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepCommunityCreation').build().execute()">
                     <i class="bi bi-plus-circle"></i> Create Community
                 </button>
             </div>
@@ -35,12 +35,12 @@
             @for (communityID of Object.keys(communities); track communityID) {
                 <app-community-card
                         [community]="communities[communityID]"
-                        [isUserJoined]="booleanAttribute(joinedCommunities[communityID])"
+                        [isUserJoined]="Object.keys(joinedCommunities).includes(communityID)"
                         [isRequested]="Object.keys(requests).includes(communityID)"
-                        (joinCommunityEmitter)="joinCommunity($event)"
-                        (leaveCommunityEmitter)="leaveCommunity($event)"
-                        (removeCommunityEmitter)="removeCommunity($event)"
-                        (cancelRequestEmitter)="cancelRequest($event)"
+                        (joinCommunityEmitter)="JoinCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
+                        (leaveCommunityEmitter)="LeaveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
+                        (removeCommunityEmitter)="RemoveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).build().execute()"
+                        (cancelRequestEmitter)="CancelJoinRequestCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
                 ></app-community-card>
             }
         </section>
