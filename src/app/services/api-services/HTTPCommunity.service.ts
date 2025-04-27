@@ -53,7 +53,7 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator`)
     }
     isUserModerator(communityID: string, userID: string): Observable<ApiResponse<User>> {
-        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members?communityRole=moderator&userID=${userID}`)
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator&userID=${userID}`)
     }
 
     isUserJoined(communityID: string, userID: string): Observable<ApiResponse<boolean>> {
