@@ -57,7 +57,7 @@ export class AnnouncementFormComponent implements OnInit{
 
   exitForm(event: Event) {
     this.resetForm();
-    this.router.navigate(["/communities"]);
+    this.router.navigate(['community'], {queryParams: {communityID: this.communityID}}).then(r => {});
   }
 
   submitData(event: Event){
