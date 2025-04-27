@@ -4,6 +4,7 @@ import {EventService} from "../../../architecture/services/EventService";
 import {ApiResponse} from "../../interfaces/ApiResponse";
 import {HttpClient} from "@angular/common/http";
 import {User} from "../../../architecture/model/User";
+import { Comment } from "../../../architecture/model/Comment";
 
 export class HTTPEventService implements EventService {
     constructor(private http: HttpClient, private url: string) {
@@ -44,4 +45,14 @@ export class HTTPEventService implements EventService {
     getMembers(eventID: string): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/members`);
     }
+
+    createComment(comment: Comment): Observable<ApiResponse<Comment>> {
+        return this.http.post<ApiResponse<Comment>>(`${this.url}/events/${comment.eventID}/createComment`, comment);
+    }
+
+    getComments(eventID: string): Observable<ApiResponse<Comment>> {
+        return this.http.get<ApiResponse<Comment>>(`${this.url}/events/${eventID}/getComments`);
+    }
+
+
 }
