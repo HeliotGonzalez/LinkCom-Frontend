@@ -1,12 +1,10 @@
-import {booleanAttribute, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CommunityCardComponent} from './community-card/community-card.component';
-import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 import {CommunityService} from "../../architecture/services/CommunityService";
-import {firstValueFrom, forkJoin} from "rxjs";
-import {Notify} from "../services/notify";
+import {forkJoin} from "rxjs";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {Community} from "../../architecture/model/Community";
 import {WebSocketFactory} from "../services/api-services/WebSocketFactory.service";
@@ -94,7 +92,7 @@ export class ComunitiesComponent {
                 res.joined.data.forEach(c => this.joinedCommunities[c.id!] = c);
                 res.notJoined.data.forEach(c => this.notJoinedCommunities[c.id!] = c);
                 (this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(this.authService.getUserUUID(), Object.keys(this.notJoinedCommunities)).subscribe(res => {
-                    res.data.forEach(r => this.requests[r.communityID!] = r);
+                    res.data.filter(r => r.status === RequestStatus.PENDING).forEach(r => this.requests[r.communityID!] = r);
                 })
                 this.communities = this.orderCommunities();
                 if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;

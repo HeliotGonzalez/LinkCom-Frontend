@@ -11,6 +11,7 @@ import {UserService} from "../../architecture/services/UserService";
 import {AuthService} from "../services/auth.service";
 import {RequestStatus} from "../../architecture/model/RequestStatus";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {JoinCommunityCommand} from "../commands/JoinCommunityCommand";
 
 @Component({
     selector: 'app-community-requests-panel',

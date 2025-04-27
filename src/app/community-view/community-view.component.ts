@@ -23,13 +23,16 @@ import {CancelJoinRequestCommunityCommand} from "../commands/CancelJoinRequestCo
 import {JoinEventCommand} from "../commands/JoinEventCommand";
 import {LeaveEventCommand} from "../commands/LeaveEventCommand";
 import {EventUser} from "../../architecture/model/EventUser";
+import {BlurPanelComponent} from "../blur-panel/blur-panel.component";
+import {RequestStatus} from "../../architecture/model/RequestStatus";
 
 @Component({
     selector: 'app-community-view',
     imports: [
         EventViewComponent,
         AnnouncementCardComponent,
-        CommunityRequestsPanelComponent
+        CommunityRequestsPanelComponent,
+        BlurPanelComponent
     ],
     templateUrl: './community-view.component.html',
     standalone: true,
@@ -43,7 +46,8 @@ export class CommunityViewComponent {
     protected isRequested: boolean = false;
     protected isUserModerator: boolean = false;
     protected announcements: Announce[] = [];
-    requestPanelVisible: boolean = false;
+    protected requestPanelVisible: boolean = false;
+    protected isLoaded: boolean = false;
 
     constructor(
         protected serviceFactory: ServiceFactory,
@@ -60,9 +64,9 @@ export class CommunityViewComponent {
             this.community = await this.getCommunity(params['communityID']);
             (await this.getCommunityEvents(params['communityID'])).forEach(e => this.events[e.id!] = e);
             (await this.getUserCommunityEvents(params['communityID'], this.authService.getUserUUID())).forEach(e => this.userEvents[e.id!] = e);
-            console.log(this.events)
             this.announcements = await this.getCommunityAnnouncements(params['communityID']);
             this.initializeSockets();
+            this.isLoaded = true;
         });
     }
 
@@ -149,7 +153,7 @@ export class CommunityViewComponent {
     }
 
     private async checkIfIsRequested(communityID: string, userID: string) {
-        return (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(userID, [communityID]))).data.length > 0;
+        return (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(userID, [communityID]))).data.filter(r => r.status === RequestStatus.PENDING).length > 0;
     }
 
     protected readonly CancelJoinRequestCommunityCommand = CancelJoinRequestCommunityCommand;
