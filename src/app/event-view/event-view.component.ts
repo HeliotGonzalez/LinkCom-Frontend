@@ -5,6 +5,8 @@ import {AuthService} from "../services/auth.service";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {EventService} from "../../architecture/services/EventService";
 import {Notify} from "../services/notify";
+import {EventState} from "../../architecture/model/EventState";
+import {AcceptEventCommand} from "../commands/AcceptEventCommand";
 
 @Component({
     selector: 'app-event-view',
@@ -24,7 +26,7 @@ export class EventViewComponent {
 
     constructor(
         private authService: AuthService,
-        private serviceFactory: ServiceFactory,
+        protected serviceFactory: ServiceFactory,
         private notify: Notify
     ) {
     }
@@ -44,4 +46,12 @@ export class EventViewComponent {
     closeImageDialog() {
         this.isDialogVisible = false;
     }
+
+    protected readonly EventState = EventState;
+
+    acceptEvent() {
+
+    }
+
+    protected readonly AcceptEventCommand = AcceptEventCommand;
 }

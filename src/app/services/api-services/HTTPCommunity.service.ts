@@ -17,6 +17,10 @@ export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    getPendingCommunityEventsRequests(communityID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events?eventState=pending`);
+    }
+
     cancelRequest(communityID: string, userID: string): Observable<ApiResponse<JoinRequest>> {
         return this.http.delete<ApiResponse<JoinRequest>>(`${this.url}/communities/${communityID}/${userID}/cancelRequest`);
     }
@@ -61,7 +65,7 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events`);
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events?eventState=neq;pending`);
     }
 
     getCommunity(communityID: string): Observable<ApiResponse<Community>> {

@@ -46,6 +46,7 @@
                         </button>
                         @if (isCreator() || isUserModerator) {
                             <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
+                            <button class="button" (click)="showEventsRequestPanel()">Events Panel</button>
                             @if (isCreator()) {
                                 <button class="button"
                                         (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/moderatorsManagement').withParameters({'communityID': community?.id!}).build().execute()">
@@ -92,6 +93,9 @@
         </div>
     </div>
     <app-community-requests-panel (eventEmitter)="closeRequestPanel()"
-                                  [isVisible]="requestPanelVisible"></app-community-requests-panel>
+                                  [isVisible]="requestPanelVisible"/>
+    <app-events-request-panel (eventEmitter)="closeEventsRequestPanel()"
+                              [eventRequests]="eventRequests"
+                              [isVisible]="eventsRequestPanelVisible"/>
     <app-blur-panel [isVisible]="isLoaded"/>
 </main>

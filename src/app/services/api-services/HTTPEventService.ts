@@ -5,9 +5,14 @@ import {ApiResponse} from "../../interfaces/ApiResponse";
 import {HttpClient} from "@angular/common/http";
 import {User} from "../../../architecture/model/User";
 import { Comment } from "../../../architecture/model/Comment";
+import {EventState} from "../../../architecture/model/EventState";
 
 export class HTTPEventService implements EventService {
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    acceptEvent(eventID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.patch<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/update`, {eventState: EventState.PUBLISHED});
     }
 
     getUserCommunityEvents(communityID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {

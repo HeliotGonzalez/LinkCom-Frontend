@@ -1,0 +1,49 @@
+.requests-panel {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background: white;
+}
+
+main {
+    background: unset;
+}
+
+.container-blur {
+    z-index: 1000;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.requests-section::-webkit-scrollbar {
+    display: none;
+}
+
+.requests-section::-webkit-scrollbar-track {
+    display: none;
+}
+
+.requests-section::-webkit-scrollbar-thumb {
+    display: none;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    transition: transform 0.3s ease;
+}
+
+.icon-button:hover {
+    transform: scale(1.1);
+}
+
+.panel-header {
+    height: 20%;
+}
+
+.requests-section-container {
+    height: 80%;
+}

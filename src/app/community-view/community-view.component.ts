@@ -25,6 +25,7 @@ import {LeaveEventCommand} from "../commands/LeaveEventCommand";
 import {EventUser} from "../../architecture/model/EventUser";
 import {BlurPanelComponent} from "../blur-panel/blur-panel.component";
 import {RequestStatus} from "../../architecture/model/RequestStatus";
+import {EventsRequestPanelComponent} from "../events-request-panel/events-request-panel.component";
 
 @Component({
     selector: 'app-community-view',
@@ -32,7 +33,8 @@ import {RequestStatus} from "../../architecture/model/RequestStatus";
         EventViewComponent,
         AnnouncementCardComponent,
         CommunityRequestsPanelComponent,
-        BlurPanelComponent
+        BlurPanelComponent,
+        EventsRequestPanelComponent
     ],
     templateUrl: './community-view.component.html',
     standalone: true,
@@ -47,7 +49,9 @@ export class CommunityViewComponent {
     protected isUserModerator: boolean = false;
     protected announcements: Announce[] = [];
     protected requestPanelVisible: boolean = false;
+    protected eventsRequestPanelVisible: boolean = false;
     protected isLoaded: boolean = false;
+    protected eventRequests: {[key: string]: CommunityEvent} = {};
 
     constructor(
         protected serviceFactory: ServiceFactory,
@@ -62,12 +66,17 @@ export class CommunityViewComponent {
             this.isUserModerator = await this.checkIfIsUserModerator(params['communityID'], this.authService.getUserUUID());
             this.isRequested = await this.checkIfIsRequested(params['communityID'], this.authService.getUserUUID());
             this.community = await this.getCommunity(params['communityID']);
+            (await this.loadEventRequests()).forEach(e => this.eventRequests[e.id!] = e);
             (await this.getCommunityEvents(params['communityID'])).forEach(e => this.events[e.id!] = e);
             (await this.getUserCommunityEvents(params['communityID'], this.authService.getUserUUID())).forEach(e => this.userEvents[e.id!] = e);
             this.announcements = await this.getCommunityAnnouncements(params['communityID']);
             this.initializeSockets();
             this.isLoaded = true;
         });
+    }
+
+    private async loadEventRequests() {
+        return (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).getPendingCommunityEventsRequests(this.community?.id!))).data;
     }
 
     private async checkIfIsUserJoined(communityID: string, userID: string) {
@@ -167,4 +176,12 @@ export class CommunityViewComponent {
     }
 
     protected readonly Object = Object;
+
+    showEventsRequestPanel() {
+        this.eventsRequestPanelVisible = true;
+    }
+
+    closeEventsRequestPanel() {
+        this.eventsRequestPanelVisible = false;
+    }
 }

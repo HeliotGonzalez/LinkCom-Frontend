@@ -24,6 +24,7 @@ export interface CommunityService extends Service {
     getCommunities(): Observable<ApiResponse<Community>>;
     getCommunitiesPaginated(limit: number, offset: number): Observable<ApiResponse<Community>>;
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>>;
+    getPendingCommunityEventsRequests(communityID: string): Observable<ApiResponse<CommunityEvent>>;
     isUserJoined(communityID: string, userID: string): Observable<ApiResponse<boolean>>
     getUserCommunities(userID: string): Observable<ApiResponse<Community>>;
     getCommunitiesExcludingUser(userID: string): Observable<ApiResponse<Community>>;

@@ -42,3 +42,11 @@
     background: white;
     color: darkred;
 }
+
+.community-card-content-header {
+    height: 20%;
+}
+
+.community-card-content-body {
+    height: 70%;
+}

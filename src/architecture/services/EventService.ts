@@ -17,4 +17,5 @@ export interface EventService extends Service {
     getUserCommunityEvents(communityID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
     createComment(comment: Comment): Observable<ApiResponse<Comment>>;
     getComments(eventID: string): Observable<ApiResponse<Comment>>;
+    acceptEvent(eventID: string): Observable<ApiResponse<CommunityEvent>>;
 }

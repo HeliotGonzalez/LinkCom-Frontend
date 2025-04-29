@@ -81,7 +81,6 @@ export class CommunityRequestsPanelComponent {
         ).subscribe();
     }
 
-
     acceptRequest(user: User) {
         const request = this.requests.find(r => r.userID === user.id);
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
