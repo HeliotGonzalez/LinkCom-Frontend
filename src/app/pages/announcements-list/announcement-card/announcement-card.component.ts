@@ -8,11 +8,9 @@ import { Router } from '@angular/router';
 import { Announce } from '../../../interfaces/announce';
 
 @Component({
-    selector: 'app-announcement-card',
-    imports: [],
-    templateUrl: './announcement-card.component.html',
-    standalone: true,
-    styleUrl: './announcement-card.component.css'
+  selector: 'app-announcement-card',
+  templateUrl: './announcement-card.component.html',
+  styleUrls: ['./announcement-card.component.css'],
 })
 export class AnnouncementCardComponent implements OnInit {
   
