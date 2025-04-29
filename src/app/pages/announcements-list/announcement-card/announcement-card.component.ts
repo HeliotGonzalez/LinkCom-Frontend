@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth.service'; // Asegúrate de tene
 import { Announce } from '../../interfaces/announce';
 import Swal from 'sweetalert2';
 import { NgIf } from '@angular/common';
+import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../../architecture/services/CommunityService';
 
 @Component({
   selector: 'app-announcement-card',
@@ -21,7 +23,8 @@ export class AnnouncementCardComponent implements OnInit {
   constructor(
     private router: Router, 
     private authService: AuthService, 
-    private apiService: ApiService
+    private apiService: ApiService,
+    private serviceFactory: ServiceFactory
   ) {}
 
   ngOnInit() {
@@ -44,7 +47,7 @@ export class AnnouncementCardComponent implements OnInit {
       if (result.isConfirmed) {
         console.log('ID del anuncio a eliminar:', announcementId);
         // Hacer la llamada al API de eliminación
-        this.apiService.removeAnnouncement(announcementId, this.userId).subscribe({
+        (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
           next: (response) => {
             console.log('Evento eliminado con éxito:', response);
             Swal.fire({
