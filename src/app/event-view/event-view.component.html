@@ -22,6 +22,15 @@
         </div>
     </div>
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
+        <button class="button" (click)="openCommentModal()">View</button>
+
+        <app-event-comment-modal
+        [visible]="isCommentModalVisible"
+        (closed)="isCommentModalVisible = false"
+        (commentSubmitted)="handleComment($event)">
+      </app-event-comment-modal>
+            
+
         @if (!isDisabled) {
             <button class="button" (click)="joinEvent()">Join</button>
         } @else {

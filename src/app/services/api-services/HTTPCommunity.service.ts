@@ -113,4 +113,5 @@ export class HTTPCommunityService implements CommunityService {
     removeCommunity(communityID: string) {
         return this.http.delete<ApiResponse<Community>>(`${this.url}/communities/${communityID}`);
     }
+    
 }

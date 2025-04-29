@@ -5,12 +5,14 @@ import {AuthService} from "../services/auth.service";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {EventService} from "../../architecture/services/EventService";
 import {Notify} from "../services/notify";
+import { EventCommentModalComponent } from "./event-comment-modal/event-comment-modal.component";
 
 @Component({
     selector: 'app-event-view',
     imports: [
-        ImageDialogComponent
-    ],
+    ImageDialogComponent,
+    EventCommentModalComponent,
+],
     templateUrl: './event-view.component.html',
     standalone: true,
     styleUrl: './event-view.component.css'
@@ -19,6 +21,7 @@ export class EventViewComponent {
     @Input() event: CommunityEvent | null = null;
     @Input() isDisabled: boolean = true;
     protected isDialogVisible: boolean = false;
+    protected isCommentModalVisible: boolean = false;
 
     constructor(
         private authService: AuthService,
@@ -56,4 +59,18 @@ export class EventViewComponent {
     closeImageDialog() {
         this.isDialogVisible = false;
     }
+
+    openCommentModal() {
+        this.isCommentModalVisible = true;
+    }
+    
+    closeCommentModal() {
+        this.isCommentModalVisible = false;
+    }
+
+    handleComment(comment: string) {
+        console.log('Comentario enviado:', comment);
+        // Aquí podrías llamar a un servicio para guardar el comentario
+      }
+      
 }
