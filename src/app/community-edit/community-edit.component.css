@@ -1,0 +1,25 @@
+.image-upload {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.community-img {
+    display: block;
+    max-width: 400px;
+    transition: filter 0.3s ease;
+}
+
+.image-upload:hover .community-img {
+    filter: grayscale(50%);
+}
+
+.image-upload:hover .overlay {
+    opacity: 1;
+}
+
+.image-upload input[type="file"] {
+    top: 0; left: 0;
+    opacity: 0;
+    cursor: pointer;
+}

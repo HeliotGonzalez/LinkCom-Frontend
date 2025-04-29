@@ -137,6 +137,7 @@ export class ApiService {
     }
 
     updateCommunity(id: string, data: any): Observable<any> {
+        console.log('Se obtuvo el id: ' + id);
         return this.http.patch<any>(
           `${this.baseUrl}/communities/${id}`,
           data

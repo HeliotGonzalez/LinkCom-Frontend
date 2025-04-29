@@ -77,15 +77,12 @@ export class CommunityViewComponent {
     }
 
     protected editCommunity() {
-        this.router.navigate(["/editCommunity"], {queryParams: {communityID: this.community?.id}}).then(r => {
-        });
-    }
-
-    goToEditCommunity() {
-        this.router.navigate(['/editCommunity'], { 
-          queryParams: { communityID: this.community?.id } 
-        });
-    }
+        if (!this.community) return;
+        this.router.navigate(
+          ['/editCommunity'],
+          { state: { community: this.community } }
+        );
+      }
 
     protected isUserInEvent(event: CommunityEvent): boolean {
         return this.userEvents?.map(e => e.id).includes(event.id)!;

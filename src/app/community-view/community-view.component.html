@@ -12,9 +12,8 @@
                 <section id="announces-section" class="d-flex flex-column align-items-center h-100 overflow-auto">
                     <div class="d-flex gap-3">
                         <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!</button>
-                        <button class="button mb-5 mt-5" (click)="editCommunity()">Edit community</button>
                         @if (this.isCreator()) {
-                            <button class="button mb-5 mt-5" (click)="showAnnouncements()">Edit community</button>
+                            <button class="button mb-5 mt-5" (click)="editCommunity()">Edit community</button>
                         }
                         <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
                     </div>
