@@ -1,0 +1,49 @@
+/* Paleta Discord-like */
+:host {
+    --blue-1: #5c6ac4;
+    --blue-2: #23326f;
+    --chip-bg: rgba(255, 255, 255, 0.1);
+    max-width: 900px;
+    width: 95%; 
+  }
+  
+  .profile-card {
+    max-width: 650px;
+    background: linear-gradient(180deg, var(--blue-1) 0%, var(--blue-2) 100%);
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+  
+  .banner {
+    height: 140px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .avatar {
+    position: absolute;
+    top: 70px;
+    left: 32px;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    background: #ddd;
+    border-color: var(--blue-1);
+  }
+  
+  .nav-tabs .nav-link {
+    color: #d8defe;
+    border: 0;
+  }
+  .nav-tabs .nav-link.active {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
+  
+  .comm-card {
+    width: 120px;
+  }
+  .comm-card img {
+    height: 80px;
+    object-fit: cover;
+  }
+  

@@ -37,7 +37,11 @@ import { CommunityEditComponent } from './community-edit/community-edit.componen
 =======
 import { CommunityEditComponent } from './community-edit/community-edit.component';
 import { CommunityRequestsPanelComponent } from './community-requests-panel/community-requests-panel.component';
+<<<<<<< HEAD
 >>>>>>> a55b898 (feat: Community edit)
+=======
+import { PersonalProfileComponent } from './personal-profile/personal-profile.component';
+>>>>>>> ad5282f (feat: User profile is visible)
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -68,5 +72,9 @@ export const routes: Routes = [
 =======
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent}, 
+<<<<<<< HEAD
 >>>>>>> a55b898 (feat: Community edit)
+=======
+    {path: 'profile', component: PersonalProfileComponent, outlet: 'modal'}
+>>>>>>> ad5282f (feat: User profile is visible)
 ];

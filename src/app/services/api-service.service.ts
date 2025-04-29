@@ -171,5 +171,12 @@ export class ApiService {
           data
         );
     }
+<<<<<<< HEAD
 >>>>>>> a55b898 (feat: Community edit)
+=======
+
+    getUserProfile(userID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
+>>>>>>> ad5282f (feat: User profile is visible)
 }

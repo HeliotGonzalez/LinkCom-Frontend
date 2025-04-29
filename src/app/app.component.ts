@@ -12,9 +12,13 @@ import {HTTPUserService} from "./services/api-services/HTTPUserService";
 import {WebSocketFactory} from "./services/api-services/WebSocketFactory.service";
 import {io} from "socket.io-client";
 import {WebSocketService} from "../architecture/io/WebSocketService";
+<<<<<<< HEAD
 import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
+=======
+import {Router} from "@angular/router";
+>>>>>>> ad5282f (feat: User profile is visible)
 
 @Component({
     selector: 'app-root',
@@ -40,10 +44,14 @@ export class AppComponent implements OnInit {
         private headerService: HeaderVisibilityService,
         private serviceFactory: ServiceFactory,
         private socketFactory: WebSocketFactory,
+<<<<<<< HEAD
         private notify: Notify,
         private auth: AuthService,
         private router: Router,
         private commandBuilderFactory: CommandBuilderFactory
+=======
+        private router: Router
+>>>>>>> ad5282f (feat: User profile is visible)
     ) {
     }
 
@@ -92,5 +100,16 @@ export class AppComponent implements OnInit {
                 alert('Failed to submit email.');
             }
         );
+    }
+
+      /** Comprueba si hay alguna ruta activa en el outlet "modal" */
+    isModalOpen(): boolean {
+        return this.router.routerState.snapshot.root.children
+        .some(c => c.outlet === 'modal');
+    }
+
+    /** Cierra el modal navegando a outlet null */
+    closeModal() {
+        this.router.navigate([{ outlets: { modal: null } }]);
     }
 }
