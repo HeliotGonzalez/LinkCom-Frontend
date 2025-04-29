@@ -27,24 +27,62 @@
     <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
       <div class="input-container d-flex flex-column">
         <label for="username-input">Username *</label>
-        <input [(ngModel)]="username" name="username" id="username-input" placeholder="Choose a unique username" required>
+        
+        <input
+          [(ngModel)]="username"
+          (focusout)="checkUsername(username)"
+          name="username"
+          id="username-input"
+          placeholder="Choose a unique username"
+          required
+          [class.input-error]="usernameTaken"
+        >
+      
+        <div *ngIf="usernameTaken" class="error-message">
+          Username already taken
+        </div>
       </div>
+
       <div class="input-container d-flex flex-column">
         <label for="email-input">Email *</label>
-        <input [(ngModel)]="email" name="email" id="email-input" placeholder="Enter your email address" type="email" required>
+        <input 
+        [(ngModel)]="email" 
+        (focusout)="checkEmail(email)"
+        name="email" 
+        id="email-input" 
+        placeholder="Enter your email address" 
+        type="email" 
+        required
+        [class.input-error]="emailTaken">
+        <div *ngIf="emailTaken" class="error-message">
+          Email already taken
+        </div>
       </div>
+
+      <div class="input-container d-flex flex-column">
+        <label for="description-input">Description *</label>
+        <input [(ngModel)]="description" name="description"  placeholder="Talk about yourself" required>
+      </div>
+
       <div class="input-container d-flex flex-column">
         <label for="password-input">Password *</label>
-        <input [(ngModel)]="password" name="password" id="password-input" placeholder="Choose a secure password" type="password" required>
+        <input (focusout)="checkPassLength(password)" [(ngModel)]="password" name="password" id="password-input" placeholder="Choose a secure password" type="password" required  [class.input-error]="passwordLengthError">
+        <div *ngIf="passwordLengthError" class="error-message">
+          Password must be at least 6 characters long
+        </div>
       </div>
+
       <div class="input-container d-flex flex-column">
         <label for="confirm-password-input">Confirm Password *</label>
-        <input [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirm your password" type="password" required>
-      </div>
+        <input (focusout)="checkConfPassLength(confirmPassword)" [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirm your password" type="password" required [class.input-error]="confPasswordLengthError">
+        <div *ngIf="confPasswordLengthError" class="error-message">
+          Password must be at least 6 characters long
+        </div>
     </div>
 
-    <div class="register-form-footer d-flex justify-content-center gap-2">
-      <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
+      <div class="register-form-footer d-flex justify-content-center gap-2">
+        <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
+      </div>
     </div>
   </form>
 
