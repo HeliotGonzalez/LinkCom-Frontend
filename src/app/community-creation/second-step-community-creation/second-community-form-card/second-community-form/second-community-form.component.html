@@ -1,0 +1,28 @@
+<div class="community-form-header">
+    <app-form-steps (saveDataEmitter)="changeFormStep($event)" [steps]="[
+    { step: 1, route: '/firstStepCommunityCreation' },
+    { step: 2, route: '/secondStepCommunityCreation' },
+    { step: 3, route: '/thirdStepCommunityCreation' }
+  ]" [currentStep]="2" class="form-steps-circles-container"></app-form-steps>
+  <div class="community-form-title-container text-center">
+    <h1 class="community-form-title">Community creation</h1>
+    <h2 class="community-form-subtitle">Let others know about it!</h2>
+  </div>
+</div>
+<form class="community-form">
+  <div class="community-form-inputs flex-grow-1">
+    <div class="input-container d-flex flex-column">
+      <label for="community-form-description-input">Community description *</label>
+      <textarea [(ngModel)]="description" name="community-form-description-input" id="community-form-description-input" placeholder="Tell others about your community!"></textarea>
+    </div>
+    <div class="input-container d-flex flex-row justify-content-center" id="interests-input-container">
+      <label for="community-privacy-input">Private community</label>
+      <input [(ngModel)]="privateCommunity" name="community-privacy-input" id="community-privacy-input" type="checkbox">
+    </div>
+  </div>
+  <div class="community-form-footer d-flex align-items-end justify-content-center">
+    <button (click)="previousPage()" class="form-button normal-empty-button">PREVIOUS</button>
+    <button (click)="nextPage($event)" class="form-button normal-button">NEXT</button>
+  </div>
+</form>
+
