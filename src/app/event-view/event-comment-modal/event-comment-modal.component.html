@@ -6,6 +6,7 @@
           <button type="button" class="btn-close" (click)="closeModal()" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
+<<<<<<< HEAD
           <div *ngIf="comments.length > 0" class="mb-3">
             <label class="form-label fw-bold">Comentarios:</label>
             <ul class="list-group mb-2">
@@ -33,6 +34,25 @@
         <div class="modal-footer gap-2">
           <button type="button" class="button" (click)="submitComment()">Publicar</button>
           <button type="button" class="leave-button" (click)="closeModal()">Cerrar</button>
+=======
+            <div *ngIf="comments.length > 0" class="mb-3">
+              <label class="form-label fw-bold">Comentarios anteriores:</label>
+              <ul class="list-group mb-2">
+                <li *ngFor="let comment of comments" class="list-group-item">
+                  {{ comment }}
+                </li>
+              </ul>
+            </div>
+          
+            <textarea [(ngModel)]="commentText"
+                      class="form-control"
+                      rows="1"
+                      placeholder="Escribe tu comentario aquí..."></textarea>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="submitComment()">Publicar</button>
+>>>>>>> 6a3686a (feat: added comments modal and button to delete comments)
         </div>
       </div>
     </div>
