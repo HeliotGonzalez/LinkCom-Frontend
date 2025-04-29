@@ -127,4 +127,8 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.delete<ApiResponse<Announce>>(`${this.url}/communities/${announcementID}/deleteAnnouncement`)
     }
     
+    removeAnnouncement(announcementID: string): Observable<ApiResponse<Announce>> {
+        return this.http.delete<ApiResponse<Announce>>(`${this.url}/communities/${announcementID}/deleteAnnouncement`)
+    }
+    
 }
