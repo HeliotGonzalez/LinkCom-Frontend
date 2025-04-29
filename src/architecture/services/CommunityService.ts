@@ -39,4 +39,5 @@ export interface CommunityService extends Service {
     createCommunity(community: Community): Observable<ApiResponse<Community>>;
     removeCommunity(communityID: string): Observable<ApiResponse<Community>>;
     createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>>;
+    removeAnnouncement(announcementID: string): Observable<ApiResponse<Announce>>;
 }
