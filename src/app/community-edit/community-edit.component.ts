@@ -15,34 +15,34 @@ import Swal from 'sweetalert2';
 export class CommunityEditComponent implements OnInit {
   communityForm!: FormGroup;
   communityID!: string; 
-  currentCommunity!: Community;
+  community!: Community;
   fileToUpload: File | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService
+    private apiService: ApiService,
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.communityID = params['communityID'];
-      this.initializeForm();
-      this.loadCommunityData();
-    });
+    const state = window.history.state as { community?: Community };
+    if (state.community) {
+      this.community = state.community;
+      console.log('Comunidad: ', this.community);
+      this.buildFormFrom(this.community);
+    }
   }
 
-  initializeForm() {
+  private buildFormFrom(c: Community) {
     this.communityForm = this.fb.group({
-      name: ['', Validators.required],
-      description: [''],
-      isPrivate: [false]
+      name:        [c.name,        Validators.required],
+      description: [c.description],
+      isPrivate:   [c.isPrivate]
     });
   }
 
   loadCommunityData() {
-    this.apiService.getCommunity(this.communityID).subscribe({
+    this.apiService.getCommunity(this.community.id).subscribe({
       next: (res: any) => {
         const data = res.data[0] as Community;
         if (data) {
@@ -67,25 +67,25 @@ export class CommunityEditComponent implements OnInit {
   onSubmit() {
     if (this.communityForm.valid) {
       const formValue = this.communityForm.value;
-      // Usamos FormData para enviar datos y archivo
       const formData = new FormData();
+
       let name = formValue.name;
       let description = formValue.description;
       let isPrivate = formValue.isPrivate;
+      
       if (this.fileToUpload) {
-        // El campo debe llamarse "image" para coincidir con upload.single("image")
         formData.append("image", this.fileToUpload, this.fileToUpload.name);
       }
-      // Llamamos al método del ApiService para actualizar la comunidad
-      this.apiService.updateCommunity(this.communityID, {name, description, isPrivate}).subscribe({
+      
+      this.apiService.updateCommunity(this.community.id, {name, description, isPrivate}).subscribe({
         next: res => {
             Swal.fire({
               icon: 'success',
-              title: 'Comunidad actualizada',
-              text: 'La comunidad se actualizó con éxito.',
-              confirmButtonText: 'Aceptar'
+              title: 'Community updated',
+              text: 'Was updated successfully',
+              confirmButtonText: 'Continue'
             }).then(() => {
-              this.router.navigate(['/community'], { queryParams: { communityID: this.communityID } });
+              this.router.navigate(['/community'], { queryParams: { communityID: this.community.id } });
             });
           },
           error: err => {
@@ -93,7 +93,7 @@ export class CommunityEditComponent implements OnInit {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Ocurrió un error al actualizar la comunidad.',
+              text: 'An error ocurred while updating the community.',
               confirmButtonText: 'Aceptar'
             });
         }

@@ -88,15 +88,12 @@ export class CommunityViewComponent {
     }
 
     protected editCommunity() {
-        this.router.navigate(["/editCommunity"], {queryParams: {communityID: this.community?.id}}).then(r => {
-        });
-    }
-
-    goToEditCommunity() {
-        this.router.navigate(['/editCommunity'], { 
-          queryParams: { communityID: this.community?.id } 
-        });
-    }
+        if (!this.community) return;
+        this.router.navigate(
+          ['/editCommunity'],
+          { state: { community: this.community } }
+        );
+      }
 
     private async getCommunity(communityID: string) {
         return (await (firstValueFrom((this.serviceFactory.get('communities') as CommunityService).getCommunity(communityID)))).data[0];

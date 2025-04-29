@@ -165,6 +165,7 @@ export class ApiService {
 >>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
 =======
     updateCommunity(id: string, data: any): Observable<any> {
+        console.log('Se obtuvo el id: ' + id);
         return this.http.patch<any>(
           `${this.baseUrl}/communities/${id}`,
           data
