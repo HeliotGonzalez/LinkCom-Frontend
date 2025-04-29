@@ -4,7 +4,7 @@
 /* Estilo de la tarjeta del formulario */
 .form-card {
     width: 40rem; /* Reducido para que el formulario sea más compacto */
-    height: 90vh;
+    height: 100vh;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background: white;
@@ -157,5 +157,16 @@
     font-size: 1rem;
     margin-top: 0.5rem;
     color: #666;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+  }
+  
+  .input-error {
+    border: 1px solid red;
+    outline: none;
   }
   
