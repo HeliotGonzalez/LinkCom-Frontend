@@ -61,21 +61,10 @@
     font-weight: bold;
   }
   
-  /* Contenedor para los puntos de evento */
-  .event-dot {
-    width: 8px;
-    height: 8px;
-    background-color: blue;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 1px;
-  }
-  
-  
   /* Punto de evento: pequeño círculo azul */
   .event-dot {
-    width: 6px;
-    height: 6px;
+    width: 9px;
+    height: 9px;
     background-color: #007bff;
     border-radius: 50%;
     display: inline-block;
