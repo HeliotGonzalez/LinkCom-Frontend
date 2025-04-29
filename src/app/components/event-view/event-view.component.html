@@ -21,7 +21,16 @@
             </app-image-dialog>
         </div>
     </div>
-    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3 gap-2">
+    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
+        <button class="button" (click)="openCommentModal()">View</button>
+
+        <app-event-comment-modal
+        [visible]="isCommentModalVisible"
+        (closed)="isCommentModalVisible = false"
+        (commentSubmitted)="handleComment($event)">
+      </app-event-comment-modal>
+            
+
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
                 <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
