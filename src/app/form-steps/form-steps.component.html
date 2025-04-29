@@ -1,0 +1,20 @@
+<div class="container mt-5">
+    <div class="d-flex align-items-center">
+        @for (step of steps; track $index) {
+            <div class="text-center" (click)="emit(step.route)">
+                <a [routerLink]="step.route">
+                    <div
+                            class="community-step-circle rounded-circle border border-primary d-flex align-items-center justify-content-center"
+                            [ngClass]="getStepClass(step.step)"
+                            style="width: 40px; height: 40px;"
+                    >
+                        {{ step.step }}
+                    </div>
+                </a>
+            </div>
+            @if ($index < steps.length - 1) {
+                <div class="flex-grow-1 mx-2" style="height: 2px; background-color: #ccc;"></div>
+            }
+        }
+    </div>
+</div>

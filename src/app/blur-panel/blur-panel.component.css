@@ -1,0 +1,15 @@
+.container-blur {
+    z-index: 1000;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.7);
+    height: 93.5vh;
+}
+
+main {
+    background: unset;
+}
