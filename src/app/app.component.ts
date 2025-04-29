@@ -12,6 +12,7 @@ import {HTTPUserService} from "./services/api-services/HTTPUserService";
 import {WebSocketFactory} from "./services/api-services/WebSocketFactory.service";
 import {io} from "socket.io-client";
 import {WebSocketService} from "../architecture/io/WebSocketService";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'app-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit {
         private http: HttpClient,
         private headerService: HeaderVisibilityService,
         private serviceFactory: ServiceFactory,
-        private socketFactory: WebSocketFactory
+        private socketFactory: WebSocketFactory,
+        private router: Router
     ) {
     }
 
@@ -81,5 +83,16 @@ export class AppComponent implements OnInit {
                 alert('Failed to submit email.');
             }
         );
+    }
+
+      /** Comprueba si hay alguna ruta activa en el outlet "modal" */
+    isModalOpen(): boolean {
+        return this.router.routerState.snapshot.root.children
+        .some(c => c.outlet === 'modal');
+    }
+
+    /** Cierra el modal navegando a outlet null */
+    closeModal() {
+        this.router.navigate([{ outlets: { modal: null } }]);
     }
 }
