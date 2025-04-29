@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {ImageDialogComponent} from "../image-dialog/image-dialog.component";
 import {AuthService} from "../services/auth.service";
@@ -6,7 +6,7 @@ import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {EventService} from "../../architecture/services/EventService";
 import {Notify} from "../services/notify";
 import { EventCommentModalComponent } from "./event-comment-modal/event-comment-modal.component";
-
+import { Comment } from '../../architecture/model/Comment';
 @Component({
     selector: 'app-event-view',
     imports: [
@@ -20,6 +20,8 @@ import { EventCommentModalComponent } from "./event-comment-modal/event-comment-
 export class EventViewComponent {
     @Input() event: CommunityEvent | null = null;
     @Input() isDisabled: boolean = true;
+    @Output() joinEventEmitter = new EventEmitter();
+    @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
     protected isCommentModalVisible: boolean = false;
 
@@ -31,13 +33,7 @@ export class EventViewComponent {
     }
 
     joinEvent() {
-        (this.serviceFactory.get('events') as EventService).joinEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
-            next: () => {
-                this.notify.success(`You have joined ${this.event?.title}`);
-                this.isDisabled = true;
-            },
-            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
-        });
+        this.joinEventEmitter.emit();
     }
 
     leaveEvent() {
@@ -68,9 +64,15 @@ export class EventViewComponent {
         this.isCommentModalVisible = false;
     }
 
-    handleComment(comment: string) {
-        console.log('Comentario enviado:', comment);
-        // Aquí podrías llamar a un servicio para guardar el comentario
+    createComment(comment: Comment) {
+        console.log(comment.body);
+        (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
+            next: () => {
+                this.notify.success(`You have published a comment`);
+                this.isCommentModalVisible = false;
+            },
+            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        });
       }
       
 }
