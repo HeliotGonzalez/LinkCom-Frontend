@@ -1,8 +1,0 @@
-@if (isVisible) {
-    <div id="imageDialog" class="dialog" (click)="closeDialog($event)" [ngClass]="{'show': isVisible}">
-        <div class="dialog-content" (click)="$event.stopPropagation()">
-            <span class="close" (click)="close.emit()">&times;</span>
-            <img [src]="imageUrl" alt="Image" class="vw-100 object-fit-contain">
-        </div>
-    </div>
-}

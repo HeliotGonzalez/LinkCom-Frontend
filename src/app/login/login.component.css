@@ -1,13 +1,4 @@
-.main{
-  flex: 1;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: linear-gradient(to bottom, #2E3E7F, #5370E5);
-}
-
-/* Fondo semi-transparente del formulario*/
+/* Fondo semi-transparente del formulario */
 .login-form-background {
   position: absolute;
   top: 0;
