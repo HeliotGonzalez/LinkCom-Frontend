@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { NgFor, NgIf } from '@angular/common';
 import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, ViewChild, OnChanges, SimpleChanges} from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -13,12 +14,16 @@ declare var bootstrap: any;
 
 @Component({
 =======
+=======
+import { NgIf } from '@angular/common';
+>>>>>>> 6521e6d (Fixed somethigns)
 import {
     Component, Input, Output, EventEmitter,
     AfterViewInit, ElementRef, ViewChild, OnChanges, SimpleChanges
   } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-  
+import { Comment } from '../../../architecture/model/Comment';
+
   declare var bootstrap: any;
   
   @Component({
@@ -27,6 +32,7 @@ import { FormsModule } from '@angular/forms';
     standalone: true,
     templateUrl: './event-comment-modal.component.html',
     styleUrl: './event-comment-modal.component.css',
+<<<<<<< HEAD
 <<<<<<< HEAD
     imports: [FormsModule, NgIf, NgFor]
 })
@@ -138,11 +144,17 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
 }
 =======
     imports: [FormsModule]
+=======
+    imports: [FormsModule, NgIf]
+>>>>>>> 6521e6d (Fixed somethigns)
   })
   export class EventCommentModalComponent implements AfterViewInit, OnChanges {
     @Input() visible = false;
+    @Input() eventID!: string;
+    @Input() userID!: string;
+
     @Output() closed = new EventEmitter<void>();
-    @Output() commentSubmitted = new EventEmitter<string>();
+    @Output() commentSubmitted = new EventEmitter<Comment>();
     @Input() comments: string[] = [];
     @ViewChild('modal') modalRef!: ElementRef;
     commentText: string = '';
@@ -172,10 +184,15 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
   
     submitComment() {
       if (this.commentText.trim()) {
-        this.commentSubmitted.emit(this.commentText.trim());
+        this.commentSubmitted.emit({
+          body: this.commentText.trim(),
+          eventID: this.eventID,
+          userID: this.userID
+        });
         this.closeModal();
       }
     }
+    
   }
   
 >>>>>>> 6a3686a (feat: added comments modal and button to delete comments)

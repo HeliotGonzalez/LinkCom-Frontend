@@ -30,10 +30,13 @@
         <button class="button" (click)="openCommentModal()">View</button>
 
         <app-event-comment-modal
+        *ngIf="isCommentModalVisible"
         [visible]="isCommentModalVisible"
-        (closed)="isCommentModalVisible = false"
-        (commentSubmitted)="handleComment($event)">
-      </app-event-comment-modal>
+        [eventID]="event?.id!"
+        (commentSubmitted)="createComment($event)"
+        (closed)="closeCommentModal()"
+        ></app-event-comment-modal>
+
             
 
         @if (!isDisabled) {
