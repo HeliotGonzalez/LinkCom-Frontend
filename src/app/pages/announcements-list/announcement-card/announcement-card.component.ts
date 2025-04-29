@@ -53,11 +53,12 @@ export class AnnouncementCardComponent implements OnInit {
             Swal.fire({
               title: 'Eliminado!',
               text: 'El evento ha sido eliminado correctamente.',
-              icon: 'success',
-            });
+              icon: 'success',              
+            }).then(() => {
+              window.location.reload(); // Recargar la página para reflejar los cambios
+            })
             // Aquí puedes agregar lógica para actualizar la vista o redirigir
             // Por ejemplo, redirigir al usuario a la página de anuncios:
-            this.router.navigate(['/announcements']);
           },
           error: (error) => {
             console.error('Error al eliminar el evento:', error);
@@ -69,6 +70,7 @@ export class AnnouncementCardComponent implements OnInit {
             });
           }
         });
+
       }
     });
   }
