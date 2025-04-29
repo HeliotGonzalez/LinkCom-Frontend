@@ -52,7 +52,6 @@ export class HTTPEventService implements EventService {
     }
 
     createComment(comment: Comment): Observable<ApiResponse<Comment>> {
-        console.log(comment);
         return this.http.post<ApiResponse<Comment>>(`${this.url}/events/${comment.eventID}/createComment`, comment);
     }
 
