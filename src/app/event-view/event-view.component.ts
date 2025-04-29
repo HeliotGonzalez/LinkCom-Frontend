@@ -78,7 +78,6 @@ export class EventViewComponent {
     openCommentModal() {
         this.isCommentModalVisible = true;
     }
-
     closeCommentModal() {
         this.isCommentModalVisible = false;
     }
