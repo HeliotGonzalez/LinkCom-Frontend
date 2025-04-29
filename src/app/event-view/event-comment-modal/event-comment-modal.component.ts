@@ -1,9 +1,11 @@
+import { NgIf } from '@angular/common';
 import {
     Component, Input, Output, EventEmitter,
     AfterViewInit, ElementRef, ViewChild, OnChanges, SimpleChanges
   } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-  
+import { Comment } from '../../../architecture/model/Comment';
+
   declare var bootstrap: any;
   
   @Component({
@@ -11,12 +13,15 @@ import { FormsModule } from '@angular/forms';
     standalone: true,
     templateUrl: './event-comment-modal.component.html',
     styleUrl: './event-comment-modal.component.css',
-    imports: [FormsModule]
+    imports: [FormsModule, NgIf]
   })
   export class EventCommentModalComponent implements AfterViewInit, OnChanges {
     @Input() visible = false;
+    @Input() eventID!: string;
+    @Input() userID!: string;
+
     @Output() closed = new EventEmitter<void>();
-    @Output() commentSubmitted = new EventEmitter<string>();
+    @Output() commentSubmitted = new EventEmitter<Comment>();
     @Input() comments: string[] = [];
     @ViewChild('modal') modalRef!: ElementRef;
     commentText: string = '';
@@ -46,9 +51,14 @@ import { FormsModule } from '@angular/forms';
   
     submitComment() {
       if (this.commentText.trim()) {
-        this.commentSubmitted.emit(this.commentText.trim());
+        this.commentSubmitted.emit({
+          body: this.commentText.trim(),
+          eventID: this.eventID,
+          userID: this.userID
+        });
         this.closeModal();
       }
     }
+    
   }
   
