@@ -7,10 +7,14 @@ import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 <<<<<<< HEAD
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+<<<<<<< HEAD
 =======
 import {CommunityEvent} from "../interfaces/CommunityEvent";
 import { Community } from '../interfaces/community';
 >>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
+=======
+import { User } from '../../architecture/model/User';
+>>>>>>> 2426d70 (feat: A user can edit their data)
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -184,5 +188,12 @@ export class ApiService {
     getUserProfile(userID: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
     }
+<<<<<<< HEAD
 >>>>>>> ad5282f (feat: User profile is visible)
+=======
+
+    updateUser(id: string, payload: Partial<User>): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
+    }
+>>>>>>> 2426d70 (feat: A user can edit their data)
 }
