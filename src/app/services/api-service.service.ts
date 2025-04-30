@@ -30,7 +30,7 @@ export class ApiService {
     // Obtener comunidades a las que NO pertenece el usuario
     getNonBelongingCommunities(userID: string): Observable<any> {
         console.log('ID: ' + userID);
-        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities?userId=${userID}`);
+        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities/${userID}`);
     }
 
     // Obtener eventos para el calendario
