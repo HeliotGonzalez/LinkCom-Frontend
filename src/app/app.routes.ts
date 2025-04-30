@@ -29,6 +29,7 @@ import { AnnouncementsListComponent } from './announcements-list/announcements-l
 import { CommunityEditComponent } from './community-edit/community-edit.component';
 import { CommunityRequestsPanelComponent } from './community-requests-panel/community-requests-panel.component';
 import { PersonalProfileComponent } from './personal-profile/personal-profile.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
@@ -50,5 +51,6 @@ export const routes: Routes = [
     {path: 'announcementsList', component: AnnouncementsListComponent},
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent}, 
-    {path: 'profile', component: PersonalProfileComponent, outlet: 'modal'}
+    {path: 'profile', component: PersonalProfileComponent, outlet: 'modal'},
+    { path: 'edit-profile', component: EditProfileComponent } 
 ];

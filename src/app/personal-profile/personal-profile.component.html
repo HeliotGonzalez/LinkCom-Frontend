@@ -8,7 +8,7 @@
     <div class="banner w-100"></div>
     <img class="avatar rounded-circle border border-4" [src]="this.user.imagePath || avatarFallback" alt="profile picture"/>
     @if (this.user.id == this.ownerId){
-      <div class="d-flex align-items-center me-3 mt-3" style="font-size: larger;">
+      <div class="d-flex align-items-center me-3 mt-3" style="font-size: larger; cursor: pointer;" (click)="editProfile()">
         <i class="bi bi-pencil-square ms-auto"></i>
       </div>
     }

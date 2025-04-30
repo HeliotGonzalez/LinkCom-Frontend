@@ -6,6 +6,7 @@ import {CreateCommunityParameters} from "../interfaces/create-community-paramete
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+import { User } from '../../architecture/model/User';
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -146,5 +147,9 @@ export class ApiService {
 
     getUserProfile(userID: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
+
+    updateUser(id: string, payload: Partial<User>): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
     }
 }

@@ -3,7 +3,7 @@ import { User } from '../../architecture/model/User';
 import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommunityService } from '../../architecture/services/CommunityService';
 import { Notify } from '../services/notify';
 import { ServiceFactory } from '../services/api-services/ServiceFactory.service';
@@ -12,7 +12,7 @@ import { ServiceFactory } from '../services/api-services/ServiceFactory.service'
   selector: 'app-personal-profile',
   templateUrl: './personal-profile.component.html',
   styleUrls: ['./personal-profile.component.css'],
-  imports: [CommonModule]                 
+  imports: [CommonModule, RouterModule]                 
 })
 export class PersonalProfileComponent implements OnInit {
   @Input() parentUser: User | null = null;
@@ -26,13 +26,12 @@ export class PersonalProfileComponent implements OnInit {
     this.ownerId = this.AuthService.getUserUUID();
   }
 
-
-
   ngOnInit(): void {
     if (this.parentUser){
       this.user = this.parentUser;
       return;
     }
+
     this.apiService.getUserProfile(this.AuthService.getUserUUID()).subscribe({
       next: (response: any) => {
       const data = response.data;
@@ -58,7 +57,9 @@ export class PersonalProfileComponent implements OnInit {
 
   viewCommunity(communityID?: string): void {
     if (!communityID) { return; }
-    this.router.navigate(['/community'], { queryParams: { communityID } });
+    this.router.navigate([{ outlets: { modal: null } }]).then(() => {
+      this.router.navigate(['/community'], { queryParams: { communityID } });
+    });
   }
   
   leaveCommunity(communityID?: string, name?: string): void {
@@ -79,5 +80,11 @@ export class PersonalProfileComponent implements OnInit {
             error: res => this.notify.error(`An error occurred: ${res.message}`)
           });
       });
+  }
+
+  editProfile(){
+    this.router.navigate([{ outlets: { modal: null } }]).then(() => {
+      this.router.navigate(['/edit-profile']);
+    });
   }
 }
