@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { User } from '../../architecture/model/User';
 import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
@@ -15,39 +15,39 @@ import { ServiceFactory } from '../services/api-services/ServiceFactory.service'
   imports: [CommonModule]                 
 })
 export class PersonalProfileComponent implements OnInit {
+  @Input() parentUser: User | null = null;
 
   activeTab: 'about' | 'communities' | 'activities' = 'about';
   avatarFallback = 'assets/img/default-avatar.png';
   user: User | null = null;
+  ownerId: string = '';
 
-  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory) {}
+  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory) {
+    this.ownerId = this.AuthService.getUserUUID();
+  }
+
+
 
   ngOnInit(): void {
-    console.log('Usuario actual: ', this.AuthService.getUserUUID());
+    if (this.parentUser){
+      this.user = this.parentUser;
+      return;
+    }
     this.apiService.getUserProfile(this.AuthService.getUserUUID()).subscribe({
       next: (response: any) => {
       const data = response.data;
-
       const createdAt = new Date(data.created_at);
-
       const communities = data.communities.map((c: any) => ({
         ...c,
         created_at: new Date(c.created_at)
       }));
 
-      this.user = {
-        id: data.id,
-        username: data.username,
-        description: data.description,
-        email: data.email,
-        imagePath: data.imagePath,
-        created_at: createdAt,
-        interests: data.interests,
+      this.user = {id: data.id, username: data.username, description: data.description, email: data.email, imagePath: data.imagePath,
+        created_at: createdAt, interests: data.interests,
         stats: {
           communities: data.stats.communities,
           eventsJoined: data.stats.eventsJoined
-        },
-        communities
+        }, communities
       };
       },
       error: (error: any) => {
@@ -56,13 +56,11 @@ export class PersonalProfileComponent implements OnInit {
     });
   }
 
-  /** ➊ Ir a la vista de comunidad */
   viewCommunity(communityID?: string): void {
     if (!communityID) { return; }
     this.router.navigate(['/community'], { queryParams: { communityID } });
   }
   
-  /** ➋ Salir de la comunidad */
   leaveCommunity(communityID?: string, name?: string): void {
     if (!communityID) { return; }
 
@@ -75,7 +73,6 @@ export class PersonalProfileComponent implements OnInit {
           .subscribe({
             next: () => {
               this.notify.success('You have left this community!');
-              // quítala del array sin recargar la página
               this.user!.communities =
                 this.user!.communities.filter(c => c.id !== communityID);
             },
