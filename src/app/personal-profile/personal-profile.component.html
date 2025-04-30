@@ -2,11 +2,17 @@
 @if (this.user != null){
   <section class="card text-white profile-card mx-auto my-4 overflow-hidden">
     <!-- Banner + avatar -->
-    <button type="button" class="btn btn-sm bg-transparent position-absolute top-0 end-0 m-2"(click)="router.navigate([{ outlets: { modal: null } }])">
+    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="router.navigate([{ outlets: { modal: null } }])">
       <i class="bi bi-x-lg text-white" style="font-size: large;"></i>
     </button>
     <div class="banner w-100"></div>
     <img class="avatar rounded-circle border border-4" [src]="this.user.imagePath || avatarFallback" alt="profile picture"/>
+    @if (this.user.id == this.ownerId){
+      <div class="d-flex align-items-center me-3 mt-3" style="font-size: larger;">
+        <i class="bi bi-pencil-square ms-auto"></i>
+      </div>
+    }
+
   
     <!-- Nombre -->
     <h2 class="h4 text-center mt-5 mb-3">{{ this.user.username }}</h2>
@@ -49,11 +55,7 @@
   
         <h6 class="mt-4">Interests</h6>
         <ng-container *ngIf="this.user?.interests?.length; else noTags">
-          <span
-            class="badge bg-light text-dark me-1 mb-1"
-            *ngFor="let tag of this.user?.interests"
-            >#{{ tag }}</span
-          >
+          <span class="badge bg-light text-dark me-1 mb-1"*ngFor="let tag of this.user?.interests">#{{ tag }}</span>
         </ng-container>
         <ng-template #noTags>
           <span class="text-muted">None</span>
@@ -72,10 +74,12 @@
         <!-- Botones -->
         <div class="btn-group">
           <button class="btn btn-sm btn-primary me-3" (click)="viewCommunity(c.id)"> View </button>
-          <button class="btn btn-sm btn-danger" (click)="leaveCommunity(c.id, c.name)"> Leave </button>
+          @if (this.user.id == this.ownerId){
+            <button class="btn btn-sm btn-danger" (click)="leaveCommunity(c.id, c.name)"> Leave </button>
+          }
         </div>
       </div>
-    </div>
+  </div>
     
     <!-- Sin comunidades -->
     <p *ngIf="user && !user.communities.length" class="text-muted">
