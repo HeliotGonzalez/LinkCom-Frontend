@@ -29,15 +29,14 @@
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
         <button class="button" (click)="openCommentModal()">View</button>
 
-        <app-event-comment-modal
-        *ngIf="isCommentModalVisible"
-        [visible]="isCommentModalVisible"
-        [eventID]="event?.id!"
-        (commentSubmitted)="createComment($event)"
-        (closed)="closeCommentModal()"
-        ></app-event-comment-modal>
-
-            
+        @if(isCommentModalVisible){
+            <app-event-comment-modal
+                [visible]="isCommentModalVisible"
+                [eventID]="event?.id!"
+                (commentSubmitted)="createComment($event)"
+                (closed)="closeCommentModal()"
+            ></app-event-comment-modal>
+        }
 
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
