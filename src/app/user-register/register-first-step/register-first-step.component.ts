@@ -127,17 +127,6 @@ export class RegisterFirstStepComponent {
     input.focus();
   }
 
-  ngOnInit() {
-    this.apiService.getData().subscribe({
-      next: (response: any) => {
-        console.log('Respuesta recibida:', response);
-      },
-      error: (erro: any) => {
-        console.log('Respuesta recibida:', erro);
-      }
-    });
-  }
-
   checkUsername(username: string) {
     const url = `http://localhost:3000/user-register/firstStep?username=${encodeURIComponent(username)}`;
   
