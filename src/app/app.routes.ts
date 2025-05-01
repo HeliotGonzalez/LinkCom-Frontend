@@ -1,5 +1,4 @@
 import {Routes} from '@angular/router';
-import {UserRegisterComponent} from './user-register/user-register.component';
 import {LoginComponent} from './login/login.component';
 import {HeaderComponent} from './header/header.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -27,13 +26,18 @@ import {EventsCommunityCalendarComponent} from "./events-community-calendar/even
 import { AnnouncementCreationComponent } from './announcement-creation/announcement-creation.component';
 import { AnnouncementsListComponent } from './announcements-list/announcements-list.component';
 import {CommunityRequestsPanelComponent} from "./community-requests-panel/community-requests-panel.component";
+import { RegisterFirstStepComponent } from './user-register/register-first-step/register-first-step.component';
+import { RegisterSecondStepComponent } from './user-register/register-second-step/register-second-step.component';
+import { RegisterThirdStepComponent } from './user-register/register-third-step/register-third-step.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
     {path: 'header', component: HeaderComponent},
     {path: 'homepage', component: HomepageComponent},
-    {path: 'user-register', component: UserRegisterComponent},
-    {path: 'login', component: LoginComponent},
+    {path: 'user-register/firstStep', component: RegisterFirstStepComponent },
+    {path: 'user-register/secondStep', component: RegisterSecondStepComponent },
+    {path: 'user-register/thirdStep', component: RegisterThirdStepComponent },
+    {path: 'login', component: LoginComponent },
     {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent},
     {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent},
     {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent},
