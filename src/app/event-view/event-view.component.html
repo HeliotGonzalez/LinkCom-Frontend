@@ -22,6 +22,17 @@
         </div>
     </div>
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
+        <button class="button" (click)="openCommentModal()">View</button>
+
+        @if(isCommentModalVisible){
+            <app-event-comment-modal
+                [visible]="isCommentModalVisible"
+                [eventID]="event?.id!"
+                (commentSubmitted)="createComment($event)"
+                (closed)="closeCommentModal()"
+            ></app-event-comment-modal>
+        }
+
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
                 <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
