@@ -27,11 +27,12 @@ export class EventsCommunityCalendarComponent implements OnInit {
   currentYear: number = this.currentDate.getFullYear();
   today: number = this.currentDate.getDate();
   calendarMonth!: CalendarMonth;
-
+  selectedEvent: { title: string; description: string; date: Date } | null = null;
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  calendarEvents: { [day: number]: string[] } = {};
+  calendarEvents: { [day: number]: { title: string; description: string ;  date: Date}[] } = {};
   events: CommunityEvent[] = [];
   userid: string;
+  
 
   constructor(
     private apiService: ApiService,
@@ -57,10 +58,14 @@ export class EventsCommunityCalendarComponent implements OnInit {
 
 <<<<<<< HEAD
         this.events.forEach(ev => {
+<<<<<<< HEAD
 =======
         data.forEach(ev => {
 >>>>>>> af94eed (fix: Using a past  column dateOfTheEvent)
           const eventDate = new Date(ev.date); // Asegúrate que sea el campo correcto
+=======
+          const eventDate = new Date(ev.date); 
+>>>>>>> 271a456 (refactor: callendar)
           const day = eventDate.getDate();
           const month = eventDate.getMonth();
           const year = eventDate.getFullYear();
@@ -72,7 +77,11 @@ export class EventsCommunityCalendarComponent implements OnInit {
 
             console.log(this.calendarEvents[day])
 
-            this.calendarEvents[day].push(ev.title);
+            this.calendarEvents[day].push({
+              title: ev.title,
+              description: ev.description,
+              date: new Date(ev.date)
+            });
           }
         });
 
