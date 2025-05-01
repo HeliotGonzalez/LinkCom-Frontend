@@ -32,33 +32,30 @@ export class AnnouncementCardComponent implements OnInit {
   // Método para eliminar el anuncio
   deleteAnnouncement(announcementId: string) {
     Swal.fire({
-      title: '¿Estás seguro?',
-      text: '¡Este anuncio será eliminado!',
+      title: 'Are you sure?',
+      text: 'This announcement will be deleted!',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log('ID del anuncio a eliminar:', announcementId);
         (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
           next: (response) => {
-            console.log('Evento eliminado con éxito:', response);
             Swal.fire({
-              title: 'Eliminado!',
-              text: 'El evento ha sido eliminado correctamente.',
+              title: 'Deleted!',
+              text: 'This announcement has been deleted.',
               icon: 'success',              
             }).then(() => {
               window.location.reload(); 
             })
           },
           error: (error) => {
-            console.error('Error al eliminar el evento:', error);
             Swal.fire({
               title: 'Error!',
-              text: 'No se pudo eliminar el evento. Inténtalo de nuevo.',
+              text: 'Could not delete the announcement.',
               icon: 'error',
-              confirmButtonText: 'Reintentar',
+              confirmButtonText: 'Retry',
             });
           }
         });
