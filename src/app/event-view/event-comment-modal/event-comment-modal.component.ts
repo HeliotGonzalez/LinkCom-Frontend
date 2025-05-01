@@ -5,7 +5,7 @@ import {
   } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../architecture/model/Comment';
-
+import { AuthService } from '../../services/auth.service';
   declare var bootstrap: any;
   
   @Component({
@@ -18,7 +18,7 @@ import { Comment } from '../../../architecture/model/Comment';
   export class EventCommentModalComponent implements AfterViewInit, OnChanges {
     @Input() visible = false;
     @Input() eventID!: string;
-    @Input() userID!: string;
+    userID !: string;
 
     @Output() closed = new EventEmitter<void>();
     @Output() commentSubmitted = new EventEmitter<Comment>();
@@ -28,6 +28,12 @@ import { Comment } from '../../../architecture/model/Comment';
   
     private modalInstance: any;
   
+      constructor (
+        private authService: AuthService
+      ) {  
+        this.userID = this.authService.getUserUUID();
+      }
+
     ngAfterViewInit() {
       this.modalInstance = new bootstrap.Modal(this.modalRef.nativeElement);
       this.modalRef.nativeElement.addEventListener('hidden.bs.modal', () => {
