@@ -42,11 +42,13 @@
                       @if (day && calendarEvents[day])
                       {
                         <div class="event-dots">
-                          @for (event of calendarEvents[day]; track events) 
+                          @for (event of calendarEvents[day]; track  $index) 
                           {
-                            <span class="event-dot" [title]="events">
-
+                            
+                              <span class="event-dot" [title]="event.title"  data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="selectedEvent= event">
+                                
                             </span>
+                          
                           }
                         </div>
                       }
@@ -60,5 +62,40 @@
       </div>
     </div>
   </div>
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class=" modal-title fs-5" id="exampleModalLabel">{{selectedEvent?.title}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h5>Date</h5>
+        <div class="row">
+          <div class="col">
+            Hora:
+            <br>
+          {{selectedEvent?.date | date:'HH:mm' : 'Atlantic/Canary'}}
+        </div>
+        <div class="col">
+          Fecha:
+          <br>
+          {{ selectedEvent?.date | date:'dd/MM/yy':'es-ES' }}
+      </div>
+        </div>
+         
+        <h5>
+          Description
+        </h5>
+         <p [innerHTML]="selectedEvent?.description"> </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
