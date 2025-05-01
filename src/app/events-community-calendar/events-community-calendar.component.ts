@@ -6,6 +6,7 @@ import { FeedItem } from '../interfaces/feed-item';
 import { Router } from '@angular/router';
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+import { Community } from '../../architecture/model/Community';
 
 interface CalendarMonth {
   month: number;
@@ -27,11 +28,13 @@ export class EventsCommunityCalendarComponent implements OnInit {
   currentYear: number = this.currentDate.getFullYear();
   today: number = this.currentDate.getDate();
   calendarMonth!: CalendarMonth;
-  selectedEvent: { title: string; description: string; date: Date } | null = null;
+  selectedEvent: { title: string; description: string; date: Date; imagePath: string; communityID: string;} | null = null;
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  calendarEvents: { [day: number]: { title: string; description: string ;  date: Date}[] } = {};
+  calendarEvents: { [day: number]: { title: string; description: string ;  date: Date; imagePath:string; communityID: string;}[] } = {};
   events: CommunityEvent[] = [];
   userid: string;
+  communityNames = new Map<string, string>();
+  communityInterests  = new Map<string, string[]>();
   
 
   constructor(
@@ -42,14 +45,32 @@ export class EventsCommunityCalendarComponent implements OnInit {
     this.userid = this.authService.getUserUUID();
   }
 
+
+  private loadCommunities(): void {
+    this.apiService.getCommunities().subscribe({
+      next: (res: ApiResponse<Community>) => {
+        res.data
+          .filter(c => c.id && c.name)     // descartamos nulos
+          .forEach(c => {
+            this.communityNames.set(c.id!, c.name!);
+  
+            // guarda intereses (puede venir undefined)
+            const ints = c.interests?.map(i => i.interest) ?? [];
+            this.communityInterests.set(c.id!, ints);
+          });
+      },
+      error: err => console.error('Error al cargar comunidades', err)
+    });
+  }
   ngOnInit(): void {
     this.generateCalendarMonth();
-
+    this.loadCommunities();
     if (this.userid === 'user_id') {
       console.log('No existe usuario');
       return;
     }
 
+    
     this.apiService.getEvents(this.authService.getUserUUID()).subscribe({
       next: res => {
         console.log(res);
@@ -80,7 +101,9 @@ export class EventsCommunityCalendarComponent implements OnInit {
             this.calendarEvents[day].push({
               title: ev.title,
               description: ev.description,
-              date: new Date(ev.date)
+              date: new Date(ev.date),
+              imagePath: ev.imagePath,
+              communityID: ev.communityID,
             });
           }
         });
@@ -93,6 +116,17 @@ export class EventsCommunityCalendarComponent implements OnInit {
     });
   }
 
+  public getCommunityName(id?: string): string {
+    if (!id) return '—';
+    return this.communityNames.get(id) ?? 'Comunidad desconocida';
+  }
+
+  public getCommunityInterests(id?: string): string {
+    if (!id) return '—';
+    const ints = this.communityInterests.get(id);
+    return ints && ints.length ? ints.join(' · ') : '—';
+  }
+
   generateCalendarMonth(): void {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
@@ -100,6 +134,7 @@ export class EventsCommunityCalendarComponent implements OnInit {
     const weeks = this.generateCalendarForMonth(year, month);
     this.calendarMonth = { year, month, monthName, weeks };
   }
+  
 
   generateCalendarForMonth(year: number, month: number): (number | null)[][] {
     const firstDay = new Date(year, month, 1);
