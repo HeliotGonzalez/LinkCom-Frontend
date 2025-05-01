@@ -25,28 +25,14 @@
         <!-- Botón para abrir el modal -->
         <button (click)="openCommentModal()" class="btn btn-primary">Ver Comentarios</button>
 
-        <!-- Modal de Comentarios -->
-        <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="commentModalLabel">Comentarios</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="comments-container">
-                    <div *ngFor="let comment of comments" class="comment-bubble">
-                      <p><strong>{{ comment.userID }}</strong> -> {{ comment.body }}</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        @if(isCommentModalVisible){
+            <app-event-comment-modal
+                [visible]="isCommentModalVisible"
+                [eventID]="event?.id!"
+                (commentSubmitted)="createComment($event)"
+                (closed)="closeCommentModal()"
+            ></app-event-comment-modal>
+        }
 
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
