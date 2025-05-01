@@ -4,6 +4,9 @@ import { ApiService } from '../../../services/api-service.service';
 import { AuthService } from '../../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../../../architecture/services/CommunityService';
+import { CommunityAnnouncement } from '../../../../architecture/model/CommunityAnnouncement';
 
 
 @Component({
@@ -14,43 +17,26 @@ import { FormsModule } from '@angular/forms';
 })
 export class AnnouncementFormComponent implements OnInit{
 
-  protected title = '';
-  protected body = '';
-  private communityID = '';
-  private userID = '';
-  private communityName = '';
-  private publisherID = '';
-  
+  private communityAnnouncement!: CommunityAnnouncement;
+
+  protected title: string = "";
+  protected body: string = "";
+  private communityID!: string;
+  private publisherID!: string;
+
   constructor (
     private router: Router,
     private baseRoute: ActivatedRoute,
-    private apiService: ApiService, 
+    private serviceFactory: ServiceFactory, 
     private authService: AuthService
-  ) {
+  ) {  
     this.publisherID = this.authService.getUserUUID();
   }
 
   ngOnInit(): void {
     this.baseRoute.queryParams.subscribe(params => {
       this.communityID = params["communityID"];
-      this.communityName = params["communityName"];
-      this.userID = params["userID"];
     });
-
-
-    if (this.userID === 'user_id') {
-      console.error("Usuario no autenticado.")
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'User not authenticated',
-        confirmButtonText: 'Go back'
-      });
-      this.router.navigate([""]);
-      return;
-    }
-
-    
 
   }
 
@@ -71,7 +57,7 @@ export class AnnouncementFormComponent implements OnInit{
 
   exitForm(event: Event) {
     this.resetForm();
-    this.router.navigate(["/communities"]);
+    this.router.navigate(['community'], {queryParams: {communityID: this.communityID}}).then(r => {});
   }
 
   submitData(event: Event){
@@ -81,7 +67,14 @@ export class AnnouncementFormComponent implements OnInit{
       return;
     }
 
-    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.userID, this.communityName, this.publisherID).subscribe({
+    this.communityAnnouncement = {
+      title: this.title.trim(),
+      body: this.body.trim(),
+      communityID: this.communityID,
+      publisherID: this.publisherID
+    };
+
+    (this.serviceFactory.get('communities') as CommunityService).createAnnouncement(this.communityAnnouncement).subscribe({
       next: (response: any) => {
         console.log(response);
         Swal.fire({
@@ -102,6 +95,26 @@ export class AnnouncementFormComponent implements OnInit{
       }
     });
 
+    /*
+    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.publisherID).subscribe({
+      next: (response: any) => {
+        console.log(response);
+        Swal.fire({
+          title: "Operation success",
+          icon: "success",
+          confirmButtonText: "Continue"
+        });
+        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
+      },
+      error: (err: any) => {
+        Swal.fire({
+          title: "Operation error",
+          text: "Database connection error",
+          icon: "error",
+          confirmButtonText: "Continue"
+        });
+        console.log(err);
+      }
+    });*/
   }
-
 }

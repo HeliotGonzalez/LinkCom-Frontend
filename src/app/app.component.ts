@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {HeaderComponent} from './header/header.component';
 import {CommonModule} from '@angular/common';
-import {RouterOutlet} from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {OnInit} from '@angular/core';
 import {HeaderVisibilityService} from './services/header-visibility.service';
@@ -12,6 +12,9 @@ import {HTTPUserService} from "./services/api-services/HTTPUserService";
 import {WebSocketFactory} from "./services/api-services/WebSocketFactory.service";
 import {io} from "socket.io-client";
 import {WebSocketService} from "../architecture/io/WebSocketService";
+import {CommandBuilderFactory} from "./command-builder-factory.service";
+import {Notify} from "./services/notify";
+import {AuthService} from "./services/auth.service";
 
 @Component({
     selector: 'app-root',
@@ -22,11 +25,11 @@ import {WebSocketService} from "../architecture/io/WebSocketService";
         CommonModule,
         RouterOutlet,
     ],
+    standalone: true
 })
 export class AppComponent implements OnInit {
     title = 'LinkCom-FrontEnd';
     data: any;
-    fontSize: any;
     email: string = '';
     showHeader = true;
     url = 'http://localhost:3000';
@@ -36,7 +39,11 @@ export class AppComponent implements OnInit {
         private http: HttpClient,
         private headerService: HeaderVisibilityService,
         private serviceFactory: ServiceFactory,
-        private socketFactory: WebSocketFactory
+        private socketFactory: WebSocketFactory,
+        private notify: Notify,
+        private auth: AuthService,
+        private router: Router,
+        private commandBuilderFactory: CommandBuilderFactory
     ) {
     }
 
@@ -55,6 +62,9 @@ export class AppComponent implements OnInit {
             .put('communities', new HTTPCommunityService(this.http, this.url))
             .put('events', new HTTPEventService(this.http, this.url))
             .put('users', new HTTPUserService(this.http, this.url))
+            .put('notify', this.notify)
+            .put('auth', this.auth)
+            .put('router', this.router)
     }
 
     private fillSocketFactory() {
@@ -64,6 +74,8 @@ export class AppComponent implements OnInit {
             .put('Community', new WebSocketService(socket, 'Community'))
             .put('CommunityUser', new WebSocketService(socket, 'CommunityUser'))
             .put('JoinRequests', new WebSocketService(socket, 'JoinRequests'))
+            .put('Events', new WebSocketService(socket, 'Events'))
+            .put('EventUser', new WebSocketService(socket, 'EventUser'))
     }
 
     onSubmit() {

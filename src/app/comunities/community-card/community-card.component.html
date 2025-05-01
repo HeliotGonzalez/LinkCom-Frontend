@@ -18,11 +18,10 @@
                 }
             </div>
         </div>
-        <div class="d-flex flex-column community-card-content-body h-75">
+        <div class="d-flex flex-column community-card-content-body">
             <div class="h-75 overflow-auto">
-                <p style="text-align: justify">{{ community.description }}</p>
+                <div [innerHTML]="community.description" style="text-align: justify"></div>
             </div>
-
             <div class="d-flex flex-column">
                 <hr>
                 <section class="h-25"></section>

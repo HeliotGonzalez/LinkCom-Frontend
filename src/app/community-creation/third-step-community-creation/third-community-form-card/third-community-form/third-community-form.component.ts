@@ -8,6 +8,7 @@ import {ServiceFactory} from "../../../../services/api-services/ServiceFactory.s
 import {CommunityService} from "../../../../../architecture/services/CommunityService";
 import {Community} from "../../../../../architecture/model/Community";
 import {Notify} from "../../../../services/notify";
+import {marked} from "marked";
 
 @Component({
     selector: 'app-third-community-form',
@@ -40,7 +41,7 @@ export class ThirdCommunityFormComponent {
     protected async nextPage(event: Event) {
         event.preventDefault();
         this.saveFormData();
-        (this.serviceFactory.get('communities') as CommunityService).createCommunity(this.buildCommunity()).subscribe({
+        (this.serviceFactory.get('communities') as CommunityService).createCommunity(await this.buildCommunity()).subscribe({
             next: () => {
                 this.notify.success('Your community has been created!');
                 this.formService.remove('community');
@@ -50,10 +51,10 @@ export class ThirdCommunityFormComponent {
         });
     }
 
-    private buildCommunity(): Community {
+    private async buildCommunity() {
         return {
             creatorID: this.authService.getUserUUID(),
-            description: this.formData?.get("description"),
+            description: await marked(this.formData?.get("description")),
             name: this.formData?.get("name"),
             isPrivate: this.formData?.get("privacy"),
             imagePath: this.formData?.get("image"),

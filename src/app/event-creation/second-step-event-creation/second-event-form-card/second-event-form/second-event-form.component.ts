@@ -1,16 +1,17 @@
 import {Component} from '@angular/core';
 import {FormStepsComponent} from "../../../../form-steps/form-steps.component";
-import {NgIf} from "@angular/common";
+import {getLocaleFirstDayOfWeek, NgIf} from "@angular/common";
 import {Router} from "@angular/router";
 import {FormService} from '../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
-import {ApiService} from "../../../../services/api-service.service";
-import Swal from "sweetalert2";
 import {AuthService} from "../../../../services/auth.service";
 import {ServiceFactory} from "../../../../services/api-services/ServiceFactory.service";
-import {EventService} from "../../../../../architecture/services/EventService";
-import {CommunityEvent} from "../../../../../architecture/model/CommunityEvent";
 import {Notify} from "../../../../services/notify";
+import {EventState} from "../../../../../architecture/model/EventState";
+import {marked} from "marked";
+import {CreateEventCommand} from "../../../../commands/CreateEventCommand";
+import {first, firstValueFrom} from "rxjs";
+import {CommunityService} from "../../../../../architecture/services/CommunityService";
 
 @Component({
     selector: 'app-second-event-form',
@@ -32,7 +33,6 @@ export class SecondEventFormComponent {
         private router: Router,
         private formService: FormService,
         private serviceFactory: ServiceFactory,
-        private apiService: ApiService,
         private authService: AuthService,
         private notify: Notify
     ) {
@@ -47,21 +47,13 @@ export class SecondEventFormComponent {
 
     async nextPage(event: Event) {
         event.preventDefault();
-
         this.saveFormData();
-
         if (this.eventDescription === "") {
             this.notify.error("All required fields must be filled!");
             return;
         }
-
-        (this.serviceFactory.get('events') as EventService).createEvent(this.buildEvent() as CommunityEvent).subscribe({
-            next: () => {
-                this.notify.success('Your event has been created!');
-                this.router.navigate(["/community"], {queryParams: {communityID: this.formData?.get('communityID')}})
-            },
-            error: res => this.notify.error(`We could not create your event: ${res.message}`)
-        })
+        console.log(await this.buildEvent())
+        CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
     }
 
     private parseDate(date: string, time: string): Date {
@@ -105,15 +97,31 @@ export class SecondEventFormComponent {
         this.formService.update();
     }
 
-    private buildEvent() {
+    private async buildEvent() {
         return {
             title: this.formData?.get("name"),
-            description: this.formData?.get("description"),
+            description: await marked(this.formData?.get("description")),
             date: this.parseDate(this.formData?.get("date"), this.formData?.get("time")),
             location: this.formData?.get("location"),
             creatorID: this.authService.getUserUUID(),
             communityID: this.formData?.get("communityID"),
-            imagePath: this.formData?.get("image")
+            imagePath: this.formData?.get("image"),
+            eventState: await this.canCreateEvent() ? EventState.PUBLISHED : EventState.PENDING
         }
+    }
+
+    private async canCreateEvent() {
+        const community = (await firstValueFrom((this.serviceFactory.get('communities') as CommunityService).getCommunity(this.formData?.get('communityID')))).data[0];
+        const isModerator = (
+            await firstValueFrom(
+                (this.serviceFactory.get('communities') as CommunityService)
+                    .isUserModerator(this.formData?.get('communityID'), this.authService.getUserUUID())
+            )
+        ).data.length > 0;
+        console.log(isModerator);
+        console.log(community);
+        console.log(this.authService.getUserUUID())
+        console.log(community.creatorID)
+        return this.authService.getUserUUID() === community.creatorID || isModerator;
     }
 }

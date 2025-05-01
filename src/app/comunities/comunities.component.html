@@ -22,9 +22,9 @@
             <!-- Info y botón crear -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <p class="mb-0">
-                    <strong>{{ communities.length }}</strong> communities were found!
+                    <strong>{{ Object.keys(communities).length }}</strong> communities were found!
                 </p>
-                <button class="button" (click)="showCommunityForm()">
+                <button class="button" (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepCommunityCreation').build().execute()">
                     <i class="bi bi-plus-circle"></i> Create Community
                 </button>
             </div>
@@ -32,15 +32,15 @@
 
         <!-- Lista de comunidades -->
         <section class="communities-section d-flex community-cards-section flex-column overflow-y-auto overflow-x-hidden p-3 flex-grow-1" (scrollend)="loadCommunities()">
-            @for (community of communities; track community.id) {
+            @for (communityID of Object.keys(communities); track communityID) {
                 <app-community-card
-                        [community]="community"
-                        [isUserJoined]="booleanAttribute(joinedCommunities[community.id!])"
-                        [isRequested]="Object.keys(requests).includes(community.id!)"
-                        (joinCommunityEmitter)="joinCommunity($event)"
-                        (leaveCommunityEmitter)="leaveCommunity($event)"
-                        (removeCommunityEmitter)="removeCommunity($event)"
-                        (cancelRequestEmitter)="cancelRequest($event)"
+                        [community]="communities[communityID]"
+                        [isUserJoined]="Object.keys(joinedCommunities).includes(communityID)"
+                        [isRequested]="Object.keys(requests).includes(communityID)"
+                        (joinCommunityEmitter)="JoinCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
+                        (leaveCommunityEmitter)="LeaveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
+                        (removeCommunityEmitter)="RemoveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).build().execute()"
+                        (cancelRequestEmitter)="CancelJoinRequestCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity($event).withUser(authService.getUserUUID()).build().execute()"
                 ></app-community-card>
             }
         </section>

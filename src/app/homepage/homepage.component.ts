@@ -83,14 +83,17 @@ export class HomepageComponent implements OnInit {
 
     // Obtener comunidades del backend, aquellas a las que el usuario NO pertenece
     fetchCommunities(): void {
-        this.apiService.getNonBelongingCommunities(this.authService.getUserUUID()).subscribe({
-            next: (data: Community[]) => {
-                this.communities = data;
+        this.apiService
+            .getNonBelongingCommunities(this.authService.getUserUUID())
+            .subscribe({
+            next: (resp: { data: Community[] }) => {
+                console.log('Comunidades recibidas:', resp);
+                this.communities = resp.data;
             },
             error: (err) => {
                 console.error('Error al obtener comunidades:', err);
             }
-        });
+            });
     }
 
     fetchCalendarEvents(): void {
@@ -138,28 +141,29 @@ export class HomepageComponent implements OnInit {
 
     // Unirte a una comunidad
     joinCommunity(communityId: string): void {
-        this.apiService.joinCommunity(this.authService.getUserUUID(), communityId).subscribe({
-            next: (response) => {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Te has unido a la comunidad correctamente.',
-                    confirmButtonText: 'OK'
-                });
-
-                // this.communities = this.communities.filter(c => c.id !== communityId);
-                this.ngOnInit();
+        const userID = this.authService.getUserUUID();
+        this.apiService.joinCommunity(userID, communityId)
+          .subscribe({
+            next: response => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: 'Te has unido a la comunidad correctamente.',
+                confirmButtonText: 'OK'
+              });
+              // refrescas lo que necesites, p.ej. recargar la lista:
+              this.fetchCommunities();
             },
-            error: (err) => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Ups',
-                    text: 'Ha ocurrido un error al unirte a la comunidad.: ' + err.message,
-                    confirmButtonText: 'OK'
-                });
+            error: err => {
+              Swal.fire({
+                icon: 'error',
+                title: 'Ups',
+                text: 'Ha ocurrido un error al unirte a la comunidad: ' + (err.error?.message || err.message),
+                confirmButtonText: 'OK'
+              });
             }
-        });
-    }
+          });
+      }
 
     // Generar la estructura del calendario (solo las celdas)
     generateCalendar(): void {

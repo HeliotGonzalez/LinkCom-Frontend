@@ -1,17 +1,21 @@
-import {booleanAttribute, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CommunityCardComponent} from './community-card/community-card.component';
-import {Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {forkJoin} from "rxjs";
-import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {Community} from "../../architecture/model/Community";
 import {WebSocketFactory} from "../services/api-services/WebSocketFactory.service";
 import {JoinRequest} from "../../architecture/model/JoinRequest";
-import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
+import {RequestStatus} from "../../architecture/model/RequestStatus";
+import {CommunityUser} from "../../architecture/model/CommunityUser";
+import {JoinCommunityCommand} from "../commands/JoinCommunityCommand";
+import {LeaveCommunityCommand} from "../commands/LeaveCommunityCommand";
+import {RemoveCommunityCommand} from "../commands/RemoveCommunityCommand";
+import {CancelJoinRequestCommunityCommand} from "../commands/CancelJoinRequestCommunityCommand";
+import {RouterCommand} from "../commands/RouterCommand";
 
 @Component({
     selector: 'app-comunities',
@@ -21,7 +25,7 @@ import {log} from "@angular-devkit/build-angular/src/builders/ssr-dev-server";
     styleUrl: './comunities.component.css'
 })
 export class ComunitiesComponent {
-    protected communities: Community[] = [];
+    protected communities: {[key: string]: Community} = {};
     protected joinedCommunities: {[key: string]: Community} = {};
     protected notJoinedCommunities: {[key: string]: Community} = {};
     protected requests: {[key: string]: JoinRequest} = {};
@@ -31,32 +35,37 @@ export class ComunitiesComponent {
     protected searchTerm: string = '';
 
     constructor(
-        private router: Router,
-        private serviceFactory: ServiceFactory,
-        private authService: AuthService,
-        private notify: Notify,
+        protected serviceFactory: ServiceFactory,
+        protected authService: AuthService,
         private socketFactory: WebSocketFactory
     ) {
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         this.loadCommunities();
-        const socket = this.socketFactory.get('Communities');
-        socket.onUpdate().subscribe(res => this.onUpdateCommunity(res.new as Community));
-        socket.onDelete().subscribe(res => this.onDeleteCommunity(res.new as Community));
+        const communitiesSocket = this.socketFactory.get('Communities');
+        const requestsSocket = this.socketFactory.get('JoinRequests');
+        const communityUserSocket = this.socketFactory.get('CommunityUser');
+        communitiesSocket.onUpdate().subscribe(res => this.onUpdateCommunity(res.new as Community));
+        communitiesSocket.onDelete().subscribe(res => this.onDeleteCommunity(res.old as Community));
+        requestsSocket.onInsert().subscribe(res => this.onInsertRequest(res.new as JoinRequest));
+        requestsSocket.onUpdate().subscribe(res => this.onUpdateRequests(res.new as JoinRequest));
+        requestsSocket.onDelete().subscribe(res => this.onDeleteRequests(res.old as JoinRequest));
+        communityUserSocket.onInsert().subscribe(res => this.onJoinCommunity(res.new as CommunityUser));
+        communityUserSocket.onDelete().subscribe(res => this.onLeaveCommunity(res.old as CommunityUser));
     }
 
     private onUpdateCommunity(community: Community) {
         (this.serviceFactory.get('communities') as CommunityService).getCommunity(community.id!).subscribe(res => {
-            const updateCommunity = this.communities.find(c => c.id === community.id);
-            this.communities[this.communities.indexOf(updateCommunity!)] = res.data[0];
+            this.communities[community.id!] = res.data[0];
             this.joinedCommunities[community.id!] = res.data[0];
             this.notJoinedCommunities[community.id!] = res.data[0];
         });
     }
 
     private onDeleteCommunity(community: Community) {
-        this.communities = this.communities.filter(c => c.id !== community.id);
+        console.log(community)
+        delete this.communities[community.id!];
     }
 
     private getCommunitiesIDsFrom(data: Community[]) {
@@ -68,43 +77,8 @@ export class ComunitiesComponent {
 
         const term = this.searchTerm.toLowerCase().trim();
 
-        this.communities = this.communities.filter(c =>
-            (String(c.name).toLowerCase().includes(term)) ||
-            (String(c.description).toLowerCase().includes(term))
-        );
-    }
-
-    showCommunityForm() {
-        this.router.navigate(['firstStepCommunityCreation']).then();
-    }
-
-    joinCommunity(community: Community) {
-        if (community.isPrivate) {
-            (this.serviceFactory.get('communities') as CommunityService).requestJoinToCommunity(community.id!, this.authService.getUserUUID()).subscribe({
-                next: () => this.notify.info('Request sent!', 'The request has been sent! Now you have to wait for a response'),
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
-            });
-        } else {
-            (this.serviceFactory.get('communities') as CommunityService).joinCommunity(community.id!, this.authService.getUserUUID()).subscribe({
-                next: () => {
-                    this.notify.success('You have join this community!');
-                    this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, community);
-                },
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
-            });
-        }
-    }
-
-    leaveCommunity(community: Community) {
-        this.notify.confirm(`You will be leaving ${community.name}'s community`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(community.id!, this.authService.getUserUUID()).subscribe({
-                next: () => {
-                    this.notify.success('You have left this community!');
-                    this.applyCommunitiesChanges(this.notJoinedCommunities, this.joinedCommunities, community);
-                },
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
-            });
-        });
+        this.communities = Object.fromEntries(Object.entries(this.communities).filter(([id, community]) => (String(community.name).toLowerCase().includes(term)) ||
+            (String(community.description).toLowerCase().includes(term))))
     }
 
     loadCommunities() {
@@ -118,8 +92,7 @@ export class ComunitiesComponent {
                 res.joined.data.forEach(c => this.joinedCommunities[c.id!] = c);
                 res.notJoined.data.forEach(c => this.notJoinedCommunities[c.id!] = c);
                 (this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(this.authService.getUserUUID(), Object.keys(this.notJoinedCommunities)).subscribe(res => {
-                    res.data.forEach(r => this.requests[r.communityID!] = r);
-                    console.log(this.requests)
+                    res.data.filter(r => r.status === RequestStatus.PENDING).forEach(r => this.requests[r.communityID!] = r);
                 })
                 this.communities = this.orderCommunities();
                 if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;
@@ -135,36 +108,38 @@ export class ComunitiesComponent {
     }
 
     private orderCommunities() {
-        return Object.values(this.joinedCommunities).concat(Object.values(this.notJoinedCommunities))
+        return {...this.joinedCommunities, ...this.notJoinedCommunities};
     }
 
-    removeCommunity(community: Community) {
-        this.notify.confirm(`You will not be able to revert this: REMOVE ${community.name}'s community`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).removeCommunity(community.id!).subscribe({
-                next: () => {
-                    this.notify.success('You have removed this community!');
-                    this.loadCommunities();
-                },
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
-            });
-            else this.notify.success('Your community is still safe!');
-        });
+    private onInsertRequest(request: JoinRequest) {
+        this.requests[request.communityID] = request;
     }
 
-    protected readonly booleanAttribute = booleanAttribute;
+    private onUpdateRequests(request: JoinRequest) {
+        if (request.status === RequestStatus.ACCEPTED) this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, this.communities[request.communityID!])
+        delete this.requests[request.communityID];
+    }
 
-    cancelRequest(community: Community) {
-        this.notify.confirm(`Your join request will disappear!`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('communities') as CommunityService).cancelRequest(community.id!, this.authService.getUserUUID()).subscribe({
-                next: () => {
-                    this.notify.success('You have canceled this join request!');
-                    this.loadCommunities();
-                },
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
-            });
-            else this.notify.error('Your request is still being processed', 'Process interrupted!');
-        });
+    private onDeleteRequests(request: JoinRequest) {
+        this.requests = Object.fromEntries(Object.entries(this.requests).filter(([, r]) => r.id !== request.id));
+    }
+
+    private onJoinCommunity(communityUser: CommunityUser) {
+        if (communityUser.userID !== this.authService.getUserUUID()) return;
+        if (this.communities[communityUser.communityID] === undefined) return;
+        this.applyCommunitiesChanges(this.joinedCommunities, this.notJoinedCommunities, this.communities[communityUser.communityID]);
+    }
+
+    private onLeaveCommunity(communityUser: CommunityUser) {
+        if (communityUser.userID !== this.authService.getUserUUID()) return;
+        if (this.communities[communityUser.communityID] === undefined) return;
+        this.applyCommunitiesChanges(this.notJoinedCommunities, this.joinedCommunities, this.communities[communityUser.communityID]);
     }
 
     protected readonly Object = Object;
+    protected readonly JoinCommunityCommand = JoinCommunityCommand;
+    protected readonly LeaveCommunityCommand = LeaveCommunityCommand;
+    protected readonly RemoveCommunityCommand = RemoveCommunityCommand;
+    protected readonly CancelJoinRequestCommunityCommand = CancelJoinRequestCommunityCommand;
+    protected readonly RouterCommand = RouterCommand;
 }

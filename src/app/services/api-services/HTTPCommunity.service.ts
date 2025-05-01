@@ -11,9 +11,14 @@ import {Community} from "../../../architecture/model/Community";
 import { CommunityEvent } from "../../../architecture/model/CommunityEvent";
 import { JoinRequest } from "../../../architecture/model/JoinRequest";
 import { RequestStatus } from "../../../architecture/model/RequestStatus";
+import { CommunityAnnouncement } from "../../../architecture/model/CommunityAnnouncement";
 
 export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    getPendingCommunityEventsRequests(communityID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events?eventState=pending`);
     }
 
     cancelRequest(communityID: string, userID: string): Observable<ApiResponse<JoinRequest>> {
@@ -29,7 +34,7 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>> {
-        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests?id=${communityID}`);
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests/given?communityID=${communityID}`);
     }
 
     requestJoinToCommunity(communityID: string, userID: string): Observable<ApiResponse<any>> {
@@ -52,15 +57,15 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator`)
     }
     isUserModerator(communityID: string, userID: string): Observable<ApiResponse<User>> {
-        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members?communityRole=moderator&userID=${userID}`)
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator&userID=${userID}`)
     }
 
-    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<Community>> {
-        return this.http.get<ApiResponse<Community>>(`${this.url}/users/${userID}/communities?communityID=${communityID}`)
+    isUserJoined(communityID: string, userID: string): Observable<ApiResponse<boolean>> {
+        return this.http.get<ApiResponse<boolean>>(`${this.url}/users/${userID}/communities?communityID=${communityID}`)
     }
 
     getCommunityEvents(communityID: string): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events`);
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.url}/communities/${communityID}/events?eventState=neq;pending`);
     }
 
     getCommunity(communityID: string): Observable<ApiResponse<Community>> {
@@ -118,4 +123,8 @@ export class HTTPCommunityService implements CommunityService {
         return this.http.delete<ApiResponse<Announce>>(`${this.url}/communities/${announcementID}/deleteAnnouncement`)
     }
     
+
+    createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>> {
+        return this.http.post<ApiResponse<CommunityAnnouncement>>(`${this.url}/communities/${announcement.communityID}/createAnnouncement`, announcement);
+    }
 }
