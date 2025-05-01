@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import { Community } from '../../architecture/model/Community';
-
+import { trigger, transition, style, animate,} from '@angular/animations';
 interface CalendarMonth {
   month: number;
   year: number;
@@ -20,7 +20,29 @@ interface CalendarMonth {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './events-community-calendar.component.html',
-  styleUrls: ['./events-community-calendar.component.css']
+  styleUrls: ['./events-community-calendar.component.css'],
+  animations: [
+    trigger('fade', [
+      transition('* <=> *', [
+        style({ opacity: 0 }),
+        animate('1800ms ease-in-out', style({ opacity: 1 }))
+      ])
+    ]),
+
+    trigger('slide', [
+      transition('* <=> *', [
+        style({ transform: 'translateX(20px)', opacity: 0 }),
+        animate('600ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+      ])
+    ]),
+
+    trigger('zoom', [
+      transition('* <=> *', [
+        style({ transform: 'scale(0.8)', opacity: 0 }),
+        animate('200ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
+      ])
+    ])
+  ]
 })
 export class EventsCommunityCalendarComponent implements OnInit {
   currentDate: Date = new Date();
@@ -35,6 +57,30 @@ export class EventsCommunityCalendarComponent implements OnInit {
   userid: string;
   communityNames = new Map<string, string>();
   communityInterests  = new Map<string, string[]>();
+  selectedDayEvents: {
+    title: string;
+    description: string;
+    date: Date;
+    imagePath: string;
+    communityID: string;
+  }[] = [];
+  selectedIdx = 0;
+  openEventModal(day: number, idx: number): void {
+    this.selectedDayEvents = this.calendarEvents[day] || [];
+    this.selectedIdx       = idx;
+    this.selectedEvent     = this.selectedDayEvents[idx];
+  }
+  prevEvent(): void {
+    if (this.selectedDayEvents.length < 2) return;
+    this.selectedIdx = (this.selectedIdx - 1 + this.selectedDayEvents.length) 
+                         % this.selectedDayEvents.length;
+    this.selectedEvent = this.selectedDayEvents[this.selectedIdx];
+  }
+  nextEvent(): void {
+    if (this.selectedDayEvents.length < 2) return;
+    this.selectedIdx = (this.selectedIdx + 1) % this.selectedDayEvents.length;
+    this.selectedEvent = this.selectedDayEvents[this.selectedIdx];
+  }
   
 
   constructor(
