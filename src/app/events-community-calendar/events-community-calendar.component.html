@@ -15,26 +15,46 @@
         <table class="table table-bordered text-center">
           <thead class="table-light">
             <tr>
-              <th *ngFor="let dayName of dayNames">{{ dayName }}</th>
+              @for (dayName of dayNames; track dayName)
+              {
+                <th>
+                  {{dayName}}
+                </th>
+              }
+              
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let week of calendarMonth.weeks">
-              <td *ngFor="let day of week" class="td-calendar">
-                <div class="calendar-day"
-                     [ngClass]="{'today': day === today && calendarMonth.month === currentMonth && calendarMonth.year === currentYear}"
-                     (click)="navigateToEvent(day)">
-                  <span>{{ day ? day : '' }}</span>
+            @for (week of calendarMonth.weeks; track week)
+            {
+              <tr>
+                @for (day of week; track day)
+                {
+                  <td class="td-calendar">
+                      <div class="calendar-day" [ngClass]="{
+                        today:
+                          day === today &&
+                          calendarMonth.month === currentMonth &&
+                          calendarMonth.year === currentYear
+                      }"
+                      (click)="navigateToEvent(day)">
+                      <span>{{ day ? day : '' }}</span>
+                      @if (day && calendarEvents[day])
+                      {
+                        <div class="event-dots">
+                          @for (event of calendarEvents[day]; track events) 
+                          {
+                            <span class="event-dot" [title]="events">
 
-                  <ng-container *ngIf="day && calendarEvents[day]">
-                    <div class="event-dots">
-                      <span *ngFor="let ev of calendarEvents[day]" class="event-dot" [title]="ev"></span>
-                    </div>
-                  </ng-container>
-
-                </div>
-              </td>
-            </tr>
+                            </span>
+                          }
+                        </div>
+                      }
+                      </div>
+                  </td>
+                }
+              </tr>
+            }
           </tbody>
         </table>
       </div>
