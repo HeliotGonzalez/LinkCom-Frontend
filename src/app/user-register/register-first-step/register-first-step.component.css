@@ -1,5 +1,11 @@
 /* Fondo semi-transparente para el formulario de registro */
-
+.register-form-background {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #2E3E7F, #5370E5);
+}
 
 /* Estilo de la tarjeta del formulario */
 .form-card {
@@ -12,6 +18,8 @@
     flex-direction: column;
     padding: 2rem;
     z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
+    position: relative;
+    margin: auto; /* Centra la tarjeta en la pantalla */
   }
   
   /* Estilo del formulario de registro */
