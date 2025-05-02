@@ -53,6 +53,7 @@ export class SecondEventFormComponent {
             return;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         console.log(await this.buildEvent())
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
 =======
@@ -110,6 +111,10 @@ export class SecondEventFormComponent {
             });
         }
 >>>>>>> af94eed (fix: Using a past  column dateOfTheEvent)
+=======
+        CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
+        this.formService.remove('event');
+>>>>>>> dd63d85 (fix: realtime of events panel and event form reloading error corrected.)
     }
 
     private parseDate(date: string, time: string): Date {
