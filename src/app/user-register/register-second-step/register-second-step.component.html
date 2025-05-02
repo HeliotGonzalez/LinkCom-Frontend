@@ -24,7 +24,9 @@
     <form class="register-form">
       <!-- Vista previa de la imagen encima del texto -->
       <div class="image-preview-container d-flex justify-content-center">
-        <img *ngIf="imagePreview" [src]="imagePreview" alt="Image Preview" class="image-preview" />
+        @if (imagePreview != null) {
+          <img [src]="imagePreview" alt="Image Preview" class="image-preview">
+        }
       </div>
   
       <div class="input-container d-flex flex-column text-center">
@@ -39,11 +41,12 @@
         >
       </div>
   
-      <!-- Botón para eliminar la imagen (si ya hay una seleccionada) -->
-      <div *ngIf="imagePreview" class="d-flex justify-content-center mt-2">
-        <button (click)="onRemoveImage()" type="button" class="btn btn-danger">Remove Image</button>
-      </div>
-  
+      @if (imagePreview != null) {
+        <div class="d-flex justify-content-center mt-2">
+          <button (click)="onRemoveImage()" type="button" class="btn btn-danger">Remove Image</button>
+        </div>
+      }
+      
       <div class="form-footer d-flex justify-content-center gap-2 mt-3">
         <button (click)="goToThirdStep()" type="button" class="form-button normal-button">Next</button>
         <button (click)="goToFirstStep()" type="button" class="form-button normal-button">Back</button>
