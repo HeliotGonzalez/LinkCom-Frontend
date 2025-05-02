@@ -1,0 +1,55 @@
+<div class="form-card">
+
+  <div class="stepper-container">
+    <div class="stepper">
+      <div class="stepper-step ">
+        <div class="step-number">1</div>
+      </div>
+      <div class="stepper-step">
+        <div class="step-number">2</div>
+      </div>
+      <div class="stepper-step current">
+        <div class="step-number">3</div>
+      </div>
+    </div>
+  </div>
+
+
+    <div class="register-form-header">
+      <div class="register-form-title-container text-center">
+        <h1 class="register-form-title">User Register</h1>
+        <h2 class="register-form-subtitle">Almost done! Your registration is in process.</h2>
+      </div>
+    </div>
+  
+    <form class="register-form">
+      <!-- Mensaje de proceso -->
+      <div class="message-container text-center">
+        <div class="input-container d-flex flex-column" id="interests-input-container">
+          <label for="community-interests-input">Community interests</label>
+          <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" placeholder="Add your interests!">
+          @if (interestsCoincidences.length) {
+              <div id="interests-suggestions">
+                  @for (interest of interestsCoincidences; track $index) {
+                      <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
+                  }
+              </div>
+          }
+          <div id="interests-container" class="pt-5">
+              <section id="interests-section" class="d-flex h-100 overflow-scroll p-2 gap-2 flex-wrap">
+                  @for (interest of interests; track $index) {
+                      <app-interest-tag [interestName]="interest" (removeInterestEmitter)="removeInterest($event)"></app-interest-tag>
+                  }
+              </section>
+          </div>
+      </div>
+      </div>
+  
+      <!-- Pie de formulario con un botón que no hace nada por ahora -->
+      <div class="register-form-footer d-flex justify-content-center gap-2 mt-3">
+        <button type="button" class="form-button normal-button" (click)="goToLogin()">Finish</button>
+        <button (click)="goToSecondStep()" type="button" class="form-button normal-button">Back</button>
+      </div>
+    </form>
+  </div>
+  
