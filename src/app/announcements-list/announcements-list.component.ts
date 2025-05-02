@@ -6,6 +6,8 @@ import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
 import { ɵnormalizeQueryParams } from '@angular/common';
+import { ServiceFactory } from '../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../architecture/services/CommunityService';
 
 @Component({
   selector: 'app-announcements-list',
@@ -25,6 +27,7 @@ export class AnnouncementsListComponent implements OnInit{
     private router: Router,
     private baseRoute: ActivatedRoute,
     private apiService: ApiService,
+    private serviceFactory: ServiceFactory,
     private authService: AuthService
   ) {
     this.userID = this.authService.getUserUUID();
@@ -59,21 +62,23 @@ export class AnnouncementsListComponent implements OnInit{
         return;
       }
       
-      this.apiService.getAnnouncements(this.communityID).subscribe({
-        next: (res) => {
-          if (res) {
-            console.log(res);
-            this.announcements = res.data;
-            resolve();
-          } else {
-            reject("No data received");
+      (this.serviceFactory.get('communities') as CommunityService).getCommunityAnnouncements(this.communityID).subscribe(
+        {
+          next: (res) => {
+            if (res) {
+              console.log(res);
+              this.announcements = res.data;
+              resolve();
+            } else {
+              reject("No data received");
+            }
+          },
+          error: (err) => {
+            console.error("Error fetching announcements", err);
+            reject(err);
           }
-        },
-        error: (err) => {
-          console.error("Error fetching announcements", err);
-          reject(err);
         }
-      });
+      )
     });
   }
 
