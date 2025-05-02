@@ -45,7 +45,7 @@
                           @for (event of calendarEvents[day]; track  $index) 
                           {
                             
-                              <span class="event-dot" [title]="calendarEvents[day][$index].title" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="openEventModal(day, $index)">
+                              <span class="event-dot"  [style.background-color]="getDotColorFromName(calendarEvents[day][$index].title)" [title]="calendarEvents[day][$index].title" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="openEventModal(day, $index)">
                                 
                             </span>
                           
@@ -71,7 +71,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div [@slide]="selectedEvent">
+        <div [@slide]="selectedEvent" class="d-flex image-modal">
         <img [src]="selectedEvent?.imagePath">
         </div>
         <div [@fade]>
