@@ -95,6 +95,7 @@
     <app-community-requests-panel (eventEmitter)="closeRequestPanel()"
                                   [isVisible]="requestPanelVisible"/>
     <app-events-request-panel (eventEmitter)="closeEventsRequestPanel()"
+                              [communityID]="this.community?.id!"
                               [eventRequests]="eventRequests"
                               [isVisible]="eventsRequestPanelVisible"/>
     <app-blur-panel [isVisible]="isLoaded"/>

@@ -52,8 +52,8 @@ export class SecondEventFormComponent {
             this.notify.error("All required fields must be filled!");
             return;
         }
-        console.log(await this.buildEvent())
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
+        this.formService.remove('event');
     }
 
     private parseDate(date: string, time: string): Date {

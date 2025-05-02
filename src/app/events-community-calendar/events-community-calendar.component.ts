@@ -25,21 +25,21 @@ interface CalendarMonth {
     trigger('fade', [
       transition('* <=> *', [
         style({ opacity: 0 }),
-        animate('1800ms ease-in-out', style({ opacity: 1 }))
+        animate('3000ms ease-in-out', style({ opacity: 1 }))
       ])
     ]),
 
     trigger('slide', [
       transition('* <=> *', [
         style({ transform: 'translateX(20px)', opacity: 0 }),
-        animate('600ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
+        animate('200ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
       ])
     ]),
 
     trigger('zoom', [
       transition('* <=> *', [
         style({ transform: 'scale(0.8)', opacity: 0 }),
-        animate('200ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
+        animate('1000ms ease-out', style({ transform: 'scale(1)', opacity: 1 }))
       ])
     ])
   ]
@@ -80,6 +80,25 @@ export class EventsCommunityCalendarComponent implements OnInit {
     if (this.selectedDayEvents.length < 2) return;
     this.selectedIdx = (this.selectedIdx + 1) % this.selectedDayEvents.length;
     this.selectedEvent = this.selectedDayEvents[this.selectedIdx];
+  }
+
+  public getDotColorFromName(name: string): string {
+    let hash = 0;
+    console.log(name);
+    for (let i = 0; i < name.length; i++) {
+      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      hash = hash & hash; 
+    }
+    console.log(hash);
+  
+
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xFF;
+      color += value.toString(16).padStart(2, '0');
+    }
+    console.log(color);
+    return color;
   }
   
 
