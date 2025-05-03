@@ -22,7 +22,7 @@
                         @for (community of communities; track community) {
                             <div class="community-item mb-2">
                                 <strong>{{ community.name }}</strong>
-                                <p class="mb-1">{{ community.description }}</p>
+                                <p class="mb-1" [innerHTML]="community.description"></p>
                                 <div class="text-end">
                                     <a class="btn btn-outline-secondary btn-sm"
                                     (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
