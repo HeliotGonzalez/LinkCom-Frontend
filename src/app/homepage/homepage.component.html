@@ -13,10 +13,36 @@
                     </div>
                 </section>
             </div>
+<<<<<<< HEAD
             <!-- Calendario en la parte inferior derecha -->
             <div class="calendar">
                 <h3 class="mb-3">Calendar</h3>
                 <div class="card">
+=======
+            <!-- Columna Derecha: Comunidades y Calendario -->
+            <div class="col-md-4">
+                <!-- Una sola tarjeta para comunidades -->
+                <div class="card mb-4 shadow-card">
+                    <div class="card-body">
+                        <h4 class="mb-3 text-center">Recommended communities</h4>
+                        @for (community of communities; track community) {
+                            <div class="community-item mb-2">
+                                <strong>{{ community.name }}</strong>
+                                <p class="mb-1" [innerHTML]="community.description"></p>
+                                <div class="text-end">
+                                    <a class="btn btn-outline-secondary btn-sm"
+                                    (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
+                                </div>
+                                <hr>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- Calendario en la parte inferior derecha -->
+                <div class="calendar">
+                    <h3 class="mb-3">Calendar</h3>
+                    <div class="card">
+>>>>>>> b343f63 (feat: Now is visible the text with html tags)
                     <div class="card-body p-0">
                         <table class="table table-bordered mb-0 text-center">
                             <thead class="table-light">
