@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Command} from "../architecture/Commands/Command";
+import {Command} from "../architecture/control/Command";
 
 @Injectable({
     providedIn: 'root'

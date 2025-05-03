@@ -7,6 +7,7 @@ import {NgClass} from "@angular/common";
         NgClass
     ],
     templateUrl: './image-dialog.component.html',
+    standalone: true,
     styleUrl: './image-dialog.component.css'
 })
 export class ImageDialogComponent {

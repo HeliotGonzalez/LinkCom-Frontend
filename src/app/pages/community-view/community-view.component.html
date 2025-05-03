@@ -86,6 +86,7 @@
                 <section id="events-section" class="d-flex flex-column w-100">
                     @for (eventID of Object.keys(events); track eventID) {
                         <app-event-view [event]="events[eventID]"
+                                        [canRemove]="canLoggedUserRemoveEvent(eventID)"
                                         [isDisabled]="isUserInEvent(events[eventID])"
                                         (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
                                         (leaveEventEmitter)="LeaveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"

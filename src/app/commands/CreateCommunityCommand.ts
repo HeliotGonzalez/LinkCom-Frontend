@@ -1,19 +1,19 @@
 import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
-import {CommunityEvent} from "../../architecture/model/CommunityEvent";
-import {EventService} from "../../architecture/services/EventService";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import { Command } from "../../architecture/control/Command";
+import {CommunityService} from "../../architecture/services/CommunityService";
+import {Community} from "../../architecture/model/Community";
 
-export class CreateEventCommand implements Command {
+export class CreateCommunityCommand implements Command {
     private notify: Notify;
     private router: Router;
     private auth: AuthService;
 
     constructor(
         private serviceFactory: ServiceFactory,
-        private event: CommunityEvent,
+        private community: Community,
     ) {
         this.notify = this.serviceFactory.get('notify') as Notify;
         this.router = this.serviceFactory.get('router') as Router;
@@ -21,23 +21,23 @@ export class CreateEventCommand implements Command {
     }
 
     execute(): void {
-        (this.serviceFactory.get('events') as EventService).createEvent(this.event as CommunityEvent).subscribe({
+        (this.serviceFactory.get('communities') as CommunityService).createCommunity(this.community).subscribe({
             next: res => {
                 const event = res.data[0];
-                (this.serviceFactory.get('events') as EventService).joinEvent(event.communityID, event.id!, this.auth.getUserUUID()).subscribe();
+                (this.serviceFactory.get('communities') as CommunityService).joinCommunity(this.community!.id!, this.auth.getUserUUID()).subscribe();
                 this.notify.success('Your event has been created!');
-                this.router.navigate(["/community"], {queryParams: {communityID: this.event.communityID!}}).then();
+                this.router.navigate(["/communities"]).then();
             },
-            error: res => this.notify.error(`We could not create your event: ${res.message}`)
+            error: res => this.notify.error(`We could not create your event: ${res.error.message}`)
         })
     }
 
     static Builder = class {
         private serviceFactory: ServiceFactory | null = null;
-        private event: CommunityEvent | null = null;
+        private community: Community | null = null;
 
         static create() {
-            return new CreateEventCommand.Builder();
+            return new CreateCommunityCommand.Builder();
         }
 
         withFactory(serviceFactory: ServiceFactory) {
@@ -45,13 +45,13 @@ export class CreateEventCommand implements Command {
             return this;
         }
 
-        withEvent(event: CommunityEvent) {
-            this.event = event;
+        withCommunity(community: Community) {
+            this.community = community;
             return this;
         }
 
         build() {
-            return new CreateEventCommand(this.serviceFactory!, this.event!);
+            return new CreateCommunityCommand(this.serviceFactory!, this.community!);
         }
     }
 }

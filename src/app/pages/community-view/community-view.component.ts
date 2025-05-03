@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {EventViewComponent} from "../../components/event-view/event-view.component";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {Announce} from "../../interfaces/announce";
 import {AnnouncementCardComponent} from "../../pages/announcements-list/announcement-card/announcement-card.component";
@@ -26,7 +26,6 @@ import {EventUser} from "../../../architecture/model/EventUser";
 import {BlurPanelComponent} from "../../components/blur-panel/blur-panel.component";
 import {RequestStatus} from "../../../architecture/model/RequestStatus";
 import {EventsRequestPanelComponent} from "../../components/events-request-panel/events-request-panel.component";
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-community-view',
@@ -59,7 +58,8 @@ export class CommunityViewComponent {
         private socketFactory: WebSocketFactory,
         private route: ActivatedRoute,
         protected authService: AuthService,
-        private router: Router) {
+        private router: Router
+    ) {
     }
 
      ngOnInit() {
@@ -194,4 +194,9 @@ export class CommunityViewComponent {
           { state: { community: this.community } }
         );
       }
+
+    protected canLoggedUserRemoveEvent(eventID: string) {
+        const loggedUserID = this.authService.getUserUUID();
+        return this.events[eventID].creatorID === loggedUserID || this.isUserModerator || this.isCreator();
+    }
 }
