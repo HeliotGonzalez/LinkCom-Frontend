@@ -62,6 +62,7 @@ import { RegisterThirdStepComponent } from './pages/user-register/register-third
 >>>>>>> 45cb51e (refactor: New directory hierarchy.)
 
 export const routes: Routes = [
+<<<<<<< HEAD
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
     {path: 'header', component: HeaderComponent},
     {path: 'homepage', component: HomepageComponent},
@@ -103,4 +104,24 @@ export const routes: Routes = [
 >>>>>>> 2426d70 (feat: A user can edit their data)
 =======
 >>>>>>> 45cb51e (refactor: New directory hierarchy.)
+=======
+    {path: '', component: DashboardComponent},
+    {path: 'homepage', component: HomepageComponent, canActivate: [NoAuthGuard]},
+    {path: 'user-register/firstStep', component: RegisterFirstStepComponent},
+    {path: 'user-register/secondStep', component: RegisterSecondStepComponent},
+    {path: 'user-register/thirdStep', component: RegisterThirdStepComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'moderatorsManagement', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
+    {path: 'community', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
+    {path: 'communities', component: ComunitiesComponent, canActivate: [NoAuthGuard]},
+    {path: 'calendar', component: EventsCommunityCalendarComponent, canActivate: [NoAuthGuard]},
+    {path: 'announcementCreation', component: AnnouncementCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'moderators', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
+    {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]}
+>>>>>>> 393b45d (refactor: user registration steps and events views refactored.)
 ];

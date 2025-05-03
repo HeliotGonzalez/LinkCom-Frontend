@@ -4,35 +4,32 @@ import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {EventService} from "../../architecture/services/EventService";
 
-export class LeaveEventCommand implements Command {
+export class RemoveEventCommand implements Command {
     private notify: Notify;
 
     constructor(
         private serviceFactory: ServiceFactory,
         private event: CommunityEvent,
-        private userID: string
     ) {
         this.notify = this.serviceFactory.get('notify') as Notify;
     }
 
     execute(): void {
-        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
-            if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.userID).subscribe({
-                next: () => {
-                    this.notify.success(`You have left ${this.event?.title}`);
-                },
-                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        this.notify.confirm(`You will not be able to revert this: REMOVE ${this.event?.title}'s community`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('events') as EventService).removeEvent(this.event!.id!).subscribe({
+                next: () => this.notify.success('You have removed this event!'),
+                error: res => this.notify.error(`An error occurred: ${res.message}`)
             });
+            else this.notify.success('Your event is still safe!');
         });
     }
 
     static Builder = class {
         private serviceFactory: ServiceFactory | null = null;
         private event: CommunityEvent | null = null;
-        private userID: string | null = null;
 
         static create() {
-            return new LeaveEventCommand.Builder();
+            return new RemoveEventCommand.Builder();
         }
 
         withFactory(serviceFactory: ServiceFactory) {
@@ -45,13 +42,8 @@ export class LeaveEventCommand implements Command {
             return this;
         }
 
-        withUser(userID: string) {
-            this.userID = userID;
-            return this;
-        }
-
         build() {
-            return new LeaveEventCommand(this.serviceFactory!, this.event!, this.userID!);
+            return new RemoveEventCommand(this.serviceFactory!, this.event!);
         }
     }
 }

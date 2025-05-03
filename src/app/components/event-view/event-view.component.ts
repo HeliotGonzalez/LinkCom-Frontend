@@ -3,10 +3,11 @@ import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
 import {ImageDialogComponent} from "../image-dialog/image-dialog.component";
 import {AuthService} from "../../services/auth.service";
 import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
-import {EventService} from "../../../architecture/services/EventService";
 import {Notify} from "../../services/notify";
 import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
+import {JoinEventCommand} from "../../commands/JoinEventCommand";
+import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
 
 @Component({
     selector: 'app-event-view',
@@ -19,16 +20,19 @@ import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
 })
 export class EventViewComponent {
     @Input() event: CommunityEvent | null = null;
+    @Input() canRemove: boolean = true;
     @Input() isDisabled: boolean = true;
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
 
     constructor(
-        private authService: AuthService,
-        protected serviceFactory: ServiceFactory,
-        private notify: Notify
+        protected serviceFactory: ServiceFactory
     ) {
+    }
+
+    ngOnInit() {
+        this.loggedUserID = (this.serviceFactory.get('auth') as AuthService).getUserUUID();
     }
 
     joinEvent() {
@@ -49,9 +53,8 @@ export class EventViewComponent {
 
     protected readonly EventState = EventState;
 
-    acceptEvent() {
-
-    }
-
     protected readonly AcceptEventCommand = AcceptEventCommand;
+    protected readonly AuthService = AuthService;
+    protected loggedUserID!: string;
+    protected readonly RemoveEventCommand = RemoveEventCommand;
 }

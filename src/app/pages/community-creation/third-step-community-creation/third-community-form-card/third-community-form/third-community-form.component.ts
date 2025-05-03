@@ -9,6 +9,7 @@ import {CommunityService} from "../../../../../../architecture/services/Communit
 import {Community} from "../../../../../../architecture/model/Community";
 import {Notify} from "../../../../../services/notify";
 import {marked} from "marked";
+import {CreateCommunityCommand} from "../../../../../commands/CreateCommunityCommand";
 
 @Component({
     selector: 'app-third-community-form',
@@ -41,14 +42,7 @@ export class ThirdCommunityFormComponent {
     protected async nextPage(event: Event) {
         event.preventDefault();
         this.saveFormData();
-        (this.serviceFactory.get('communities') as CommunityService).createCommunity(await this.buildCommunity()).subscribe({
-            next: () => {
-                this.notify.success('Your community has been created!');
-                this.formService.remove('community');
-                this.router.navigate(['communities']);
-            },
-            error: () => this.notify.error('We could not create your community. Try again later!')
-        });
+        CreateCommunityCommand.Builder.create().withFactory(this.serviceFactory).withCommunity(await this.buildCommunity()).build().execute();
     }
 
     private async buildCommunity() {

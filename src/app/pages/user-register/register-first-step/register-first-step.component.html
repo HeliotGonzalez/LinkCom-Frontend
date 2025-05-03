@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <main class="main">
   <div class="register-form-background"></div>
 
@@ -45,45 +46,95 @@
       
         <div *ngIf="usernameTaken" class="error-message">
           Username already taken
+=======
+<main class="main">
+    <div class="form-card">
+        <app-form-steps [steps]="[
+                { step: 1, route: '/user-register/firstStep' },
+                { step: 2, route: '/user-register/secondStep' },
+                { step: 3, route: '/user-register/thirdStep' }
+            ]" [currentStep]="1" class="form-steps-circles-container"
+        ></app-form-steps>
+        <div class="register-form-header">
+            <div class="register-form-title-container text-center">
+                <h1 class="register-form-title">User Register</h1>
+                <h2 class="register-form-subtitle">Fill in your details to register</h2>
+            </div>
+>>>>>>> 393b45d (refactor: user registration steps and events views refactored.)
         </div>
-      </div>
 
-      <div class="input-container d-flex flex-column">
-        <label for="email-input">Email *</label>
-        <input 
-        [(ngModel)]="email" 
-        (focusout)="checkEmail(email)"
-        name="email" 
-        id="email-input" 
-        placeholder="Enter your email address" 
-        type="email" 
-        required
-        [class.input-error]="emailTaken">
-        <div *ngIf="emailTaken" class="error-message">
-          Email already taken
-        </div>
-      </div>
+        <form class="register-form">
+            <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
+                <div class="input-container d-flex flex-column">
+                    <label for="username-input">Username *</label>
 
-      <div class="input-container d-flex flex-column">
-        <label for="description-input">Description *</label>
-        <input [(ngModel)]="description" name="description"  placeholder="Talk about yourself" required>
-      </div>
+                    <input
+                            [(ngModel)]="username"
+                            (focusout)="checkUsername(username)"
+                            name="username"
+                            id="username-input"
+                            placeholder="Choose a unique username"
+                            required
+                            [class.input-error]="usernameTaken"
+                    >
 
-      <div class="input-container d-flex flex-column">
-        <label for="password-input">Password *</label>
-        <input (focusout)="checkPassLength(password)" [(ngModel)]="password" name="password" id="password-input" placeholder="Choose a secure password" type="password" required  [class.input-error]="passwordLengthError">
-        <div *ngIf="passwordLengthError" class="error-message">
-          Password must be at least 6 characters long
-        </div>
-      </div>
+                    <div *ngIf="usernameTaken" class="error-message">
+                        Username already taken
+                    </div>
+                </div>
 
-      <div class="input-container d-flex flex-column">
-        <label for="confirm-password-input">Confirm Password *</label>
-        <input (focusout)="checkConfPassLength(confirmPassword)" [(ngModel)]="confirmPassword" name="confirm-password" id="confirm-password-input" placeholder="Confirm your password" type="password" required [class.input-error]="confPasswordLengthError">
-        <div *ngIf="confPasswordLengthError" class="error-message">
-          Password must be at least 6 characters long
+                <div class="input-container d-flex flex-column">
+                    <label for="email-input">Email *</label>
+                    <input
+                            [(ngModel)]="email"
+                            (focusout)="checkEmail(email)"
+                            name="email"
+                            id="email-input"
+                            placeholder="Enter your email address"
+                            type="email"
+                            required
+                            [class.input-error]="emailTaken">
+                    <div *ngIf="emailTaken" class="error-message">
+                        Email already taken
+                    </div>
+                </div>
+
+                <div class="input-container d-flex flex-column">
+                    <label for="description-input">Description *</label>
+                    <input [(ngModel)]="description" name="description" placeholder="Talk about yourself" required>
+                </div>
+
+                <div class="input-container d-flex flex-column">
+                    <label for="password-input">Password *</label>
+                    <input (focusout)="checkPassLength(password)" [(ngModel)]="password" name="password"
+                           id="password-input" placeholder="Choose a secure password" type="password" required
+                           [class.input-error]="passwordLengthError">
+                    <div *ngIf="passwordLengthError" class="error-message">
+                        Password must be at least 6 characters long
+                    </div>
+                </div>
+
+                <div class="input-container d-flex flex-column">
+                    <label for="confirm-password-input">Confirm Password *</label>
+                    <input (focusout)="checkConfPassLength(confirmPassword)" [(ngModel)]="confirmPassword"
+                           name="confirm-password" id="confirm-password-input" placeholder="Confirm your password"
+                           type="password" required [class.input-error]="confPasswordLengthError">
+                    <div *ngIf="confPasswordLengthError" class="error-message">
+                        Password must be at least 6 characters long
+                    </div>
+                </div>
+
+                <div class="register-form-footer d-flex justify-content-center gap-2">
+                    <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="register-form-footer text-center">
+            <p>Already have an account? <a href="/login" class="login-link">Go to login instead</a></p>
         </div>
     </div>
+<<<<<<< HEAD
 
       <div class="register-form-footer d-flex justify-content-center gap-2">
         <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
@@ -101,3 +152,6 @@
 </div>
 </div>
 >>>>>>> fe35ba0 (fix: centered the register form and added background)
+=======
+</main>
+>>>>>>> 393b45d (refactor: user registration steps and events views refactored.)

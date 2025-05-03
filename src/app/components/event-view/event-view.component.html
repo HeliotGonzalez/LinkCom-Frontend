@@ -26,7 +26,7 @@
             </app-image-dialog>
         </div>
     </div>
-    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
+    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3 gap-2">
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
                 <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
@@ -35,6 +35,9 @@
             }
         } @else {
             <button class="leave-button" (click)="leaveEvent()">Leave</button>
+        }
+        @if (canRemove) {
+            <button class="leave-button" (click)="RemoveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(event!).build().execute()">Remove</button>
         }
     </div>
 </article>

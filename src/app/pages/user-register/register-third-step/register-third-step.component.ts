@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+<<<<<<< HEAD
 import { InterestTagComponent } from "../../interest-tag/interest-tag.component";
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -7,6 +8,15 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register-third-step',
   imports: [InterestTagComponent, FormsModule],
+=======
+import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
+
+@Component({
+  selector: 'app-register-third-step',
+  imports: [
+    FormStepsComponent
+  ],
+>>>>>>> 393b45d (refactor: user registration steps and events views refactored.)
   templateUrl: './register-third-step.component.html',
   styleUrl: './register-third-step.component.css'
 })

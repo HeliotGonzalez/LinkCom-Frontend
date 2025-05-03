@@ -13,10 +13,9 @@ import {UserService} from "../../../architecture/services/UserService";
 
 @Component({
     selector: 'app-blur-panel',
-    imports: [
-
-    ],
+    imports: [],
     templateUrl: './blur-panel.component.html',
+    standalone: true,
     styleUrl: './blur-panel.component.css'
 })
 export class BlurPanelComponent {
