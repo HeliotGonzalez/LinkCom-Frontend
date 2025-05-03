@@ -37,7 +37,7 @@ export class ApiService {
     // Obtener eventos para el calendario
     getEvents(userID: string): Observable<any> {
         console.log('ID: ' + userID);
-        return this.http.get(`${this.baseUrl}/getCalendarEvents?userID=${userID}`);
+        return this.http.get(`${this.baseUrl}/users/${userID}/events`);
     }
 
     // Se crea una instancia de EventUser en la base de datos (Usuario que pertenece a un evento)
@@ -129,20 +129,16 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
 
-    createAnnouncement(title: string, body: string, communityID: string, userID: string, communityName: string, publisherID: string) {
-        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
+    createAnnouncement(title: string, body: string, communityID: string, publisherID: string) {
+        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, publisherID});
     }
 
     getAnnouncements(communityID: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
-    updateCommunity(id: string, data: any): Observable<any> {
-        console.log('Se obtuvo el id: ' + id);
-        return this.http.patch<any>(
-          `${this.baseUrl}/communities/${id}`,
-          data
-        );
+    updateCommunity(id: string, data: FormData): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/communities/${id}`, data);
     }
 
     getUserProfile(userID: string): Observable<any> {

@@ -2,6 +2,7 @@ import {Service} from "./Service";
 import {Observable} from "rxjs";
 import {ApiResponse} from "../../app/interfaces/ApiResponse";
 import {CommunityEvent} from "../model/CommunityEvent";
+import {Comment} from "../model/Comment";
 import {User} from "../model/User";
 
 export interface EventService extends Service {
@@ -11,6 +12,10 @@ export interface EventService extends Service {
     getMembers(eventID: string): Observable<ApiResponse<User>>;
     createEvent(event: CommunityEvent): Observable<ApiResponse<CommunityEvent>>;
     removeEvent(eventID: string): Observable<ApiResponse<CommunityEvent>>;
-    joinEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>
-    leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>
+    joinEvent(communityID: string, eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
+    leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
+    getUserCommunityEvents(communityID: string, userID: string): Observable<ApiResponse<CommunityEvent>>;
+    createComment(comment: Comment): Observable<ApiResponse<Comment>>;
+    getComments(eventID: string): Observable<ApiResponse<Comment>>;
+    acceptEvent(eventID: string): Observable<ApiResponse<CommunityEvent>>;
 }

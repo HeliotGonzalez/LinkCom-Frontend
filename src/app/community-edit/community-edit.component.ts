@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../services/api-service.service';
 import { Community } from '../interfaces/community';
 import Swal from 'sweetalert2';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-community-edit',
@@ -17,11 +18,13 @@ export class CommunityEditComponent implements OnInit {
   communityID!: string; 
   community!: Community;
   fileToUpload: File | null = null;
+  imageBase64!: string | null;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private apiService: ApiService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -59,47 +62,46 @@ export class CommunityEditComponent implements OnInit {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length) {
-      this.fileToUpload = input.files[0];
-    }
+    if (!input.files?.length) return;
+    this.fileToUpload = input.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageBase64 = reader.result as string;
+    };
+    reader.readAsDataURL(this.fileToUpload);
   }
-
+  
   onSubmit() {
-    if (this.communityForm.valid) {
-      const formValue = this.communityForm.value;
-      const formData = new FormData();
-
-      let name = formValue.name;
-      let description = formValue.description;
-      let isPrivate = formValue.isPrivate;
-      
-      if (this.fileToUpload) {
-        formData.append("image", this.fileToUpload, this.fileToUpload.name);
-      }
-      
-      this.apiService.updateCommunity(this.community.id, {name, description, isPrivate}).subscribe({
-        next: res => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Community updated',
-              text: 'Was updated successfully',
-              confirmButtonText: 'Continue'
-            }).then(() => {
-              this.router.navigate(['/community'], { queryParams: { communityID: this.community.id } });
-            });
-          },
-          error: err => {
-            console.error("Error al actualizar la comunidad", err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'An error ocurred while updating the community.',
-              confirmButtonText: 'Aceptar'
-            });
-        }
-      });
-    } else {
-      alert("Formulario no válido");
+    if (!this.communityForm.valid) return alert("Formulario no válido");
+  
+    const { name, description, isPrivate } = this.communityForm.value;
+    const payload: any = { name, description, isPrivate };
+  
+    if (this.imageBase64) {
+      payload.imageBase64 = this.imageBase64;
     }
+  
+    this.apiService.updateCommunity(this.community.id, payload).subscribe({
+      next: (response: any) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Comunidad actualizada',
+          text: 'La comunidad ha sido actualizada exitosamente.',
+          confirmButtonText: 'Aceptar'
+          }).then(() => {
+            this.location.back();
+        });
+      }, 
+      error: (error: any) => {
+        console.error('Error al actualizar la comunidad', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar la comunidad. Por favor, inténtelo de nuevo más tarde.',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
+  
 }

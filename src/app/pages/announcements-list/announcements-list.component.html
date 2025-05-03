@@ -1,0 +1,16 @@
+<main class="main">
+    <div class="announcements-list">
+        <h1 id="announcements-list-title"> Announcements table</h1>
+        @if (announcements.length === 0) {
+            <p>There is no news yet</p>
+        } @else {
+            @for (newAnnounce of announcements; track newAnnounce) {
+                <app-announcement-card
+                    [announce]="newAnnounce"
+                    [imgPath]="communityImgPath"
+                ></app-announcement-card>
+            }
+        }
+        <button class="announcement-list-button" (click)="exitPage($event)">Go back to the main page</button>
+    </div>
+</main>
