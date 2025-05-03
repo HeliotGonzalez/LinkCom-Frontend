@@ -1,56 +1,45 @@
-<div class="background">
-<div class="form-card">
-  <div class="stepper-container">
-    <div class="stepper">
-      <div class="stepper-step ">
-        <div class="step-number">1</div>
-      </div>
-      <div class="stepper-step current">
-        <div class="step-number">2</div>
-      </div>
-      <div class="stepper-step">
-        <div class="step-number">3</div>
-      </div>
-    </div>
-  </div>
+<main class="main">
+    <div class="form-card">
+        <app-form-steps [steps]="[
+                { step: 1, route: '/user-register/firstStep' },
+                { step: 2, route: '/user-register/secondStep' },
+                { step: 3, route: '/user-register/thirdStep' }
+            ]" [currentStep]="2" class="form-steps-circles-container"
+        ></app-form-steps>
 
-    <div class="register-form-header">
-      <div class="register-form-title-container text-center">
-        <h1 class="register-form-title">User Register</h1>
-        <h2 class="register-form-subtitle">Plase select a unique profile picture</h2>
-      </div>
-    </div>
-  
-    <form class="register-form">
-      <!-- Vista previa de la imagen encima del texto -->
-      <div class="image-preview-container d-flex justify-content-center">
-        @if (imagePreview != null) {
-          <img [src]="imagePreview" alt="Image Preview" class="image-preview">
-        }
-      </div>
-  
-      <div class="input-container d-flex flex-column text-center">
-        <label for="image-input" class="form-label">Profile Picture *</label>
-        <input 
-          type="file" 
-          id="image-input" 
-          (change)="onImageSelected($event)" 
-          accept="image/*" 
-          required 
-          class="form-input"
-        >
-      </div>
-  
-      @if (imagePreview != null) {
-        <div class="d-flex justify-content-center mt-2">
-          <button (click)="onRemoveImage()" type="button" class="btn btn-danger">Remove Image</button>
+        <div class="register-form-header">
+            <div class="register-form-title-container text-center">
+                <h1 class="register-form-title">User Register</h1>
+                <h2 class="register-form-subtitle">Plase select a unique profile picture</h2>
+            </div>
         </div>
-      }
-      
-      <div class="form-footer d-flex justify-content-center gap-2 mt-3">
-        <button (click)="goToThirdStep()" type="button" class="form-button normal-button">Next</button>
-        <button (click)="goToFirstStep()" type="button" class="form-button normal-button">Back</button>
-      </div>
-    </form>
-  </div>
-</div>
+
+        <form class="register-form d-flex align-items-center">
+
+            <div class="position-relative">
+                <div class="input-container drop-zone d-flex flex-column align-items-center justify-content-center position-relative"
+                     (dragover)="onDragOver($event)"
+                     (drop)="onDrop($event)"
+                     (click)="triggerFileInput()">
+                    <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)"/>
+                    @if (!image) {
+                        <i class="bi-upload fs-5"></i>
+                        <p>Upload your image!</p>
+                    } @else {
+                        <div class="image-preview">
+                            <img [src]="image" alt="Loaded Image"/>
+                        </div>
+                    }
+                </div>
+                @if (image.length) {
+                    <i (click)="onRemoveImage()" class="d-flex bi-x-circle-fill fs-1 bg-white position-absolute remove-icon"></i>
+                }
+            </div>
+
+            <div class="form-footer d-flex justify-content-center gap-2 mt-3">
+                <button (click)="goToFirstStep()" type="button" class="form-button normal-empty-button">Back</button>
+                <button (click)="goToThirdStep()" type="button" class="form-button normal-button">Next</button>
+            </div>
+        </form>
+    </div>
+</main>

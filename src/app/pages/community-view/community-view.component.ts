@@ -177,11 +177,16 @@ export class CommunityViewComponent {
 
     protected readonly Object = Object;
 
-    showEventsRequestPanel() {
+    protected showEventsRequestPanel() {
         this.eventsRequestPanelVisible = true;
     }
 
-    closeEventsRequestPanel() {
+    protected closeEventsRequestPanel() {
         this.eventsRequestPanelVisible = false;
+    }
+
+    protected canLoggedUserRemoveEvent(eventID: string) {
+        const loggedUserID = this.authService.getUserUUID();
+        return this.events[eventID].creatorID === loggedUserID || this.isUserModerator || this.isCreator();
     }
 }

@@ -5,13 +5,15 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../../services/api-service.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
 
 @Component({
   selector: 'app-register-first-step',
-  imports: [
-    FormsModule,
-    CommonModule
-  ],
+    imports: [
+        FormsModule,
+        CommonModule,
+        FormStepsComponent
+    ],
   templateUrl: './register-first-step.component.html',
   styleUrls: ['./register-first-step.component.css'],
   standalone: true,

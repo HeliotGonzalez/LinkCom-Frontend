@@ -10,7 +10,7 @@
 /* Estilo de la tarjeta del formulario */
 .form-card {
     width: 40rem; /* Reducido para que el formulario sea más compacto */
-    height: 100vh;
+    height: 80vh;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background: white;

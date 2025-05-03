@@ -1,6 +1,5 @@
-import {Command} from "../../architecture/Commands/Command";
+import { Command } from "../../architecture/control/Command";
 import {Notify} from "../services/notify";
-import {inject} from "@angular/core";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {Community} from "../../architecture/model/Community";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
