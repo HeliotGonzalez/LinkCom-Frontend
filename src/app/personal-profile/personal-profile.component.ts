@@ -3,6 +3,7 @@ import { User } from '../../architecture/model/User';
 import { ApiService } from '../services/api-service.service';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CommunityService } from '../../architecture/services/CommunityService';
 import { Notify } from '../services/notify';
@@ -22,7 +23,7 @@ export class PersonalProfileComponent implements OnInit {
   user: User | null = null;
   ownerId: string = '';
 
-  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory) {
+  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory, private location: Location) {
     this.ownerId = this.AuthService.getUserUUID();
   }
 
@@ -69,16 +70,15 @@ export class PersonalProfileComponent implements OnInit {
       .then(confirmed => {
         if (!confirmed) { return; }
 
-        (this.serviceFactory.get('communities') as CommunityService)
-          .leaveCommunity(communityID, this.AuthService.getUserUUID())
-          .subscribe({
+        (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(communityID, this.AuthService.getUserUUID()).subscribe({
             next: () => {
               this.notify.success('You have left this community!');
-              this.user!.communities =
-                this.user!.communities.filter(c => c.id !== communityID);
+              this.user!.communities = this.user!.communities.filter(c => c.id !== communityID);
             },
             error: res => this.notify.error(`An error occurred: ${res.message}`)
           });
+      }).then(() => {
+        window.location.reload();
       });
   }
 
@@ -86,5 +86,9 @@ export class PersonalProfileComponent implements OnInit {
     this.router.navigate([{ outlets: { modal: null } }]).then(() => {
       this.router.navigate(['/edit-profile']);
     });
+  }
+
+  closeModal(){
+    this.router.navigate([{ outlets: { modal: null } }]);
   }
 }

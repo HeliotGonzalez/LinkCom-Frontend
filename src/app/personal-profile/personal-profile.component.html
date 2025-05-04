@@ -2,7 +2,7 @@
 @if (this.user != null){
   <section class="card text-white profile-card mx-auto my-4 overflow-hidden">
     <!-- Banner + avatar -->
-    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="router.navigate([{ outlets: { modal: null } }])">
+    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="closeModal()">
       <i class="bi bi-x-lg text-white" style="font-size: large;"></i>
     </button>
     <div class="banner w-100"></div>
@@ -32,22 +32,13 @@
         </button>
       </li>
       <li class="nav-item">
-        <button
-          class="nav-link"
-          [class.active]="activeTab === 'communities'"
-          [ngClass]="{
-              'text-dark': activeTab === 'communities',
-              'text-white': activeTab !== 'communities'
-            }" 
-          (click)="activeTab = 'communities'"
-        >
+        <button class="nav-link" [class.active]="activeTab === 'communities'"[ngClass]="{'text-dark': activeTab === 'communities','text-white': activeTab !== 'communities'}" 
+          (click)="activeTab = 'communities'">
           Communities
-          <!--span class="badge bg-secondary ms-1">{{ this.user?communities.length }}</span-->
         </button>
       </li>
     </ul>
   
-    <!-- Contenido de pestañas -->
     <div class="px-4 pb-4">
       <!-- About me -->
       <div *ngIf="activeTab === 'about'">
