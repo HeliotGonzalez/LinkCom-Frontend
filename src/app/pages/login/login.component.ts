@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
                 this.authService.setUserId(response.userID);
                 console.log(response.userID);
 
-                this.router.navigate(['/']);
+                this.router.navigate(['/homepage']);
             },
             (error) => {
                 console.error('Error during login:', error);
