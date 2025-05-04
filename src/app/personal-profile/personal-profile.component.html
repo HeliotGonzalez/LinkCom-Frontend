@@ -46,10 +46,10 @@
   
         <h6 class="mt-4">Interests</h6>
         <ng-container *ngIf="this.user?.interests?.length; else noTags">
-          <span class="badge bg-light text-dark me-1 mb-1"*ngFor="let tag of this.user?.interests">#{{ tag }}</span>
+          <span class="badge bg-light text-light me-1 mb-1"*ngFor="let tag of this.user?.interests">#{{ tag }}</span>
         </ng-container>
         <ng-template #noTags>
-          <span class="text-muted">None</span>
+          <span class="text-light">None</span>
         </ng-template>
       </div>
   
@@ -64,9 +64,9 @@
     
         <!-- Botones -->
         <div class="btn-group">
-          <button class="btn btn-sm btn-primary me-3" (click)="viewCommunity(c.id)"> View </button>
+          <button class="button2 btn-primary me-3 " (click)="viewCommunity(c.id)"> View </button>
           @if (this.user.id == this.ownerId){
-            <button class="btn btn-sm btn-danger" (click)="leaveCommunity(c.id, c.name)"> Leave </button>
+            <button class="leave-button btn-danger" (click)="leaveCommunity(c.id, c.name)"> Leave </button>
           }
         </div>
       </div>

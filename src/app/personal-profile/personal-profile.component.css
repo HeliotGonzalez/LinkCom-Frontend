@@ -7,43 +7,91 @@
     width: 95%; 
   }
   
-  .profile-card {
-    max-width: 650px;
-    background: linear-gradient(180deg, var(--blue-1) 0%, var(--blue-2) 100%);
-    border-radius: 1rem;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-  }
+.profile-card {
+  max-width: 650px;
+  background: linear-gradient(180deg, var(--blue-1) 0%, var(--blue-2) 100%);
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.banner {
+  height: 140px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.avatar {
+  position: absolute;
+  top: 70px;
+  left: 32px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  background: #ddd;
+  border-color: var(--blue-1);
+}
+
+.nav-tabs .nav-link {
+  color: #d8defe;
+  border: 0;
+}
+.nav-tabs .nav-link.active {
+  color: #fff;
+  border-bottom: 2px solid #fff;
+}
+
+.comm-card {
+  width: 120px;
+}
+.comm-card img {
+  height: 80px;
+  object-fit: cover;
+}
+
+.button {
+  border-radius: 5px;
+  padding: 0.5rem 1.7rem;
+  background: #2E3E7F;
+  color: white;
+  border: 2px solid #2E3E7F;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
   
-  .banner {
-    height: 140px;
-    background: rgba(255, 255, 255, 0.15);
-  }
-  
-  .avatar {
-    position: absolute;
-    top: 70px;
-    left: 32px;
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    background: #ddd;
-    border-color: var(--blue-1);
-  }
-  
-  .nav-tabs .nav-link {
-    color: #d8defe;
-    border: 0;
-  }
-  .nav-tabs .nav-link.active {
-    color: #fff;
-    border-bottom: 2px solid #fff;
-  }
-  
-  .comm-card {
-    width: 120px;
-  }
-  .comm-card img {
-    height: 80px;
-    object-fit: cover;
-  }
+.button:hover {
+  background: white;
+  color: #2E3E7F;
+  border: 2px solid #2E3E7F;
+}
+
+.button2 {
+  border-radius: 5px;
+  padding: 0.5rem 1.7rem;
+  background: white;
+  border: 2px solid #2E3E7F;
+  color: #2E3E7F;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.button2:hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.leave-button {
+  border-radius: 5px;
+  padding: 0.5rem 1.7rem;
+  background: #d31f1f;
+  color: white;
+  border: 2px solid #d31f1f;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.leave-button:hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  color: darkred;
+  background: white;
+}
   
