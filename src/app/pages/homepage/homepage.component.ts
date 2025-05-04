@@ -54,13 +54,7 @@ export class HomepageComponent implements OnInit {
         // Eventos y noticias
         this.apiService.getFeed(this.authService.getUserUUID()).subscribe({
             next: (data: FeedItem[]) => {
-                this.allFeedItems = data.map(item => ({
-                    ...item,
-                    date: new Date(item.date)
-                }));
-                for (let dat of data) {
-                    console.log(dat);
-                }
+                this.allFeedItems = data.map(item => ({...item,date: new Date(item.date)}));
 
                 console.log('Data recibido: ' + data);
                 this.loadMoreFeed();
@@ -69,7 +63,13 @@ export class HomepageComponent implements OnInit {
                 console.error('Error al obtener feed:', err);
             }
         });
+    }
 
+    fetchExcludedEvents(): void {
+        this.apiService.getCommunitiesEventsExcludingUser(this.authService.getUserUUID()).subscribe({
+            next: (res: any) => this.feedEvents = res.data as CommunityEvent[],
+            error: err => console.error('Error loading events:', err)
+        });
     }
 
     // Lazy load: ir cargando en batches de feedBatchSize
@@ -83,9 +83,7 @@ export class HomepageComponent implements OnInit {
 
     // Obtener comunidades del backend, aquellas a las que el usuario NO pertenece
     fetchCommunities(): void {
-        this.apiService
-            .getNonBelongingCommunities(this.authService.getUserUUID())
-            .subscribe({
+        this.apiService.getNonBelongingCommunities(this.authService.getUserUUID()).subscribe({
             next: (resp: { data: Community[] }) => {
                 console.log('Comunidades recibidas:', resp);
                 this.communities = resp.data;
@@ -126,8 +124,10 @@ export class HomepageComponent implements OnInit {
                         title: "Success!",
                         text: "You have joined the event.",
                         icon: "success"
+                    }).then(() => {
+                        this.feedEvents = this.feedEvents.filter(e => e.id !== event.id);
+                        this.fetchCalendarEvents();
                     });
-                    this.feedEvents = this.feedEvents.filter(e => e.id !== event.id);
                 },
                 error: res => {
                     Swal.fire({
@@ -142,17 +142,18 @@ export class HomepageComponent implements OnInit {
     // Unirte a una comunidad
     joinCommunity(communityId: string): void {
         const userID = this.authService.getUserUUID();
-        this.apiService.joinCommunity(userID, communityId)
-          .subscribe({
+        this.apiService.joinCommunity(userID, communityId).subscribe({
             next: response => {
               Swal.fire({
                 icon: 'success',
                 title: 'Éxito',
                 text: 'Te has unido a la comunidad correctamente.',
                 confirmButtonText: 'OK'
+              }).then(() => {
+                this.fetchCommunities();
+                this.fetchFeed();
+                this.fetchExcludedEvents();
               });
-              // refrescas lo que necesites, p.ej. recargar la lista:
-              this.fetchCommunities();
             },
             error: err => {
               Swal.fire({
@@ -163,7 +164,7 @@ export class HomepageComponent implements OnInit {
               });
             }
           });
-      }
+    }
 
     // Generar la estructura del calendario (solo las celdas)
     generateCalendar(): void {
@@ -201,26 +202,5 @@ export class HomepageComponent implements OnInit {
             weeks.push(week);
         }
         this.calendarWeeks = weeks;
-    }
-
-    // Función trackBy para los nombres de los días (son únicos)
-    trackByDayName(index: number, day: string): string {
-        return day;
-    }
-
-    // Función trackBy para cada semana; usamos el índice de la semana
-    trackByWeek(index: number, week: (number | null)[]): number {
-        return index;
-    }
-
-    // Función trackBy para los días del mes: si el día es nulo, concatenamos el índice
-    trackByDay(index: number, day: number | null): string {
-        return day !== null ? day.toString() : `empty-${index}`;
-    }
-
-    // Función trackBy para los eventos del calendario
-    trackByEvent(index: number, event: string): string {
-        // Suponiendo que el título del evento es único, o en caso de estar repetido se puede usar el índice
-        return event && event.trim() !== '' ? event : index.toString();
     }
 }
