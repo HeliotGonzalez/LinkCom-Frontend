@@ -9,7 +9,7 @@
                         <app-feed-event-card (joinEventEmitter)="joinEvent($event)" [event]="event"></app-feed-event-card>
                     }
                     <div class="text-center">
-                        <button class="btn btn-outline-primary" (click)="loadMoreFeed()">Show more</button>
+                        <button class="button" (click)="loadMoreFeed()">Show more</button>
                     </div>
                 </section>
             </div>
@@ -24,7 +24,7 @@
                                 <strong>{{ community.name }}</strong>
                                 <p class="mb-1" [innerHTML]="community.description"></p>
                                 <div class="text-end">
-                                    <a class="btn btn-outline-secondary btn-sm"
+                                    <a class="button"
                                     (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
                                 </div>
                                 <hr>

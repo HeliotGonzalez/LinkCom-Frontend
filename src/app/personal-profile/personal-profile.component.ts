@@ -19,7 +19,7 @@ export class PersonalProfileComponent implements OnInit {
   @Input() parentUser: User | null = null;
 
   activeTab: 'about' | 'communities' | 'activities' = 'about';
-  avatarFallback = 'assets/img/default-avatar.png';
+  avatarFallback = 'LogoLinkComNegro.svg';
   user: User | null = null;
   ownerId: string = '';
 

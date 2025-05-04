@@ -96,17 +96,18 @@ export class HomepageComponent implements OnInit {
 
     fetchCalendarEvents(): void {
         this.apiService.getEvents(this.authService.getUserUUID()).subscribe({
-            next: (events: any[]) => {
+            next: (res: { success: boolean; data: any[] }) => {
+                const events = res.data || [];
+                console.log('payload de eventos:', events);
+          
                 events.forEach(ev => {
-                    const day = new Date(ev.date).getDate();
-                    // Si no existe la entrada para ese día, se crea el array
-                    if (!this.calendarEvents[day]) {
-                        this.calendarEvents[day] = [];
-                    }
-                    // Solo se agregan hasta 3 eventos por día
-                    if (this.calendarEvents[day].length < 3) {
-                        this.calendarEvents[day].push(ev.title);
-                    }
+                  const day = new Date(ev.date).getDate();
+                  if (!this.calendarEvents[day]) {
+                    this.calendarEvents[day] = [];
+                  }
+                  if (this.calendarEvents[day].length < 3) {
+                    this.calendarEvents[day].push(ev.title);
+                  }
                 });
             },
             error: (err) => {

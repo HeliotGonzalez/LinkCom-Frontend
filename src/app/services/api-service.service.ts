@@ -25,6 +25,7 @@ export class ApiService {
     
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
+        console.log('Yendo al back con ID: ' + userId);
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
     }
 
