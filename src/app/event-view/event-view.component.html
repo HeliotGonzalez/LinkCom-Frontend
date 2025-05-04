@@ -60,9 +60,6 @@
 
 
         @if (!isDisabled) {
-            <button class="button" (click)="joinEvent()">Join</button>
-        }
-        @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
                 <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
             } @else {
