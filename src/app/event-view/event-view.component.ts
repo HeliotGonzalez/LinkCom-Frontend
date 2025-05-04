@@ -9,13 +9,14 @@ import { EventCommentModalComponent } from "./event-comment-modal/event-comment-
 import { Comment } from '../../architecture/model/Comment';
 import {EventState} from "../../architecture/model/EventState";
 import {AcceptEventCommand} from "../commands/AcceptEventCommand";
-
+import { NgFor } from '@angular/common';
 @Component({
     selector: 'app-event-view',
     imports: [
-    ImageDialogComponent,
-    EventCommentModalComponent,
-],
+        ImageDialogComponent,
+        EventCommentModalComponent,
+        NgFor
+    ],
     templateUrl: './event-view.component.html',
     standalone: true,
     styleUrl: './event-view.component.css'
@@ -27,13 +28,28 @@ export class EventViewComponent {
     @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
     protected isCommentModalVisible: boolean = false;
+    comments: Comment[] = [];
+
+
+    ngOnInit() {
+
+        if (this.event) {
+            const eventId = this.event?.id ?? '';
+            (this.serviceFactory.get('events') as EventService).getComments(eventId).subscribe({
+                next: res => {
+                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
+                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
+                },
+                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
+            });
+        }
+    }
 
     constructor(
         private authService: AuthService,
         private serviceFactory: ServiceFactory,
         private notify: Notify
-    ) {
-    }
+    ) {}
 
     joinEvent() {
         this.joinEventEmitter.emit();
@@ -62,7 +78,7 @@ export class EventViewComponent {
     openCommentModal() {
         this.isCommentModalVisible = true;
     }
-    
+
     closeCommentModal() {
         this.isCommentModalVisible = false;
     }
@@ -76,13 +92,11 @@ export class EventViewComponent {
             },
             error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
         });
-      }
-      
+    }
+
     protected readonly EventState = EventState;
 
-    acceptEvent() {
-
-    }
+    acceptEvent() {}
 
     protected readonly AcceptEventCommand = AcceptEventCommand;
 }
