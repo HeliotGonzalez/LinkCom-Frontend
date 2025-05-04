@@ -1,4 +1,4 @@
-import { Command } from "../../architecture/control/Command";
+import {Command} from "../../architecture/Commands/Command";
 import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";

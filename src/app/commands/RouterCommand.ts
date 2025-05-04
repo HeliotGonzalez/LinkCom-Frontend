@@ -1,4 +1,4 @@
-import { Command } from "../../architecture/control/Command";
+import {Command} from "../../architecture/Commands/Command";
 import {Router} from "@angular/router";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 
