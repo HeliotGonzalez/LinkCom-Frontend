@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {HeaderComponent} from './components/header/header.component';
+import {HeaderComponent} from './header/header.component';
 import {CommonModule} from '@angular/common';
 import {Router, RouterOutlet} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
@@ -92,16 +92,5 @@ export class AppComponent implements OnInit {
                 alert('Failed to submit email.');
             }
         );
-    }
-
-      /** Comprueba si hay alguna ruta activa en el outlet "modal" */
-    isModalOpen(): boolean {
-        return this.router.routerState.snapshot.root.children
-        .some(c => c.outlet === 'modal');
-    }
-
-    /** Cierra el modal navegando a outlet null */
-    closeModal() {
-        this.router.navigate([{ outlets: { modal: null } }]);
     }
 }

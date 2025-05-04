@@ -2,11 +2,3 @@
     <app-header></app-header>
 }
 <router-outlet/>
-
-<ng-container *ngIf="isModalOpen()">
-  <div class="modal-backdrop" (click)="closeModal()"></div>
-
-  <div class="modal-center">
-    <router-outlet name="modal"></router-outlet>
-  </div>
-</ng-container>

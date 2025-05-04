@@ -6,7 +6,6 @@ import {CreateCommunityParameters} from "../interfaces/create-community-paramete
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
-import { User } from '../../architecture/model/User';
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -25,14 +24,13 @@ export class ApiService {
     
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
-        console.log('Yendo al back con ID: ' + userId);
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
     }
 
     // Obtener comunidades a las que NO pertenece el usuario
     getNonBelongingCommunities(userID: string): Observable<any> {
         console.log('ID: ' + userID);
-        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities/${userID}`);
+        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities?userId=${userID}`);
     }
 
     // Obtener eventos para el calendario
@@ -138,15 +136,6 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
-    updateCommunity(id: string, data: FormData): Observable<any> {
-        return this.http.patch(`${this.baseUrl}/communities/${id}`, data);
-    }
 
-    getUserProfile(userID: string): Observable<any> {
-        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
-    }
-
-    updateUser(id: string, payload: Partial<User>): Observable<any> {
-        return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
-    }
+    
 }
