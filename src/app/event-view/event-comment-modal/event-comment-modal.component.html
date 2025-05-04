@@ -1,0 +1,30 @@
+<div #modal class="modal fade" tabindex="-1" aria-labelledby="eventCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="eventCommentModalLabel">Comentario del Evento</h5>
+          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+            <div *ngIf="comments.length > 0" class="mb-3">
+              <label class="form-label fw-bold">Comentarios anteriores:</label>
+              <ul class="list-group mb-2">
+                <li *ngFor="let comment of comments" class="list-group-item">
+                  {{ comment }}
+                </li>
+              </ul>
+            </div>
+          
+            <textarea [(ngModel)]="commentText"
+                      class="form-control"
+                      rows="1"
+                      placeholder="Escribe tu comentario aquí..."></textarea>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="submitComment()">Publicar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

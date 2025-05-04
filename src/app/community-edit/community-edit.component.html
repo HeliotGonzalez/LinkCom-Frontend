@@ -1,0 +1,64 @@
+<div class="container mt-3">
+  <div class="d-flex justify-content-center ">
+    <h2>Editing {{this.community.name}}</h2>
+  </div>
+
+    <form [formGroup]="communityForm" (ngSubmit)="onSubmit()">
+      <div class="d-flex justify-content-center mt-3 ">
+          <label class="image-upload p-0 m-0">
+            <img
+              [src]="community.imagePath"
+              alt="Community Image"
+              class="community-img"
+            />
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              (change)="onFileSelected($event)"
+            />
+          </label>
+      </div>
+
+      <!-- Nombre -->
+      <div class="mb-3">
+        <label class="form-label fw-bold" for="communityName">Name</label>
+        <input
+          id="communityName"
+          class="form-control"
+          formControlName="name"
+          type="text"
+          placeholder="Nombre de la comunidad"
+        />
+      </div>
+  
+      <!-- Descripción -->
+      <div class="mb-3">
+        <label class="form-label fw-bold" for="communityDescription">Description</label>
+        <textarea
+          id="communityDescription"
+          class="form-control"
+          formControlName="description"
+          placeholder="Descripción de la comunidad"
+          rows="3"
+        ></textarea>
+      </div>
+  
+      <!-- isPrivate (checkbox o select) -->
+      <div class="mb-3 form-check">
+        <input
+          id="communityPrivate"
+          class="form-check-input"
+          type="checkbox"
+          formControlName="isPrivate"
+        />
+        <label class="form-check-label fw-bold" for="communityPrivate">
+          Is this community private?
+        </label>
+      </div>
+
+      <div class="d-flex justify-content-center ">
+        <button type="submit" class="button">Save changes</button>
+      </div>
+    </form>
+  </div>
+  

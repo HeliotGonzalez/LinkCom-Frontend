@@ -5,13 +5,17 @@ import {AuthService} from "../services/auth.service";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {EventService} from "../../architecture/services/EventService";
 import {Notify} from "../services/notify";
+import { EventCommentModalComponent } from "./event-comment-modal/event-comment-modal.component";
+import { Comment } from '../../architecture/model/Comment';
 import {EventState} from "../../architecture/model/EventState";
 import {AcceptEventCommand} from "../commands/AcceptEventCommand";
-
+import { NgFor } from '@angular/common';
 @Component({
     selector: 'app-event-view',
     imports: [
-        ImageDialogComponent
+        ImageDialogComponent,
+        EventCommentModalComponent,
+        NgFor
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
@@ -23,20 +27,44 @@ export class EventViewComponent {
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
+    protected isCommentModalVisible: boolean = false;
+    comments: Comment[] = [];
+
+
+    ngOnInit() {
+
+        if (this.event) {
+            const eventId = this.event?.id ?? '';
+            (this.serviceFactory.get('events') as EventService).getComments(eventId).subscribe({
+                next: res => {
+                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
+                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
+                },
+                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
+            });
+        }
+    }
 
     constructor(
         private authService: AuthService,
-        protected serviceFactory: ServiceFactory,
+        private serviceFactory: ServiceFactory,
         private notify: Notify
-    ) {
-    }
+    ) {}
 
     joinEvent() {
         this.joinEventEmitter.emit();
     }
 
     leaveEvent() {
-        this.leaveEventEmitter.emit();
+        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
+            if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.authService.getUserUUID()).subscribe({
+                next: () => {
+                    this.notify.success(`You have left ${this.event?.title}`);
+                    this.isDisabled = false;
+                },
+                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+            });
+        });
     }
 
     openImageDialog() {
@@ -47,11 +75,27 @@ export class EventViewComponent {
         this.isDialogVisible = false;
     }
 
+    openCommentModal() {
+        this.isCommentModalVisible = true;
+    }
+    closeCommentModal() {
+        this.isCommentModalVisible = false;
+    }
+
+    createComment(comment: Comment) {
+        console.log(comment.body);
+        (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
+            next: () => {
+                this.notify.success(`You have published a comment`);
+                this.isCommentModalVisible = false;
+            },
+            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        });
+    }
+
     protected readonly EventState = EventState;
 
-    acceptEvent() {
-
-    }
+    acceptEvent() {}
 
     protected readonly AcceptEventCommand = AcceptEventCommand;
 }

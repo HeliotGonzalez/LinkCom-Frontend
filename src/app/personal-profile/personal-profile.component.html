@@ -1,0 +1,84 @@
+<!-- Observable | async para renderizar datos -->
+@if (this.user != null){
+  <section class="card text-white profile-card mx-auto my-4 overflow-hidden">
+    <!-- Banner + avatar -->
+    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="closeModal()">
+      <i class="bi bi-x-lg text-white" style="font-size: large;"></i>
+    </button>
+    <div class="banner w-100"></div>
+    <img class="avatar rounded-circle border border-4" [src]="this.user.imagePath || avatarFallback" alt="profile picture"/>
+    @if (this.user.id == this.ownerId){
+      <div class="d-flex align-items-center me-3 mt-3" style="font-size: larger; cursor: pointer;" (click)="editProfile()">
+        <i class="bi bi-pencil-square ms-auto"></i>
+      </div>
+    }
+
+  
+    <!-- Nombre -->
+    <h2 class="h4 text-center mt-5 mb-3">{{ this.user.username }}</h2>
+  
+    <!-- Tabs -->
+    <ul
+      class="nav nav-tabs justify-content-center border-0 mb-3"
+      role="tablist"
+    >
+      <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="activeTab === 'about'"
+          [ngClass]="{
+            'text-dark': activeTab === 'about',
+            'text-white': activeTab !== 'about'
+          }" (click)="activeTab = 'about'">
+          About me
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'communities'"[ngClass]="{'text-dark': activeTab === 'communities','text-white': activeTab !== 'communities'}" 
+          (click)="activeTab = 'communities'">
+          Communities
+        </button>
+      </li>
+    </ul>
+  
+    <div class="px-4 pb-4">
+      <!-- About me -->
+      <div *ngIf="activeTab === 'about'">
+        <p>{{ this.user.description || '— Nothing here yet —' }}</p>
+  
+        <h6 class="mt-4">Interests</h6>
+        <ng-container *ngIf="this.user?.interests?.length; else noTags">
+          <span class="badge bg-light text-light me-1 mb-1"*ngFor="let tag of this.user?.interests">#{{ tag }}</span>
+        </ng-container>
+        <ng-template #noTags>
+          <span class="text-light">None</span>
+        </ng-template>
+      </div>
+  
+      <!-- Communities -->
+      <div *ngIf="activeTab === 'communities'">
+  <!-- Comunidades del usuario -->
+  <div class="list-group list-group-flush" *ngIf="user?.communities?.length">
+      <div class="list-group-item bg-transparent d-flex justify-content-between align-items-center" *ngFor="let c of user?.communities">
+    
+        <!-- Nombre -->
+        <span class="fw-semibold text-light">{{ c.name }}</span>
+    
+        <!-- Botones -->
+        <div class="btn-group">
+          <button class="button2 btn-primary me-3 " (click)="viewCommunity(c.id)"> View </button>
+          @if (this.user.id == this.ownerId){
+            <button class="leave-button btn-danger" (click)="leaveCommunity(c.id, c.name)"> Leave </button>
+          }
+        </div>
+      </div>
+  </div>
+    
+    <!-- Sin comunidades -->
+    <p *ngIf="user && !user.communities.length" class="text-muted">
+      No perteneces a ninguna comunidad.
+    </p>
+      </div>
+  
+    </div>
+  </section>
+}
+
