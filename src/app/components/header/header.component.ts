@@ -23,6 +23,10 @@ export class HeaderComponent {
         this.router.navigate(['/']);
     }
 
+    goToUsersList() {
+        this.router.navigate(['users-list']);
+    }
+
     goToProfile() {
         this.router.navigate([{outlets: {modal: ['profile', this.user]}}]);
     }

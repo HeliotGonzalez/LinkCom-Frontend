@@ -76,6 +76,7 @@ export class AppComponent implements OnInit {
             .put('JoinRequests', new WebSocketService(socket, 'JoinRequests'))
             .put('Events', new WebSocketService(socket, 'Events'))
             .put('EventUser', new WebSocketService(socket, 'EventUser'))
+            .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'));
     }
 
     onSubmit() {

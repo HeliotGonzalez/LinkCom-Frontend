@@ -32,6 +32,7 @@ import { RegisterThirdStepComponent } from './pages/user-register/register-third
 import { CommunityEditComponent } from './pages/community-edit/community-edit.component';
 import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+import { UsersListComponent } from './pages/users-list/users-list.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
@@ -59,5 +60,6 @@ export const routes: Routes = [
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent},
     {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
-    { path: 'edit-profile', component: EditProfileComponent }
+    {path: 'edit-profile', component: EditProfileComponent },
+    {path: 'users-list', component: UsersListComponent}
 ];
