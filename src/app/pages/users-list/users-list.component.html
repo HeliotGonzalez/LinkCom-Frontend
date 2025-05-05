@@ -1,0 +1,38 @@
+<main>
+    <div class="container mt-4 p-4 rounded bg-primary text-light" id="user-list-container">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>All Users</h2>
+        <button class="btn btn-outline-light" (click)="toggleFriendRequestsPanel()">
+          <i class="bi bi-envelope-fill"></i> Friend Requests
+        </button>
+      </div>
+  
+      <div class="d-flex justify-content-between align-items-center my-3">
+        <input type="text" class="form-control w-50" placeholder="Search users..." [(ngModel)]="searchText">
+      </div>
+      
+      <div class="user-cards-container mt-3">
+        @if (filteredUsers().length > 0) {
+          @for (user of filteredUsers(); track user.id) {
+            <app-user-list-card
+              [user]="user"
+              (addFriend)="sendFriendRequest($event)">
+            </app-user-list-card>
+          }
+        } @else {
+          <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4">
+            No users found
+          </p>
+        }
+      </div>
+    </div>
+  
+    <!-- Friend Requests Panel -->
+    @if (showRequestsPanel) {
+      <app-friend-requests-panel
+        [isVisible]="showRequestsPanel"
+        (closePanel)="toggleFriendRequestsPanel()"
+      ></app-friend-requests-panel>
+    }
+  </main>
+  

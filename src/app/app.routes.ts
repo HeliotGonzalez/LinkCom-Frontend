@@ -65,7 +65,11 @@ import { RegisterThirdStepComponent } from './pages/user-register/register-third
 import { CommunityEditComponent } from './pages/community-edit/community-edit.component';
 import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+<<<<<<< HEAD
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
+=======
+import { UsersListComponent } from './pages/users-list/users-list.component';
+>>>>>>> d73d479 (feat: added user-list & friends requests.)
 
 export const routes: Routes = [
 <<<<<<< HEAD
@@ -140,6 +144,11 @@ export const routes: Routes = [
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent},
     {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
+<<<<<<< HEAD
     { path: 'edit-profile', component: EditProfileComponent }
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
+=======
+    {path: 'edit-profile', component: EditProfileComponent },
+    {path: 'users-list', component: UsersListComponent}
+>>>>>>> d73d479 (feat: added user-list & friends requests.)
 ];
