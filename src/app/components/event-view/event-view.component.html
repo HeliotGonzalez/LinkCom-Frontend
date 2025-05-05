@@ -1,0 +1,38 @@
+<article class="event d-flex flex-column overflow-hidden">
+    <div class="event-header d-flex align-items-center gap-2 w-100">
+        <div class="d-flex w-75">
+            <h2 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%">{{ event?.title }}</h2>
+        </div>
+        <div class="w-50 text-end">
+            {{ event?.date }}
+        </div>
+    </div>
+    <div class="event-body d-flex w-100">
+        <div class="pe-4 ps-1 w-50 overflow-auto">
+            <div [innerHTML]="event?.description" style="text-align: justify"></div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center w-50 h-100">
+            <img [src]="event?.imagePath" alt="Event image" (click)="openImageDialog()"
+                 class="event-image w-100 h-100 object-fit-cover">
+            <app-image-dialog
+                    [isVisible]="isDialogVisible"
+                    [imageUrl]="event?.imagePath"
+                    (close)="closeImageDialog()">
+            </app-image-dialog>
+        </div>
+    </div>
+    <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3 gap-2">
+        @if (!isDisabled) {
+            @if (event?.eventState === EventState.PENDING) {
+                <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
+            } @else {
+                <button class="button" (click)="joinEvent()">Join</button>
+            }
+        } @else {
+            <button class="leave-button" (click)="leaveEvent()">Leave</button>
+        }
+        @if (canRemove) {
+            <button class="leave-button" (click)="RemoveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(event!).build().execute()">Remove</button>
+        }
+    </div>
+</article>

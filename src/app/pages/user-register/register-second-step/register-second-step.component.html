@@ -1,0 +1,45 @@
+<main class="main">
+    <div class="form-card">
+        <app-form-steps [steps]="[
+                { step: 1, route: '/user-register/firstStep' },
+                { step: 2, route: '/user-register/secondStep' },
+                { step: 3, route: '/user-register/thirdStep' }
+            ]" [currentStep]="2" class="form-steps-circles-container"
+        ></app-form-steps>
+
+        <div class="register-form-header">
+            <div class="register-form-title-container text-center">
+                <h1 class="register-form-title">User Register</h1>
+                <h2 class="register-form-subtitle">Plase select a unique profile picture</h2>
+            </div>
+        </div>
+
+        <form class="register-form d-flex align-items-center">
+
+            <div class="position-relative">
+                <div class="input-container drop-zone d-flex flex-column align-items-center justify-content-center position-relative"
+                     (dragover)="onDragOver($event)"
+                     (drop)="onDrop($event)"
+                     (click)="triggerFileInput()">
+                    <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)"/>
+                    @if (!image) {
+                        <i class="bi-upload fs-5"></i>
+                        <p>Upload your image!</p>
+                    } @else {
+                        <div class="image-preview">
+                            <img [src]="image" alt="Loaded Image"/>
+                        </div>
+                    }
+                </div>
+                @if (image.length) {
+                    <i (click)="onRemoveImage()" class="d-flex bi-x-circle-fill fs-1 bg-white position-absolute remove-icon"></i>
+                }
+            </div>
+
+            <div class="form-footer d-flex justify-content-center gap-2 mt-3">
+                <button (click)="goToFirstStep()" type="button" class="form-button normal-empty-button">Back</button>
+                <button (click)="goToThirdStep()" type="button" class="form-button normal-button">Next</button>
+            </div>
+        </form>
+    </div>
+</main>

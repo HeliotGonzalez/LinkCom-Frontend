@@ -1,0 +1,43 @@
+<br><br>
+<main>
+<div id="users-container" class="container mt-4 p-4 rounded bg-primary text-light">
+    <div>
+        <button (click)="exitPage($event)" class="icon-button bg-transparent border-0"><i class="bi-arrow-left fs-1 text-white"></i></button>
+    </div>
+    <div class="d-flex flex-column align-items-center">
+        @defer (when community) {
+            <h1>{{ community.name }}'s</h1>
+        }
+        <h2>MEMBERS</h2>
+        <hr class="w-75">
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <input type="text" class="form-control w-50" placeholder="Search" [(ngModel)]="searchText">
+        <select class="form-select w-25" [(ngModel)]="filter" (change)="filterMembers()">
+          <option value="all">Everyone</option>
+          <option value="moderator">Moderators</option>
+          <option value="member">Members</option>
+        </select>
+      </div>
+ 
+    <!-- User Cards -->
+    @if (allMembers.length > 0) {
+      @for (member of allMembers; track member.id) {
+        <app-user-card
+            [username]="member.username"
+            [role]="moderators.includes(member) ? CommunityRole.MODERATOR : CommunityRole.MEMBER"
+            (roleChanged)="updateRole(member.id, $event)"
+        >
+        </app-user-card>
+      }
+    } @else {
+      <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4">No members found</p>
+    }
+    <div class="d-flex align-items-center justify-content-center p-3 gap-5">
+        <button (click)="saveChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-success fs-5">Save changes</button>
+        <button (click)="resetChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-danger fs-5">Reset changes</button>
+    </div>
+  </div>
+</main>
