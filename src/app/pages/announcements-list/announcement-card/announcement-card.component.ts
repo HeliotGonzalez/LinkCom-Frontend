@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from '../../services/api-service.service'; 
-import { AuthService } from '../../services/auth.service'; 
-import { Announce } from '../../interfaces/announce';
+import { ApiService } from '../../../services/api-service.service'; 
+import { AuthService } from '../../../services/auth.service'; 
+import { Announce } from '../../../interfaces/announce';
 import Swal from 'sweetalert2';
-import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
-import { CommunityService } from '../../../architecture/services/CommunityService';
+import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../../../architecture/services/CommunityService';
 
 @Component({
   selector: 'app-announcement-card',
@@ -41,7 +41,7 @@ export class AnnouncementCardComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
-          next: (response) => {
+          next: () => {
             Swal.fire({
               title: 'Deleted!',
               text: 'This announcement has been deleted.',
@@ -50,7 +50,7 @@ export class AnnouncementCardComponent implements OnInit {
               window.location.reload(); 
             })
           },
-          error: (error) => {
+          error: () => {
             Swal.fire({
               title: 'Error!',
               text: 'Could not delete the announcement.',
