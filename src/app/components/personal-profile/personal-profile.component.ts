@@ -1,13 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { User } from '../../architecture/model/User';
-import { ApiService } from '../services/api-service.service';
-import { AuthService } from '../services/auth.service';
+import { User } from '../../../architecture/model/User';
+import { ApiService } from '../../services/api-service.service';
+import { AuthService } from '../../services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { CommunityService } from '../../architecture/services/CommunityService';
-import { Notify } from '../services/notify';
-import { ServiceFactory } from '../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../../architecture/services/CommunityService';
+import { Notify } from '../../services/notify';
+import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
 
 @Component({
   selector: 'app-personal-profile',
@@ -16,39 +17,47 @@ import { ServiceFactory } from '../services/api-services/ServiceFactory.service'
   imports: [CommonModule, RouterModule]                 
 })
 export class PersonalProfileComponent implements OnInit {
-  @Input() parentUser: User | null = null;
+  userIdToShow: string | null = null;
 
   activeTab: 'about' | 'communities' | 'activities' = 'about';
   avatarFallback = 'LogoLinkComNegro.svg';
   user: User | null = null;
   ownerId: string = '';
+  imagePath: string = 'LogoLinkComNegro.svg'
 
-  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory, private location: Location) {
+  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory, private route: ActivatedRoute) {
     this.ownerId = this.AuthService.getUserUUID();
   }
 
   ngOnInit(): void {
-    if (this.parentUser){
-      this.user = this.parentUser;
-      return;
-    }
+    this.route.paramMap.subscribe(params => {
+      const idFromRoute = params.get('id');
+      this.userIdToShow = idFromRoute ?? this.AuthService.getUserUUID();
+      this.loadProfile(this.userIdToShow);
+    });
 
-    this.apiService.getUserProfile(this.AuthService.getUserUUID()).subscribe({
+
+  }
+
+  loadProfile(id: string){
+    this.apiService.getUserProfile(id).subscribe({
       next: (response: any) => {
-      const data = response.data;
-      const createdAt = new Date(data.created_at);
-      const communities = data.communities.map((c: any) => ({
-        ...c,
-        created_at: new Date(c.created_at)
-      }));
+        console.log('Response:', response);
+        const data = response.data;
+        const createdAt = new Date(data.created_at);
+        const communities = data.communities.map((c: any) => ({
+          ...c,
+          created_at: new Date(c.created_at)
+        }));
 
-      this.user = {id: data.id, username: data.username, description: data.description, email: data.email, imagePath: data.imagePath,
-        created_at: createdAt, interests: data.interests,
-        stats: {
-          communities: data.stats.communities,
-          eventsJoined: data.stats.eventsJoined
-        }, communities
-      };
+        this.user = {id: data.id, username: data.username, description: data.description, email: data.email, imagePath: data.imagePath,
+          created_at: createdAt, interests: data.interests,
+          stats: {
+            communities: data.stats.communities,
+            eventsJoined: data.stats.eventsJoined
+          }, communities
+        };
+        console.log('User data:', this.user);
       },
       error: (error: any) => {
         console.error('Error fetching user profile:', error);

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from '../services/api-service.service';
-import { Community } from '../interfaces/community';
+import { ApiService } from '../../services/api-service.service';
+import { Community } from '../../interfaces/community';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
 
@@ -19,6 +19,7 @@ export class CommunityEditComponent implements OnInit {
   community!: Community;
   fileToUpload: File | null = null;
   imageBase64!: string | null;
+  path: string | null = '';
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +32,8 @@ export class CommunityEditComponent implements OnInit {
     const state = window.history.state as { community?: Community };
     if (state.community) {
       this.community = state.community;
+      this.path = this.community.imagePath || '';
+      console.log('Path: ', this.path);
       console.log('Comunidad: ', this.community);
       this.buildFormFrom(this.community);
     }
@@ -67,6 +70,8 @@ export class CommunityEditComponent implements OnInit {
     const reader = new FileReader();
     reader.onload = () => {
       this.imageBase64 = reader.result as string;
+      this.path = reader.result as string;
+      console.log('Base64: ', this.imageBase64);
     };
     reader.readAsDataURL(this.fileToUpload);
   }
@@ -85,9 +90,9 @@ export class CommunityEditComponent implements OnInit {
       next: (response: any) => {
         Swal.fire({
           icon: 'success',
-          title: 'Comunidad actualizada',
-          text: 'La comunidad ha sido actualizada exitosamente.',
-          confirmButtonText: 'Aceptar'
+          title: 'Community updated',
+          text: 'The community has been updated successfully.',
+          confirmButtonText: 'Continue'
           }).then(() => {
             this.location.back();
         });
@@ -97,8 +102,8 @@ export class CommunityEditComponent implements OnInit {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: 'No se pudo actualizar la comunidad. Por favor, inténtelo de nuevo más tarde.',
-          confirmButtonText: 'Aceptar'
+          text: 'An error has occurred while updating the community.',
+          confirmButtonText: 'Accept'
         });
       }
     });

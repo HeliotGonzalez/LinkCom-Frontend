@@ -94,4 +94,12 @@
   color: darkred;
   background: white;
 }
+
+.imagen{
+  width: 60px; 
+  height: 60px; 
+  border-radius: 50%; 
+  object-fit: cover;
+  margin-right: 1em;
+}
   

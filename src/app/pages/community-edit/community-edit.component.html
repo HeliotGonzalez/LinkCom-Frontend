@@ -6,16 +6,8 @@
     <form [formGroup]="communityForm" (ngSubmit)="onSubmit()">
       <div class="d-flex justify-content-center mt-3 ">
           <label class="image-upload p-0 m-0">
-            <img
-              [src]="community.imagePath"
-              alt="Community Image"
-              class="community-img"
-            />
-            <input
-              type="file"
-              accept="image/png, image/jpeg"
-              (change)="onFileSelected($event)"
-            />
+            <img [src]="path" alt="Community Image"class="community-img"/>
+            <input type="file" accept="image/png, image/jpeg" (change)="onFileSelected($event)"/>
           </label>
       </div>
 

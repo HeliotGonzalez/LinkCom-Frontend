@@ -15,7 +15,7 @@
         <div class="collapse navbar-collapse text-center" id="navbarNav">
             <ul class="navbar-nav ms-auto me-3 ">
                 <li class="nav-item">
-                    <a class="nav-link active" routerLink="/">Home</a>
+                    <a class="nav-link active" routerLink="/homepage">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="communities">Communities</a>
@@ -35,8 +35,8 @@
                         <i class="bi bi-person-circle" style="font-size: 2rem; color: white;"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-centered" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" [routerLink]="[{ outlets: { modal: ['profile'] } }]">Profile</a></li>
-                        <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" (click)="goToProfile()" style="cursor: pointer;">Profile</a></li>
+                        <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Log out</a></li>
                     </ul>
                 </div>
             }
