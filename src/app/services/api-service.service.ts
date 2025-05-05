@@ -136,6 +136,8 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
-
+    getUserProfile(userID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
     
 }

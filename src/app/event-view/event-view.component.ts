@@ -9,13 +9,11 @@ import { EventCommentModalComponent } from "./event-comment-modal/event-comment-
 import { Comment } from '../../architecture/model/Comment';
 import {EventState} from "../../architecture/model/EventState";
 import {AcceptEventCommand} from "../commands/AcceptEventCommand";
-import { NgFor } from '@angular/common';
 @Component({
     selector: 'app-event-view',
     imports: [
         ImageDialogComponent,
         EventCommentModalComponent,
-        NgFor
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
