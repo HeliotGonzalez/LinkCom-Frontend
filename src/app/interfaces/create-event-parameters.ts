@@ -3,5 +3,5 @@ export interface CreateEventParameters {
     description: string;
     communityID: string;
     userID: string;
-    dateOfTheEvent: Date;
+    date: Date;
 }

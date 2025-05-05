@@ -36,7 +36,7 @@ export class HTTPEventService implements EventService {
     }
 
     removeEvent(eventID: string): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.delete<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/delete`);
+        return this.http.delete<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}`);
     }
 
     joinEvent(communityID: string, eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
