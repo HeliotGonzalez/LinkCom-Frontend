@@ -56,7 +56,7 @@ export class PersonalProfileComponent implements OnInit {
             communities: data.stats.communities,
             eventsJoined: data.stats.eventsJoined
           }, communities
-        };
+        } as User;
         console.log('User data:', this.user);
       },
       error: (error: any) => {
