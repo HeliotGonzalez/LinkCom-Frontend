@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
           <div *ngIf="comments.length > 0" class="mb-3">
-            <label class="form-label fw-bold">Comentarios anteriores:</label>
+            <label class="form-label fw-bold">Comentarios:</label>
             <ul class="list-group mb-2">
             <!-- Spinner visible mientras se cargan los comentarios -->
             <div *ngIf="loadingComments" class="spinner-container">
@@ -31,8 +31,8 @@
                     placeholder="Escribe tu comentario aquí..."></textarea>
         </div>
         <div class="modal-footer gap-2">
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-          <button type="button" class="btn btn-primary" (click)="submitComment()">Publicar</button>
+          <button type="button" class="button" (click)="submitComment()">Publicar</button>
+          <button type="button" class="leave-button" (click)="closeModal()">Cerrar</button>
         </div>
       </div>
     </div>
