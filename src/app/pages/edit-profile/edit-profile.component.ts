@@ -2,9 +2,9 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router }       from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ApiService }   from '../services/api-service.service';
-import { AuthService }  from '../services/auth.service';
-import { User }         from '../../architecture/model/User';
+import { ApiService }   from '../../services/api-service.service';
+import { AuthService }  from '../../services/auth.service';
+import { User }         from '../../../architecture/model/User';
 
 @Component({
   selector: 'app-edit-profile',

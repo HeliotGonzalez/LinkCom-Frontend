@@ -59,7 +59,13 @@ import {CommunityRequestsPanelComponent} from "./components/community-requests-p
 import { RegisterFirstStepComponent } from './pages/user-register/register-first-step/register-first-step.component';
 import { RegisterSecondStepComponent } from './pages/user-register/register-second-step/register-second-step.component';
 import { RegisterThirdStepComponent } from './pages/user-register/register-third-step/register-third-step.component';
+<<<<<<< HEAD
 >>>>>>> 45cb51e (refactor: New directory hierarchy.)
+=======
+import { CommunityEditComponent } from './pages/community-edit/community-edit.component';
+import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+>>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
 
 export const routes: Routes = [
 <<<<<<< HEAD
@@ -122,6 +128,18 @@ export const routes: Routes = [
     {path: 'calendar', component: EventsCommunityCalendarComponent, canActivate: [NoAuthGuard]},
     {path: 'announcementCreation', component: AnnouncementCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'moderators', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
+<<<<<<< HEAD
     {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]}
 >>>>>>> 393b45d (refactor: user registration steps and events views refactored.)
+=======
+    {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]},
+    {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
+    {path: 'header', component: HeaderComponent},
+    {path: 'announcementCreation', component: AnnouncementCreationComponent},
+    {path: 'announcementsList', component: AnnouncementsListComponent},
+    {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
+    {path: 'editCommunity', component: CommunityEditComponent},
+    {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
+    { path: 'edit-profile', component: EditProfileComponent }
+>>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
 ];
