@@ -9,6 +9,11 @@
   
       <div class="d-flex justify-content-between align-items-center my-3">
         <input type="text" class="form-control w-50" placeholder="Search users..." [(ngModel)]="searchText">
+      
+        <select class="form-select w-25" [(ngModel)]="filter">
+          <option value="all">All Users</option>
+          <option value="friends">Friends</option>
+        </select>
       </div>
       
       <div class="user-cards-container mt-3">

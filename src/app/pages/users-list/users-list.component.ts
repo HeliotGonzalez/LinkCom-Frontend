@@ -21,6 +21,7 @@ export class UsersListComponent implements OnInit {
   currentUserID!: string;
   showRequestsPanel: boolean = false;
   friends: string[] = [];
+  filter: string = 'all';
 
   constructor(
     private serviceFactory: ServiceFactory,
@@ -44,9 +45,10 @@ export class UsersListComponent implements OnInit {
 
 
   filteredUsers(): User[] {
-    return this.users.filter(user =>
-      user.username.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+    if (this.filter === 'friends') {
+      return this.users.filter(user => this.friends.includes(user.id) && user.username.toLowerCase().includes(this.searchText.toLowerCase()));
+    }
+    return this.users.filter(user => user.username.toLowerCase().includes(this.searchText.toLowerCase()));
   }
 
   sendFriendRequest(user: User) {
