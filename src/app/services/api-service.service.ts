@@ -5,7 +5,8 @@ import {Observable} from 'rxjs';
 import {CreateCommunityParameters} from "../interfaces/create-community-parameters";
 import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
-import {CommunityEvent} from "../interfaces/CommunityEvent";
+import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+import { User } from '../../architecture/model/User';
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -24,19 +25,20 @@ export class ApiService {
     
     // Obtener feed (eventos + noticias)
     getFeed(userId: string): Observable<any> {
+        console.log('Yendo al back con ID: ' + userId);
         return this.http.get(`${this.baseUrl}/feed?userId=${userId}`);
     }
 
     // Obtener comunidades a las que NO pertenece el usuario
-    getNonBelongingCommunities(userId: string): Observable<any> {
-        console.log('ID: ' + userId);
-        return this.http.get(`${this.baseUrl}/nonBelongingCommunities?userId=${userId}`);
+    getNonBelongingCommunities(userID: string): Observable<any> {
+        console.log('ID: ' + userID);
+        return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities/${userID}`);
     }
 
     // Obtener eventos para el calendario
     getEvents(userID: string): Observable<any> {
         console.log('ID: ' + userID);
-        return this.http.get(`${this.baseUrl}/getCalendarEvents?userID=${userID}`);
+        return this.http.get(`${this.baseUrl}/users/${userID}/events`);
     }
 
     // Se crea una instancia de EventUser en la base de datos (Usuario que pertenece a un evento)
@@ -46,13 +48,13 @@ export class ApiService {
     }
 
     // Un usuario se une a una comunidad
-    joinCommunity(userID: string, communityID: string): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinCommunity`, {userID, communityID});
+    joinCommunity(userID: string, communityId: string): Observable<any> {
+        return this.http.put(`${this.baseUrl}/communities/${communityId}/join`, { userID });
     }
 
     // Un usuario se une a una comunidad
-    joinEvent(userID: string, communityID: string, eventID: number): Observable<any> {
-        return this.http.post(`${this.baseUrl}/joinEvent`, {userID, eventID, communityID});
+    joinEvent(userID: string, communityID: string | undefined, eventID: string | undefined): Observable<any> {
+        return this.http.put(`${this.baseUrl}/events/${eventID}/join`, {userID, communityID});
     }
 
     createCommunity(data: CreateCommunityParameters) {
@@ -100,11 +102,11 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/communityEvents?communityID=${communityID}`);
     }
 
-    getUserEvents(userID: string): Observable<ApiResponse> {
-        return this.http.get<ApiResponse>(`${this.baseUrl}/userEvents?userID=${userID}`);
+    getUserEvents(userID: string): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.get<ApiResponse<CommunityEvent>>(`${this.baseUrl}/userEvents?userID=${userID}`);
     }
 
-    leaveEvent(userID: string, eventID: number) {
+    leaveEvent(userID: string, eventID: string) {
         return this.http.post(`${this.baseUrl}/leaveEvent`, {userID, eventID});
     }
 
@@ -128,13 +130,23 @@ export class ApiService {
         return this.http.get(`${this.baseUrl}/removeCommunity?communityID=${communityID}`);
     }
 
-    createAnnouncement(title: string, body: string, communityID: string, userID: string, communityName: string, publisherID: string) {
-        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, userID, communityName, publisherID});
+    createAnnouncement(title: string, body: string, communityID: string, publisherID: string) {
+        return this.http.post(`${this.baseUrl}/createAnnouncement`, {title, body, communityID, publisherID});
     }
 
     getAnnouncements(communityID: string): Observable<any> {
         return this.http.get(`${this.baseUrl}/announcements?communityID=${communityID}`);
     }
 
+    updateCommunity(id: string, data: FormData): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/communities/${id}`, data);
+    }
 
+    getUserProfile(userID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
+
+    updateUser(id: string, payload: Partial<User>): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
+    }
 }

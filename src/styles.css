@@ -21,8 +21,36 @@ header {
 main {
     height: 93.5vh;
     display: flex;
-    overflow: hidden;
+    overflow: auto;
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle, #2E3E7F, #5370E5);
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #2E3E7F, #5370E5);
+    border-radius: 15px;
+    border: 2px solid white;
+}
+
+main::-webkit-scrollbar {
+    display: none;
+}
+
+main::-webkit-scrollbar-track {
+    display: none;
+}
+
+main::-webkit-scrollbar-thumb {
+    display: none;
 }

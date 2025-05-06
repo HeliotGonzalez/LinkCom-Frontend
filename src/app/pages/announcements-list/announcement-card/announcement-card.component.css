@@ -1,0 +1,46 @@
+.announcement-card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    width: 100%;
+    height: 250px;
+    background: #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.announcement-card-img-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.announcement-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: 10px;
+}
+
+.announcement-card-info {
+    position: relative;
+    margin: 20px;
+}
+
+.announcement-card-body {
+    width: 100%;
+    height: auto;
+    text-overflow: ellipsis;
+}
+
+.announcement-card-publisher {
+    position: absolute;
+    right: 5%;
+    bottom: 0;
+    font-size: large;
+    font-weight: 600;
+}

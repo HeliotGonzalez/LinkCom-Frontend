@@ -1,0 +1,33 @@
+/* Puedes agregar estilos personalizados o ajustes sobre Bootstrap aquí */
+
+.hero-section {
+  background: linear-gradient(135deg, #e9f5ff 0%, #ffffff 100%);
+}
+
+.cta-section {
+  background: #f8f9fa;
+}
+
+main {
+  align-items: unset;
+  overflow: auto;
+  background: unset;
+}
+
+.button {
+  border-radius: 5px;
+  padding: 0.5rem 1.7rem;
+  background: #2E3E7F;
+  color: white;
+  border: 2px solid #2E3E7F;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
+  text-decoration: none;
+  cursor: pointer;
+}
+  
+.button:hover {
+  background: white;
+  color: #2E3E7F;
+  border: 2px solid #2E3E7F;
+}

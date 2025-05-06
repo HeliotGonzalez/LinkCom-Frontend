@@ -1,0 +1,88 @@
+.calendar-container {
+  padding: 20px;
+  width: 80%;
+  height: 100%;
+  background-color: white;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.calendar-space {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.image-modal
+{
+  align-items: center;
+  align-content: center;
+  display: flex;
+}
+
+
+img
+{
+  max-height: 25vh;
+  display: flex;
+  align-content: center;
+}
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 400px;     
+  margin: 0 auto 20px; 
+}
+
+
+.calendar-month {
+  border: 1px solid #ccc;
+  padding: 10px;
+  flex-grow: 1;
+}
+
+.internal-modal
+{
+  padding-left: 2em;
+}
+.td-calendar {
+  width: 80px;
+  height: 80px;
+  vertical-align: top;
+  position: relative;
+  padding: 0;        
+}
+.calendar-day {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;       
+  width: 100%;       
+  height: 100%;     
+  cursor: pointer;
+  position: relative;
+  padding: 5px;
+  text-align: center;
+}
+
+.today {
+  font-weight: bold;
+  color: red;
+}
+
+.event-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;  
+  gap: 3px;
+  width: 100%;             
+  margin-top: 5px;
+}
+
+.event-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}

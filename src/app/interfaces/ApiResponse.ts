@@ -1,4 +1,5 @@
-export interface ApiResponse {
+export interface ApiResponse<T> {
+    error?: string;
     message: string;
-    data: Record<string, any>;
+    data: T[];
 }
