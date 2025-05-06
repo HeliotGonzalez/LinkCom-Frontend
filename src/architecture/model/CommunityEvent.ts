@@ -4,7 +4,7 @@ export interface CommunityEvent {
     id?: string;
     title: string;
     description: string;
-    date: Date;
+    date: string;
     location: string;
     creatorID: string;
     communityID: string;
