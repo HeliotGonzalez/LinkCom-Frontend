@@ -42,6 +42,7 @@
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3">
         <!-- Botón para abrir el modal -->
 <<<<<<< HEAD
+<<<<<<< HEAD
         <button (click)="openCommentModal()" class="btn btn-primary">Ver Comentarios</button>
 
         <!-- Modal de Comentarios -->
@@ -68,6 +69,11 @@
 =======
         <button (click)="openCommentModal()" class="button">Comments</button>
 >>>>>>> 2ae6514 (style: comments texts are now in enghlish.)
+=======
+        @if (event?.eventState !== EventState.PENDING) {
+            <button (click)="openCommentModal()" class="button">Comments</button>
+        }
+>>>>>>> b8ac590 (fix: interests now work.)
 
 
         @if (!isDisabled) {
