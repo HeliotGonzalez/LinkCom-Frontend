@@ -16,6 +16,7 @@
           @for (user of filteredUsers(); track user.id) {
             <app-user-list-card
               [user]="user"
+              [isFriend]="friends.includes(user.id)"
               (addFriend)="sendFriendRequest($event)">
             </app-user-list-card>
           }
