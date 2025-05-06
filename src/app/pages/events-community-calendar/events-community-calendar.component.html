@@ -36,8 +36,7 @@
                           day === today &&
                           calendarMonth.month === currentMonth &&
                           calendarMonth.year === currentYear
-                      }"
-                      (click)="navigateToEvent(day)">
+                      }">
                       <span>{{ day ? day : '' }}</span>
                       @if (day && calendarEvents[day])
                       {
