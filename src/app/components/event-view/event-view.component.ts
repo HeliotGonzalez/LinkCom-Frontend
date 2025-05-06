@@ -8,11 +8,15 @@ import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
 import {JoinEventCommand} from "../../commands/JoinEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
+import { EventCommentModalComponent } from '../../event-view/event-comment-modal/event-comment-modal.component';
+import { EventService } from '../../../architecture/services/EventService';
+import { Comment } from '../../../architecture/model/Comment';
 
 @Component({
     selector: 'app-event-view',
     imports: [
-        ImageDialogComponent
+        ImageDialogComponent,
+        EventCommentModalComponent,
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
@@ -25,15 +29,28 @@ export class EventViewComponent {
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
     protected isDialogVisible: boolean = false;
+    protected isCommentModalVisible: boolean = false;
+    comments: Comment[] = [];
 
-    constructor(
-        protected serviceFactory: ServiceFactory
-    ) {
-    }
 
     ngOnInit() {
-        this.loggedUserID = (this.serviceFactory.get('auth') as AuthService).getUserUUID();
+        if (this.event) {
+            const eventId = this.event?.id ?? '';
+            (this.serviceFactory.get('events') as EventService).getComments(eventId).subscribe({
+                next: res => {
+                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
+                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
+                },
+                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
+            });
+        }
     }
+
+    constructor(
+        private authService: AuthService,
+        protected serviceFactory: ServiceFactory,
+        private notify: Notify
+    ) {}
 
     joinEvent() {
         this.joinEventEmitter.emit();
@@ -51,7 +68,28 @@ export class EventViewComponent {
         this.isDialogVisible = false;
     }
 
+    openCommentModal() {
+        this.isCommentModalVisible = true;
+    }
+
+    closeCommentModal() {
+        this.isCommentModalVisible = false;
+    }
+
+    createComment(comment: Comment) {
+        console.log(comment.body);
+        (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
+            next: () => {
+                this.notify.success(`You have published a comment`);
+                this.isCommentModalVisible = false;
+            },
+            error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        });
+    }
+
     protected readonly EventState = EventState;
+
+    acceptEvent() {}
 
     protected readonly AcceptEventCommand = AcceptEventCommand;
     protected readonly AuthService = AuthService;

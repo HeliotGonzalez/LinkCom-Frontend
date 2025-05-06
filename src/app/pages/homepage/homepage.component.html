@@ -1,8 +1,8 @@
-<main>
-    <div class="container-fluid py-4 a">
-        <div class="row">
+<main class="main">
+    <div class="container-fluid py-4 a h-100 overflow-hidden">
+        <div class="row h-100 overflow-auto">
             <!-- Columna Izquierda: Feed -->
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <section class="feed mb-4">
                     <h2 class="mb-3 text-center">Feed</h2>
                     @for (event of feedEvents; track event.id) {
@@ -14,10 +14,10 @@
                 </section>
             </div>
             <!-- Columna Derecha: Comunidades y Calendario -->
-            <div class="col-md-4">
+            <div class="col-md-4 h-100 overflow-auto">
                 <!-- Una sola tarjeta para comunidades -->
-                <div class="card mb-4 shadow-card">
-                    <div class="card-body">
+                <div class="card mb-4 shadow-card overflow-auto">
+                    <div class="card-body recommended-communities">
                         <h4 class="mb-3 text-center">Recommended communities</h4>
                         @for (community of communities; track community) {
                             <div class="community-item mb-2">

@@ -4,5 +4,13 @@
         <h1 class="announcement-card-title"> {{ announce.title }}</h1>
         <p class="announcement-card-body"> {{ announce.body }}</p>
         <p class="bi bi-person-circle announcement-card-publisher" style="font-size: 2.5em"></p>
+        @if (announce.publisherID === userId) {
+            <button 
+            (click)="deleteAnnouncement(announce.id)"
+            type="button"
+            class="btn btn-danger">
+                Delete
+            </button>
+        }
     </div>
 </div>

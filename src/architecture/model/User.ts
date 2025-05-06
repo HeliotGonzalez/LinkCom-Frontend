@@ -1,6 +1,7 @@
 import { Community } from "./Community";
 
 export interface User {
+    name: string;
     id: string;
     username: string;
     description: string | null;
