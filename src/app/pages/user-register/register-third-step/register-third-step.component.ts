@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { InterestTagComponent } from "../../../components/interest-tag/interest-tag.component";
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { FormStepsComponent } from '../../../components/form-steps/form-steps.component';
 
 @Component({
   selector: 'app-register-third-step',
-  imports: [InterestTagComponent, FormsModule],
+  imports: [InterestTagComponent, FormsModule, FormStepsComponent],
   templateUrl: './register-third-step.component.html',
   styleUrl: './register-third-step.component.css'
 })

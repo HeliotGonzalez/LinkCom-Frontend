@@ -10,16 +10,17 @@
 /* Estilo de la tarjeta del formulario */
 .form-card {
     width: 40rem; /* Reducido para que el formulario sea más compacto */
-    height: 80vh;
+    height: 100%;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     background: white;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 1.5rem;
     z-index: 1; /* Asegura que la tarjeta esté por encima del fondo */
     position: relative;
     margin: auto; /* Centra la tarjeta en la pantalla */
+    overflow: hidden;
   }
   
   /* Estilo del formulario de registro */
@@ -32,7 +33,6 @@
   
   /* Cabecera del formulario de registro */
   .register-form-header {
-    padding: 0.5rem;
     text-align: center;
   }
   
@@ -130,7 +130,6 @@
   .stepper-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 2rem;
   }
   
   .stepper {
