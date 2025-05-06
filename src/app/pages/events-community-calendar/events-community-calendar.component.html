@@ -36,8 +36,7 @@
                           day === today &&
                           calendarMonth.month === currentMonth &&
                           calendarMonth.year === currentYear
-                      }"
-                      (click)="navigateToEvent(day)">
+                      }">
                       <span>{{ day ? day : '' }}</span>
                       @if (day && calendarEvents[day])
                       {
@@ -70,8 +69,8 @@
         <h1 class=" modal-title fs-5" id="exampleModalLabel">{{selectedEvent?.title}}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div [@slide]="selectedEvent" class="d-flex image-modal">
+      <div class="modal-body internal-modal">
+        <div [@slide]="selectedEvent" class="image-modal d-flex justify-content-center align-items-center">
         <img [src]="selectedEvent?.imagePath">
         </div>
         <div [@fade]>

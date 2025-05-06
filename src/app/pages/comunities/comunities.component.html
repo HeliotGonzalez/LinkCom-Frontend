@@ -21,7 +21,7 @@
 
             <!-- Info y botón crear -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <p class="mb-0">
+                <p class="mb-0 text-white">
                     <strong>{{ Object.keys(communities).length }}</strong> communities were found!
                 </p>
                 <button class="button" (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepCommunityCreation').build().execute()">
