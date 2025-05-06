@@ -17,6 +17,7 @@ import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {Router} from "@angular/router";
 >>>>>>> ad5282f (feat: User profile is visible)
@@ -24,6 +25,8 @@ import {Router} from "@angular/router";
 =======
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 >>>>>>> 995ae32 (Style: Disabled create community)
+=======
+>>>>>>> b18b85f (fixed)
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -32,7 +35,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         HeaderComponent,
         CommonModule,
         RouterOutlet,
-        BrowserAnimationsModule
+        
     ],
     standalone: true
 })
