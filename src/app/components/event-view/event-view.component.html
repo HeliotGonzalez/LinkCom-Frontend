@@ -1,4 +1,5 @@
 <article class="event d-flex flex-column overflow-hidden">
+<<<<<<< HEAD
     <div class="event-header d-flex align-items-center gap-2 w-100">
 <<<<<<< HEAD
         <div class="d-flex w-75">
@@ -11,17 +12,29 @@
         <h1>{{event?.title}}</h1>
         {{ event?.date }}
 >>>>>>> af94eed (fix: Using a past  column dateOfTheEvent)
+=======
+    <div class="event-header d-flex flex-column w-100">
+        <div class="d-flex align-items-center gap-2 w-100">
+            <div class="d-flex w-75">
+                <h2 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%">{{ event?.title }}</h2>
+            </div>
+            <div class="w-50 text-end">
+                <span class="fw-lighter">{{ parseDateTimeLocal(event?.date!) }}</span>
+            </div>
+        </div>
+        <hr>
+>>>>>>> b50c42b (style: modified some style issues.)
     </div>
     <div class="event-body d-flex w-100">
         <div class="pe-4 ps-1 w-50 overflow-auto">
             <div [innerHTML]="event?.description" style="text-align: justify"></div>
         </div>
         <div class="d-flex align-items-center justify-content-center w-50 h-100">
-            <img [src]="event?.imagePath" alt="Event image" (click)="openImageDialog()"
+            <img [src]="event?.imagePath ? event?.imagePath : 'LogoLinkComNegro.svg'" alt="Event image" (click)="openImageDialog()"
                  class="event-image w-100 h-100 object-fit-cover">
             <app-image-dialog
                     [isVisible]="isDialogVisible"
-                    [imageUrl]="event?.imagePath"
+                    [imageUrl]="event?.imagePath ? event?.imagePath : 'LogoLinkComNegro.svg'"
                     (close)="closeImageDialog()">
             </app-image-dialog>
         </div>

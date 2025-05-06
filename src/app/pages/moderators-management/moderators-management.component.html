@@ -28,20 +28,20 @@
           <option value="member">Members</option>
         </select>
       </div>
- 
-    <!-- User Cards -->
-    @if (allMembers.length > 0) {
-      @for (member of allMembers; track member.id) {
-        <app-user-card
-            [username]="member.username"
-            [role]="moderators.includes(member) ? CommunityRole.MODERATOR : CommunityRole.MEMBER"
-            (roleChanged)="updateRole(member.id, $event)"
-        >
-        </app-user-card>
-      }
-    } @else {
-      <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4">No members found</p>
-    }
+    <section class="h-50 overflow-auto">
+        @if (allMembers.length > 0) {
+            @for (member of allMembers; track member.id) {
+                <app-user-card
+                        [username]="member.username"
+                        [role]="moderators.includes(member) ? CommunityRole.MODERATOR : CommunityRole.MEMBER"
+                        (roleChanged)="updateRole(member.id, $event)"
+                >
+                </app-user-card>
+            }
+        } @else {
+            <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4">No members found</p>
+        }
+    </section>
     <div class="d-flex align-items-center justify-content-center p-3 gap-5">
         <button (click)="saveChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-success fs-5">Save changes</button>
         <button (click)="resetChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-danger fs-5">Reset changes</button>

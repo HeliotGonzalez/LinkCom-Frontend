@@ -117,8 +117,8 @@ export class SecondEventFormComponent {
 >>>>>>> dd63d85 (fix: realtime of events panel and event form reloading error corrected.)
     }
 
-    private parseDate(date: string, time: string): Date {
-        return new Date(Date.parse(`${date}T${time}`));
+    private parseDate(date: string, time: string): string {
+        return new Date(Date.parse(`${date}T${time}`)).toISOString();
     }
 
     onDragOver(event: DragEvent) {
