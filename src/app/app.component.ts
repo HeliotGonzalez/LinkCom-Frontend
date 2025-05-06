@@ -15,7 +15,7 @@ import {WebSocketService} from "../architecture/io/WebSocketService";
 import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -24,6 +24,7 @@ import {AuthService} from "./services/auth.service";
         HeaderComponent,
         CommonModule,
         RouterOutlet,
+        BrowserAnimationsModule
     ],
     standalone: true
 })
