@@ -21,7 +21,7 @@ header {
 main {
     height: 93.5vh;
     display: flex;
-    overflow: hidden;
+    overflow: auto;
     justify-content: center;
     align-items: center;
     background: radial-gradient(circle, #2E3E7F, #5370E5);
