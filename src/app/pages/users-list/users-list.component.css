@@ -1,0 +1,10 @@
+button.btn-outline-light {
+  border: 1px solid white;
+}
+.user-cards-container {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-top: 1rem;
+}
+  
