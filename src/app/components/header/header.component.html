@@ -69,13 +69,13 @@
         <div class="collapse navbar-collapse text-center" id="navbarNav">
             <ul class="navbar-nav ms-auto me-3 ">
                 <li class="nav-item">
-                    <a class="nav-link active" routerLink="/homepage">Home</a>
+                    <a class="nav-link" routerLink="/homepage" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="communities">Communities</a>
+                    <a class="nav-link" routerLink="communities" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Communities</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="calendar">Calendar</a>
+                    <a class="nav-link" routerLink="calendar" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Calendar</a>
                 </li>
             </ul>
             @if (!this.user) {
