@@ -16,10 +16,14 @@ import {WebSocketService} from "../architecture/io/WebSocketService";
 import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
+<<<<<<< HEAD
 =======
 import {Router} from "@angular/router";
 >>>>>>> ad5282f (feat: User profile is visible)
 
+=======
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+>>>>>>> 995ae32 (Style: Disabled create community)
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -28,6 +32,7 @@ import {Router} from "@angular/router";
         HeaderComponent,
         CommonModule,
         RouterOutlet,
+        BrowserAnimationsModule
     ],
     standalone: true
 })

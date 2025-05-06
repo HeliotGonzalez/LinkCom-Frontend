@@ -49,11 +49,19 @@
             </div>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex flex-column align-items-center justify-content-center">
+                    
                     <div class="d-flex gap-3 p-3">
-                        <button class="button"
+                        @if (isUserJoined){
+                        <button class="button" 
                                 (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepEventCreation').withParameters({'communityID': community?.id!}).build().execute()">
                             Create Event
                         </button>
+                    } @else if (!isUserJoined) 
+                    {
+                        <button class="button" [disabled]="true" >
+                            Create Event
+                        </button>
+                    }
                         @if (isCreator() || isUserModerator) {
                             <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
                             <button class="button" (click)="showEventsRequestPanel()">Events Panel</button>
