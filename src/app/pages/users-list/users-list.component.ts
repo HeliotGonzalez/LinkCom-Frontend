@@ -20,6 +20,7 @@ export class UsersListComponent implements OnInit {
   users: User[] = [];
   currentUserID!: string;
   showRequestsPanel: boolean = false;
+  friends: string[] = [];
 
   constructor(
     private serviceFactory: ServiceFactory,
@@ -27,14 +28,20 @@ export class UsersListComponent implements OnInit {
     private notify: Notify
   ) {}
 
+
   ngOnInit() {
     this.currentUserID = this.auth.getUserUUID();
-    (this.serviceFactory.get('users') as UserService)
-      .getAllUsers()
-      .subscribe(res => {
-        this.users = res.data.filter(user => user.id !== this.currentUserID);
-      });
+    const userService = this.serviceFactory.get('users') as UserService;
+
+    userService.getAllUsers().subscribe(res => {
+      this.users = res.data.filter(user => user.id !== this.currentUserID);
+    });
+
+    userService.getFriends(this.currentUserID).subscribe(res => {
+      this.friends = res.data.map((f: User) => f.id);
+    });
   }
+
 
   filteredUsers(): User[] {
     return this.users.filter(user =>
