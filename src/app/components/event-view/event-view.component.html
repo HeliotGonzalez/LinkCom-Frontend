@@ -31,12 +31,10 @@
         }
 
         @if(isCommentModalVisible){
-            <app-event-comment-modal
-                [visible]="isCommentModalVisible"
-                [eventID]="event?.id!"
-                (commentSubmitted)="createComment($event)"
-                (closed)="closeCommentModal()"
-            ></app-event-comment-modal>
+            <app-comment-modal
+                [isVisible]="isCommentModalVisible"
+                (closeModal)="closeCommentModal()"
+            ></app-comment-modal>
         }
 
         @if (!isDisabled) {

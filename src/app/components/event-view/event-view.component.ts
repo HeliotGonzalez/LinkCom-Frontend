@@ -6,17 +6,16 @@ import {ServiceFactory} from "../../services/api-services/ServiceFactory.service
 import {Notify} from "../../services/notify";
 import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
-import {JoinEventCommand} from "../../commands/JoinEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
-import { EventCommentModalComponent } from '../../event-view/event-comment-modal/event-comment-modal.component';
 import { EventService } from '../../../architecture/services/EventService';
 import { Comment } from '../../../architecture/model/Comment';
+import {CommentModalComponent} from "../comment-modal/comment-modal.component";
 
 @Component({
     selector: 'app-event-view',
     imports: [
         ImageDialogComponent,
-        EventCommentModalComponent,
+        CommentModalComponent,
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
