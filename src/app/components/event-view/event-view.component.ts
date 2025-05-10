@@ -6,13 +6,23 @@ import {ServiceFactory} from "../../services/api-services/ServiceFactory.service
 import {Notify} from "../../services/notify";
 import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
-import {JoinEventCommand} from "../../commands/JoinEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
+<<<<<<< HEAD
+=======
+import { EventService } from '../../../architecture/services/EventService';
+import { Comment } from '../../../architecture/model/Comment';
+import {CommentModalComponent} from "../comment-modal/comment-modal.component";
+>>>>>>> 16c35fc (fix: import error fixed.)
 
 @Component({
     selector: 'app-event-view',
     imports: [
+<<<<<<< HEAD
         ImageDialogComponent
+=======
+        ImageDialogComponent,
+        CommentModalComponent,
+>>>>>>> 16c35fc (fix: import error fixed.)
     ],
     templateUrl: './event-view.component.html',
     standalone: true,

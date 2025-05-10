@@ -75,6 +75,15 @@
         }
 >>>>>>> b8ac590 (fix: interests now work.)
 
+<<<<<<< HEAD
+=======
+        @if(isCommentModalVisible){
+            <app-comment-modal
+                [isVisible]="isCommentModalVisible"
+                (closeModal)="closeCommentModal()"
+            ></app-comment-modal>
+        }
+>>>>>>> 16c35fc (fix: import error fixed.)
 
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
