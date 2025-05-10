@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Comment } from '../../architecture/model/Comment';  // Asegúrate de importar la estructura de los comentarios
+import { Comment } from '../../../architecture/model/Comment';  // Asegúrate de importar la estructura de los comentarios
 
 @Component({
   selector: 'app-comment-modal',
