@@ -1,1 +1,14 @@
-<p>message works!</p>
+<article [ngClass]="getClass()" class="message w-100 d-flex flex-column gap-2">
+    <div class="message-container d-flex align-items-center p-2">
+        {{message.body}}
+    </div>
+    <div class="message-card-footer d-flex align-items-center gap-2">
+        @if (own) {
+            <i (click)="removeMessage()" class="bi-trash mt-auto"></i>
+        } @else {
+            <i class="bi-flag mt-auto"></i>
+        }
+        <i class="bi-check2-all"></i>
+        <span class="fw-light">{{hour}}</span>
+    </div>
+</article>

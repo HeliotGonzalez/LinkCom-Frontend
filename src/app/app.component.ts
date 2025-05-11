@@ -18,6 +18,7 @@ import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {Router} from "@angular/router";
 >>>>>>> ad5282f (feat: User profile is visible)
@@ -27,6 +28,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 >>>>>>> 995ae32 (Style: Disabled create community)
 =======
 >>>>>>> b18b85f (fixed)
+=======
+import {CriteriaBuilderFactory} from "../architecture/io/criteria/CriteriaBuilderFactory";
+import {Filters} from "../architecture/io/criteria/Filters";
+import {Order} from "../architecture/io/criteria/Order";
+import {Criteria} from "../architecture/io/criteria/Criteria";
+import {CriteriaSerializer} from "../architecture/io/criteria/CriteriaSerializer";
+import {FilterOperator} from "../architecture/io/criteria/FilterOperator";
+import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
+>>>>>>> 814e53e (feat: messages functionallities implemented.)
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -71,6 +81,7 @@ export class AppComponent implements OnInit {
         });
         this.fillServiceFactory();
         this.fillSocketFactory();
+        this.fillCriteriaFactory();
     }
 
     private fillServiceFactory() {
@@ -81,6 +92,7 @@ export class AppComponent implements OnInit {
             .put('notify', this.notify)
             .put('auth', this.auth)
             .put('router', this.router)
+            .put('messages', new HTTPMessageService(this.http, this.url))
     }
 
     private fillSocketFactory() {
@@ -92,7 +104,8 @@ export class AppComponent implements OnInit {
             .put('JoinRequests', new WebSocketService(socket, 'JoinRequests'))
             .put('Events', new WebSocketService(socket, 'Events'))
             .put('EventUser', new WebSocketService(socket, 'EventUser'))
-            .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'));
+            .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'))
+            .put('Messages', new WebSocketService(socket, 'Messages'))
     }
 
     onSubmit() {
@@ -120,5 +133,24 @@ export class AppComponent implements OnInit {
     /** Cierra el modal navegando a outlet null */
     closeModal() {
         this.router.navigate([{ outlets: { modal: null } }]);
+    }
+
+    private fillCriteriaFactory() {
+        const factory = new CriteriaBuilderFactory();
+
+        factory.register('test', {build: (filters: Filters, order: Order, limit?: number, offset?: number) => new Criteria(filters, order, limit, offset)});
+
+        const test = factory.with(Filters.fromValues([
+            {field: 'from', operator: '=', value: 'userid1'},
+            {field: 'to', operator: '=', value: 'userid1'},
+            {field: 'from', operator: '=', value: 'userid2'},
+            {field: 'to', operator: '=', value: 'userid2'},
+        ]), Order.asc('userID')).build('test');
+
+        const serial = CriteriaSerializer.serialize(test);
+
+        console.log(serial);
+
+        console.log(JSON.parse(atob(serial)));
     }
 }

@@ -5,6 +5,8 @@
         </div>
     </div>
     <div class="flex-grow-1 h-100 d-flex align-items-center p-3">
-        <span class="fw-light">{{ user.username }}</span>
+        @defer (when user) {
+            <span class="fw-light">{{ user.username }}</span>
+        }
     </div>
 </article>
