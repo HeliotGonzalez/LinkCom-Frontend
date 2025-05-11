@@ -1,0 +1,29 @@
+textarea {
+    line-height: 1.7;
+    border-radius: 10px;
+    resize: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    height: auto;
+    outline: none;
+    border: none;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.3s ease;
+    transform-origin: bottom;
+    position: absolute;
+    bottom: 1rem;
+    max-height: 15rem;
+    width: 95%;
+}
+
+form {
+    position: relative;
+    width: 100%;
+    min-height: 4rem;
+    max-height: 17rem;
+}
+
+.h-separator {
+    height: 3px;
+    background: radial-gradient(circle, #eaeaea, white);
+}

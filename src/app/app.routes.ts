@@ -33,6 +33,7 @@ import { CommunityEditComponent } from './pages/community-edit/community-edit.co
 import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { UsersListComponent } from './pages/users-list/users-list.component';
+import {MessagesComponent} from "./pages/messages/messages.component";
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
@@ -61,5 +62,6 @@ export const routes: Routes = [
     {path: 'editCommunity', component: CommunityEditComponent},
     {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
     {path: 'edit-profile', component: EditProfileComponent },
-    {path: 'users-list', component: UsersListComponent}
+    {path: 'users-list', component: UsersListComponent},
+    {path: 'messages', component: MessagesComponent},
 ];
