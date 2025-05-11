@@ -4,9 +4,9 @@ import {Observable} from "rxjs";
 import {ApiResponse} from "../../app/interfaces/ApiResponse";
 
 export interface MessageService extends Service {
-    send(message: Message): void;
+    send(message: Message): Observable<void>;
     get(id: string): Observable<ApiResponse<Message>>;
     getBetween(from: string, to: string): Observable<ApiResponse<Message>>;
-    edit(message: Message): void;
-    delete(id: string): void;
+    edit(message: Message): Observable<void>;
+    delete(id: string): Observable<void>;
 }

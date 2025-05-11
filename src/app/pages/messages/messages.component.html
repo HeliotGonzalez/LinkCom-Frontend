@@ -16,9 +16,17 @@
             </h1>
             <div class="h-separator w-100"></div>
         </div>
-        <section class="messages-section d-flex flex-column overflow-y-auto">
-
+        <section class="messages-section d-flex flex-column p-3 overflow-y-auto">
+            @for (message of messages; track message.id) {
+                <app-message
+                        [message]="message"
+                        [own]="message.from === auth.getUserUUID()"
+                        (removeEmitter)="removeMessage($event)"
+                ></app-message>
+            }
         </section>
-        <app-input class="mt-auto"></app-input>
+        <app-input class="mt-auto"
+                   (sendMessageEmitter)="send($event)"
+        ></app-input>
     </div>
 </main>
