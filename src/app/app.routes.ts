@@ -69,7 +69,11 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
 =======
 import { UsersListComponent } from './pages/users-list/users-list.component';
+<<<<<<< HEAD
 >>>>>>> d73d479 (feat: added user-list & friends requests.)
+=======
+import {MessagesComponent} from "./pages/messages/messages.component";
+>>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
 
 export const routes: Routes = [
 <<<<<<< HEAD
@@ -149,6 +153,11 @@ export const routes: Routes = [
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing)
 =======
     {path: 'edit-profile', component: EditProfileComponent },
+<<<<<<< HEAD
     {path: 'users-list', component: UsersListComponent}
 >>>>>>> d73d479 (feat: added user-list & friends requests.)
+=======
+    {path: 'users-list', component: UsersListComponent},
+    {path: 'messages', component: MessagesComponent},
+>>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
 ];

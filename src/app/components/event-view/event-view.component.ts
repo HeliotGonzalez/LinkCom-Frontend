@@ -12,7 +12,12 @@ import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
 import { EventService } from '../../../architecture/services/EventService';
 import { Comment } from '../../../architecture/model/Comment';
 import {CommentModalComponent} from "../comment-modal/comment-modal.component";
+<<<<<<< HEAD
 >>>>>>> 16c35fc (fix: import error fixed.)
+=======
+import {User} from "../../../architecture/model/User";
+import {UserService} from "../../../architecture/services/UserService";
+>>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
 
 @Component({
     selector: 'app-event-view',
@@ -29,12 +34,20 @@ import {CommentModalComponent} from "../comment-modal/comment-modal.component";
     styleUrl: './event-view.component.css'
 })
 export class EventViewComponent {
-    @Input() event: CommunityEvent | null = null;
+    @Input() eventID!: string;
     @Input() canRemove: boolean = true;
     @Input() isDisabled: boolean = true;
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
+    protected event!: CommunityEvent;
+    protected creator!: User;
     protected isDialogVisible: boolean = false;
+<<<<<<< HEAD
+=======
+    protected isCommentModalVisible: boolean = false;
+    comments: Comment[] = [];
+
+>>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
 
     constructor(
         protected serviceFactory: ServiceFactory
@@ -43,6 +56,20 @@ export class EventViewComponent {
 
     ngOnInit() {
         this.loggedUserID = (this.serviceFactory.get('auth') as AuthService).getUserUUID();
+    }
+
+    ngOnInit() {
+        (this.serviceFactory.get('events') as EventService).getEvent(this.eventID).subscribe(res => {
+            this.event = {...res.data[0]};
+            (this.serviceFactory.get('users') as UserService).getUser(this.event.creatorID).subscribe( res => this.creator = res.data[0]);
+            (this.serviceFactory.get('events') as EventService).getComments(this.eventID).subscribe({
+                next: res => {
+                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
+                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
+                },
+                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
+            });
+        });
     }
 
     joinEvent() {
@@ -62,7 +89,10 @@ export class EventViewComponent {
     }
 
     protected readonly EventState = EventState;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
     protected readonly AcceptEventCommand = AcceptEventCommand;
     protected readonly AuthService = AuthService;
     protected loggedUserID!: string;
