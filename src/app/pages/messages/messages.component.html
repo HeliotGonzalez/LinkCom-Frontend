@@ -11,23 +11,29 @@
         <div class="separator"></div>
     </aside>
     <div class="w-75 h-100 d-flex flex-column bg-white">
-        <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
-            <h1 class="fw-lighter">
-                {{recipient?.username}}
-            </h1>
-            <div class="h-separator w-100"></div>
-        </div>
-        <section class="messages-section d-flex flex-column p-3 overflow-y-auto">
-            @for (message of messages; track message.id) {
-                <app-message
-                        [message]="message"
-                        [own]="message.from === auth.getUserUUID()"
-                        (removeEmitter)="removeMessage($event)"
-                ></app-message>
-            }
-        </section>
-        <app-input class="mt-auto"
-                   (sendMessageEmitter)="send($event)"
-        ></app-input>
+        @if (recipient) {
+            <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
+                <h1 class="fw-lighter">
+                    {{recipient?.username}}
+                </h1>
+                <div class="h-separator w-100"></div>
+            </div>
+            <section class="messages-section flex-grow-1 d-flex flex-column p-3 overflow-y-auto">
+                @for (messageID of Object.keys(messages); track messageID) {
+                    <app-message
+                            [message]="messages[messageID]"
+                            [own]="messages[messageID].from === auth.getUserUUID()"
+                            (removeEmitter)="removeMessage($event)"
+                    ></app-message>
+                }
+            </section>
+            <app-input class="mt-auto"
+                       (sendMessageEmitter)="send($event)"
+            ></app-input>
+        } @else {
+            <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+                <h1>Start chatting with someone you antisocial!</h1>
+            </div>
+        }
     </div>
 </main>
