@@ -16,17 +16,8 @@ export class Filter {
         const field = values.field;
         const operator = values.operator;
         const value = values.value;
-        if (!field || !operator || !value) throw new Error('Invalid filter');
+        if (!field || !operator || !value) throw new Error(`Invalid filter: ${field}.${operator}.${value}`);
         return new Filter(field, FilterOperator.fromValue(operator), value);
-    }
-
-    static buildOrFrom(filters: Filters) {
-        const value: string[] = [];
-        filters.getFilters().forEach(f => {
-            console.log(f.getOperator().toString());
-            value.push(`${f.getField()}.${f.getOperator()}.${f.getValue()}`)
-        });
-        return new Filter('', FilterOperator.fromValue('or'), value.join(','));
     }
 
     public getField() {
@@ -34,7 +25,7 @@ export class Filter {
     }
 
     public getOperator() {
-        return this.operator.getValue();
+        return this.operator;
     }
 
     public getValue() {

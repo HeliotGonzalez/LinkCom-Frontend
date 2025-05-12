@@ -4,7 +4,7 @@ export interface Message {
     to: string;
     body: string;
     isRead: boolean;
-    editedAt?: string;
-    deletedAt?: string;
+    edited_at?: string;
+    deleted_at?: string;
     created_at: string;
 }
