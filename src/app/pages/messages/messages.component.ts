@@ -25,7 +25,7 @@ import {RouterCommand} from "../../commands/RouterCommand";
 })
 export class MessagesComponent {
     protected users: User[] = [];
-    protected messages: Message[] = [];
+    protected messages: {[key: string]: Message} = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
 
@@ -45,11 +45,12 @@ export class MessagesComponent {
     ngOnInit() {
         this.route.paramMap.subscribe(params => {
             this.recipientID = params.get('id');
+            this.messages = {};
             if (this.recipientID)
                 this.recipientSubscription = (this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => this.recipient = res.data[0]);
             this.friendsSubscription = (this.serviceFactory.get('users') as UserService).getAllUsers().subscribe(res => {
                 this.users = [...res.data];
-                this.messagesSubscription = (this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => this.messages = [...res.data]);
+                this.messagesSubscription = (this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => res.data.forEach(m => this.messages[m.id!] = m));
             });
         });
         this.initializeSocketsListeners();
@@ -65,7 +66,7 @@ export class MessagesComponent {
         const message: Message = {
             from: this.auth.getUserUUID(),
             to: this.recipientID!,
-            body: body,
+            body: btoa(body),
             isRead: false,
             created_at: new Date().toISOString()
         };
@@ -77,21 +78,21 @@ export class MessagesComponent {
     }
 
     private initializeSocketsListeners() {
-        this.sockets.get('Messages').onInsert().subscribe(res => this.onInsertMessage(res.new as Message));
-        this.sockets.get('Messages').onUpdate().subscribe(res => this.onUpdateMessage(res.new as Message));
+        this.sockets.get('Messages').onInsert().subscribe(res => this.onChangeMessage(res.new as Message));
+        this.sockets.get('Messages').onUpdate().subscribe(res => this.onChangeMessage(res.new as Message));
         this.sockets.get('Messages').onDelete().subscribe(res => this.onDeleteMessage(res.old as Message));
     }
 
-    private onInsertMessage(message: Message) {
-        this.messages.push(message);
-    }
-
-    private onUpdateMessage(message: Message) {
+    private onChangeMessage(message: Message) {
+        if (message.from !== this.auth.getUserUUID() && message.to !== this.auth.getUserUUID()) return;
+        this.messages[message.id!] = message;
     }
 
     private onDeleteMessage(message: Message) {
-        this.messages = this.messages.filter(m => m.id !== message.id);
+        if (message.from !== this.auth.getUserUUID() && message.to !== this.auth.getUserUUID()) return;
+        delete this.messages[message.id!];
     }
 
     protected readonly RouterCommand = RouterCommand;
+    protected readonly Object = Object;
 }
