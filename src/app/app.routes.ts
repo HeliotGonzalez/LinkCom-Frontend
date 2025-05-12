@@ -64,4 +64,5 @@ export const routes: Routes = [
     {path: 'edit-profile', component: EditProfileComponent },
     {path: 'users-list', component: UsersListComponent},
     {path: 'messages', component: MessagesComponent},
+    {path: 'messages/:id', component: MessagesComponent}
 ];

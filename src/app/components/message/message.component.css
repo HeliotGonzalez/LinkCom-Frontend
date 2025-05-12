@@ -16,3 +16,7 @@
 .message-card-footer span {
     font-size: 0.7rem;
 }
+
+em {
+    color: grey;
+}

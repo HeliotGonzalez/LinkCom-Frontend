@@ -16,15 +16,19 @@ export class MessageComponent {
     @Output() removeEmitter = new EventEmitter<string>();
 
     ngOnInit() {
-        this.hour = `${new Date(this.message.created_at).getHours().toString()}:${new Date(this.message.created_at).getMinutes().toString()}`;
+        console.log(this.message);
     }
 
     getClass() {
         return this.own ? 'align-items-end' : 'align-items-start';
     }
 
+    deserializeDate(dateString: string) {
+        const date = new Date(dateString);
+        return `${date.getHours().toString()}:${date.getMinutes().toString()}`
+    }
+
     protected readonly Date = Date;
-    hour!: string;
 
     removeMessage() {
         this.removeEmitter.emit(this.message.id);
