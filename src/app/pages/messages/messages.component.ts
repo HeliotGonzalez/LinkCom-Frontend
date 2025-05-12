@@ -93,6 +93,5 @@ export class MessagesComponent {
         delete this.messages[message.id!];
     }
 
-    protected readonly RouterCommand = RouterCommand;
     protected readonly Object = Object;
 }

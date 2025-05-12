@@ -15,7 +15,7 @@ export interface FilterGroupInterface {
 export class Filters {
     private readonly filters: (Filter | FilterGroup)[];
 
-    constructor(filters: (Filter | FilterGroup)[]) {
+    constructor(filters: (Filter | FilterGroup)[] = []) {
         this.filters = filters;
     }
 
@@ -40,6 +40,11 @@ export class Filters {
         } else {
             return Filter.fromValues(f);
         }
+    }
+
+    public add(filter: Filter | FilterGroup): Filters {
+        this.filters.push(filter);
+        return this;
     }
 }
 
