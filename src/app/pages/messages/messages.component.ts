@@ -9,6 +9,9 @@ import {AuthService} from "../../services/auth.service";
 import {Message} from "../../../architecture/model/Message";
 import {MessageComponent} from "../../components/message/message.component";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
+import {Subscription} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
+import {RouterCommand} from "../../commands/RouterCommand";
 
 @Component({
     selector: 'app-messages',
@@ -23,27 +26,45 @@ import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.ser
 export class MessagesComponent {
     protected users: User[] = [];
     protected messages: Message[] = [];
-    protected recipient: string = "3c541401-7aeb-495e-80a2-487ff12ee29a";
+    protected recipientID: string | null = null;
+    protected recipient: User | null = null;
+
+    protected recipientSubscription: Subscription | null = null;
+    protected friendsSubscription: Subscription | null = null;
+    protected messagesSubscription: Subscription | null = null;
 
     constructor(
-        private serviceFactory: ServiceFactory,
+        private route: ActivatedRoute,
+        protected router: Router,
+        protected serviceFactory: ServiceFactory,
         private sockets: WebSocketFactory,
         protected auth: AuthService
     ) {
     }
 
     ngOnInit() {
-        (this.serviceFactory.get('users') as UserService).getAllUsers().subscribe(res => {
-            this.users = [...res.data];
-            (this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipient).subscribe(res => this.messages = [...res.data]);
+        this.route.paramMap.subscribe(params => {
+            this.recipientID = params.get('id');
+            if (this.recipientID)
+                this.recipientSubscription = (this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => this.recipient = res.data[0]);
+            this.friendsSubscription = (this.serviceFactory.get('users') as UserService).getAllUsers().subscribe(res => {
+                this.users = [...res.data];
+                this.messagesSubscription = (this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => this.messages = [...res.data]);
+            });
         });
         this.initializeSocketsListeners();
+    }
+
+    ngOnDestroy() {
+        this.recipientSubscription?.unsubscribe();
+        this.friendsSubscription?.unsubscribe();
+        this.messagesSubscription?.unsubscribe();
     }
 
     send(body: string) {
         const message: Message = {
             from: this.auth.getUserUUID(),
-            to: this.recipient,
+            to: this.recipientID!,
             body: body,
             isRead: false,
             created_at: new Date().toISOString()
@@ -71,4 +92,6 @@ export class MessagesComponent {
     private onDeleteMessage(message: Message) {
         this.messages = this.messages.filter(m => m.id !== message.id);
     }
+
+    protected readonly RouterCommand = RouterCommand;
 }

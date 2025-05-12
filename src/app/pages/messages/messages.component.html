@@ -3,6 +3,7 @@
         <section class="w-100 h-100 overflow-y-auto">
             @for (user of users; track user.id) {
                 <app-user-card
+                        (click)="router.navigate(['/messages', user.id])"
                     [userID]="user.id"
                 ></app-user-card>
             }
@@ -12,7 +13,7 @@
     <div class="w-75 h-100 d-flex flex-column bg-white">
         <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
             <h1 class="fw-lighter">
-                Pruebas
+                {{recipient?.username}}
             </h1>
             <div class="h-separator w-100"></div>
         </div>

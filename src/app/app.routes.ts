@@ -159,5 +159,9 @@ export const routes: Routes = [
 =======
     {path: 'users-list', component: UsersListComponent},
     {path: 'messages', component: MessagesComponent},
+<<<<<<< HEAD
 >>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
+=======
+    {path: 'messages/:id', component: MessagesComponent}
+>>>>>>> 2ff0225 (fix: messages pages now displays logic deletion.)
 ];
