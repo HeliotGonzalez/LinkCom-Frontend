@@ -84,12 +84,12 @@ export class MessagesComponent {
     }
 
     private onChangeMessage(message: Message) {
-        if (message.from !== this.auth.getUserUUID() && message.to !== this.auth.getUserUUID()) return;
+        if (message.from !== this.auth.getUserUUID() && message.to === this.recipientID || message.to !== this.auth.getUserUUID() && message.from === this.recipientID) return;
         this.messages[message.id!] = message;
     }
 
     private onDeleteMessage(message: Message) {
-        if (message.from !== this.auth.getUserUUID() && message.to !== this.auth.getUserUUID()) return;
+        if (message.from !== this.auth.getUserUUID() && message.to === this.recipientID || message.to !== this.auth.getUserUUID() && message.from === this.recipientID) return;
         delete this.messages[message.id!];
     }
 
