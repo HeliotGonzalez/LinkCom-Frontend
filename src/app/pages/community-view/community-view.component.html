@@ -1,13 +1,14 @@
-<main class="main d-flex flex-column flex-grow-1">
-    <div class="d-flex flex-column w-100 align-items-center">
+<main class="main d-flex flex-column">
+    <div class="members-list h-100 bg-warning w-25 position-absolute"></div>
+    <div class="community-content d-flex flex-column align-items-center">
         <div id="community-image-container"
              class="d-flex align-items-center justify-content-center overflow-hidden w-100 bg-white">
             <img [src]="this.community?.imagePath">
         </div>
-        <div id="community-name-container" class="d-flex align-items-center justify-content-center w-100">
-            <h1 class="fw-bold"> {{ this.community?.name }}'s Community </h1>
+        <div id="community-name-container" class="d-flex align-items-center justify-content-center p-4 w-100">
+            <h1 class="fw-bold"> {{ this.community?.name }} </h1>
         </div>
-        <div class="d-flex flex-column bg-white w-70">
+        <div class="d-flex flex-column bg-white w-50">
             <div id="announces-section-container" class="d-flex flex-column w-100">
                 <section id="announces-section" class="d-flex flex-column align-items-center h-100 overflow-auto">
                     @if (isUserJoined) {
@@ -42,11 +43,19 @@
             </div>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex flex-column align-items-center justify-content-center">
+                    
                     <div class="d-flex gap-3 p-3">
-                        <button class="button"
+                        @if (isUserJoined){
+                        <button class="button" 
                                 (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepEventCreation').withParameters({'communityID': community?.id!}).build().execute()">
                             Create Event
                         </button>
+                    } @else if (!isUserJoined) 
+                    {
+                        <button class="button" [disabled]="true" >
+                            Create Event
+                        </button>
+                    }
                         @if (isCreator() || isUserModerator) {
                             <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
                             <button class="button" (click)="showEventsRequestPanel()">Events Panel</button>
@@ -85,7 +94,7 @@
                 </div>
                 <section id="events-section" class="d-flex flex-column w-100">
                     @for (eventID of Object.keys(events); track eventID) {
-                        <app-event-view [event]="events[eventID]"
+                        <app-event-view [eventID]="eventID"
                                         [canRemove]="canLoggedUserRemoveEvent(eventID)"
                                         [isDisabled]="isUserInEvent(events[eventID])"
                                         (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
@@ -96,6 +105,7 @@
             </div>
         </div>
     </div>
+
     <app-community-requests-panel (eventEmitter)="closeRequestPanel()"
                                   [isVisible]="requestPanelVisible"/>
     <app-events-request-panel (eventEmitter)="closeEventsRequestPanel()"

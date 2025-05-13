@@ -22,4 +22,12 @@ export class HeaderComponent {
         this.user = this.authService.getUserUUID();
         this.router.navigate(['/']);
     }
+
+    goToUsersList() {
+        this.router.navigate(['users-list']);
+    }
+
+    goToProfile() {
+        this.router.navigate([{outlets: {modal: ['profile', this.user]}}]);
+    }
 }

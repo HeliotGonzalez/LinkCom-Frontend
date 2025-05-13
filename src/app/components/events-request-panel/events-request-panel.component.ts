@@ -13,7 +13,6 @@ import {EventState} from "../../../architecture/model/EventState";
     selector: 'app-events-request-panel',
     imports: [
         EventViewComponent
-
     ],
     templateUrl: './events-request-panel.component.html',
     standalone: true,

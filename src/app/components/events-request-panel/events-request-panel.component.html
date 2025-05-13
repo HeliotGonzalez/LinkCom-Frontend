@@ -10,13 +10,12 @@
                 </div>
                 <div class="d-flex align-items-center flex-column p-2">
                     <hr class="w-75">
-                    Events requests
                 </div>
             </div>
             <div class="requests-section-container w-100 overflow-hidden">
                 <section class="requests-section d-flex flex-column w-100 p-5 gap-3 h-100 overflow-auto">
                     @for (eventID of Object.keys(eventRequests); track eventID) {
-                        <app-event-view [event]="eventRequests[eventID]"
+                        <app-event-view [eventID]="eventID!"
                                         [isDisabled]="false"
                                         (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(eventRequests[eventID]).withUser(authService.getUserUUID()).build().execute()"
                                         (leaveEventEmitter)="LeaveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(eventRequests[eventID]).withUser(authService.getUserUUID()).build().execute()"

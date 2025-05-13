@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ApiService } from '../../../services/api-service.service'; 
-import { AuthService } from '../../../services/auth.service'; 
-import { Announce } from '../../../interfaces/announce';
+import { ApiService } from '../../../services/api-service.service';
+import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
 import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../../architecture/services/CommunityService';
+import { Router } from '@angular/router';
+import { Announce } from '../../../interfaces/announce';
 
 @Component({
   selector: 'app-announcement-card',
