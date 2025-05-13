@@ -12,11 +12,13 @@ import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.ser
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RouterCommand} from "../../commands/RouterCommand";
+import { UsersListComponent } from '../users-list/users-list.component';
 
 @Component({
     selector: 'app-messages',
     imports: [
         InputComponent,
+        UsersListComponent,
         UserCardComponent,
         MessageComponent
     ],
