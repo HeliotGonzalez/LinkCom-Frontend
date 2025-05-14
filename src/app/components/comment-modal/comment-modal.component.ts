@@ -4,6 +4,7 @@ import { Comment } from '../../../architecture/model/Comment';  // Asegúrate de
 @Component({
   selector: 'app-comment-modal',
   templateUrl: './comment-modal.component.html',
+  standalone: true,
   styleUrls: ['./comment-modal.component.css']
 })
 export class CommentModalComponent {

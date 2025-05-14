@@ -12,13 +12,15 @@ import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.ser
 import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Notify} from "../../services/notify";
+import {UsersListComponent} from "../users-list/users-list.component";
 
 @Component({
     selector: 'app-messages',
     imports: [
         InputComponent,
         UserCardComponent,
-        MessageComponent
+        MessageComponent,
+        UsersListComponent
     ],
     templateUrl: './messages.component.html',
     standalone: true,
@@ -33,11 +35,7 @@ export class MessagesComponent {
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
 
-    protected paramsSubscription: Subscription | null = null;
-    protected recipientSubscription: Subscription | null = null;
-    protected friendsSubscription: Subscription | null = null;
-    protected messagesSubscription: Subscription | null = null;
-    protected socketSubscriptions : Subscription[] = [];
+    protected subscriptions: Subscription[] = [];
 
     constructor(
         private route: ActivatedRoute,
@@ -50,32 +48,29 @@ export class MessagesComponent {
     }
 
     ngOnInit() {
-        this.paramsSubscription = this.route.paramMap.subscribe(params => {
+        this.subscriptions.push(this.route.paramMap.subscribe(params => {
             this.restart();
             this.recipientID = params.get('id');
             if (this.recipientID)
-                this.recipientSubscription = (this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => {
+                this.subscriptions.push((this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => {
                     this.recipient = res.data[0];
                     this.initializeSocketsListeners();
-                });
-            this.friendsSubscription = (this.serviceFactory.get('users') as UserService).getFriends(this.auth.getUserUUID()).subscribe(res => {
+                }));
+            this.subscriptions.push((this.serviceFactory.get('users') as UserService).getFriends(this.auth.getUserUUID()).subscribe(res => {
                 this.users = [...res.data];
-                this.messagesSubscription = (this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
+                this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
                     this.markAsRead(Object.values(this.messages));
-                });
-            });
-        });
+                }));
+            }));
+        }));
     }
 
     restart() {
         this.messages = {};
         this.recipientID = null;
         this.recipient = null;
-        if (this.recipientSubscription) this.recipientSubscription?.unsubscribe();
-        if (this.friendsSubscription) this.friendsSubscription?.unsubscribe();
-        if (this.messagesSubscription) this.messagesSubscription?.unsubscribe();
-        this.socketSubscriptions.forEach(s => s.unsubscribe());
+        this.subscriptions.forEach(s => s.unsubscribe());
     }
 
     ngOnDestroy() {
@@ -105,9 +100,9 @@ export class MessagesComponent {
     }
 
     private initializeSocketsListeners() {
-        this.socketSubscriptions.push(this.sockets.get('Messages').onInsert().subscribe(res => this.onChangeMessage(res.new as Message)));
-        this.socketSubscriptions.push(this.sockets.get('Messages').onUpdate().subscribe(res => this.onChangeMessage(res.new as Message)));
-        this.socketSubscriptions.push(this.sockets.get('Messages').onDelete().subscribe(res => this.onDeleteMessage(res.old as Message)));
+        this.subscriptions.push(this.sockets.get('Messages').onInsert().subscribe(res => this.onChangeMessage(res.new as Message)));
+        this.subscriptions.push(this.sockets.get('Messages').onUpdate().subscribe(res => this.onChangeMessage(res.new as Message)));
+        this.subscriptions.push(this.sockets.get('Messages').onDelete().subscribe(res => this.onDeleteMessage(res.old as Message)));
     }
 
     private onChangeMessage(message: Message) {
