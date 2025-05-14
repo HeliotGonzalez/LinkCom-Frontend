@@ -27,7 +27,7 @@ export class HTTPMessageService implements MessageService {
                 }
             ])
         ));
-        return firstValueFrom(this.http.get<ApiResponse<Message>>(`${this.url}/${serial}`)).then(res => res.data.map(m => m.from !== id ? m.from : m.to));
+        return this.http.get<ApiResponse<Message>>(`${this.url}/${serial}`);
     }
 
     markAsRead(ids: string[]): Observable<void> {
