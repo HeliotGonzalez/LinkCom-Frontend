@@ -1,8 +1,10 @@
 .message-container {
     border: 2px solid #5b75de;
     border-radius: 10px;
-    max-width: 45%;
-    width: fit-content;
+    max-width: fit-content;
+    background: white;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .self-message {
@@ -19,4 +21,10 @@
 
 em {
     color: grey;
+}
+
+.removing:hover {
+    padding: 0.7rem;
+    background: #eeeeee;
+    border-radius: 10px;
 }

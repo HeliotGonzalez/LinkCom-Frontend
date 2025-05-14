@@ -4,7 +4,7 @@ import {FilterGroup, FilterGroupLogic} from "./FilterGroup";
 export interface FilterInterface {
     field: string;
     operator: string;
-    value: string;
+    value: any;
 }
 
 export interface FilterGroupInterface {
@@ -20,9 +20,8 @@ export class Filters {
     }
 
     static fromValues(filters: (FilterInterface | FilterGroupInterface)[]): Filters {
-        console.log(filters)
-       const filtersArray: (Filter | FilterGroup)[] = [];
-       filters.forEach(f => filtersArray.push(this.buildFilterFrom(f)));
+        const filtersArray: (Filter | FilterGroup)[] = [];
+        filters.forEach(f => filtersArray.push(this.buildFilterFrom(f)));
         return new Filters(filtersArray)
     }
 

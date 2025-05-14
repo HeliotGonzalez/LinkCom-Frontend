@@ -7,6 +7,7 @@ import {UserService} from "../../../architecture/services/UserService";
     selector: 'app-user-card',
     imports: [],
     templateUrl: './user-card.component.html',
+    standalone: true,
     styleUrl: './user-card.component.css'
 })
 export class UserCardComponent {

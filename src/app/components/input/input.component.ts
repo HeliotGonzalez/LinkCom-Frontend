@@ -2,12 +2,13 @@ import {Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/c
 import {FormsModule} from "@angular/forms";
 
 @Component({
-  selector: 'app-input',
+    selector: 'app-input',
     imports: [
         FormsModule
     ],
-  templateUrl: './input.component.html',
-  styleUrl: './input.component.css'
+    templateUrl: './input.component.html',
+    standalone: true,
+    styleUrl: './input.component.css'
 })
 export class InputComponent {
     @ViewChild('textarea') textareaRef!: ElementRef<HTMLTextAreaElement>;

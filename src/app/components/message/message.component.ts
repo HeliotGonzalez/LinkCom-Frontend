@@ -8,12 +8,15 @@ import {NgClass} from "@angular/common";
         NgClass
     ],
     templateUrl: './message.component.html',
+    standalone: true,
     styleUrl: './message.component.css'
 })
 export class MessageComponent {
     @Input() message!: Message;
     @Input() own!: boolean;
+    @Input() isRemoving: boolean = false;
     @Output() removeEmitter = new EventEmitter<string>();
+    @Output() addToRemoveListEmitter = new EventEmitter<string>();
 
     getClass() {
         return this.own ? 'align-items-end' : 'align-items-start';
@@ -31,6 +34,10 @@ export class MessageComponent {
     }
 
     deserialize(text: string) {
-        return atob(text);
+        return decodeURIComponent(text);
+    }
+
+    addToRemoveList() {
+        this.addToRemoveListEmitter.emit(this.message.id);
     }
 }

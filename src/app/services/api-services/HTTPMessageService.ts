@@ -1,4 +1,4 @@
-import {Observable} from "rxjs";
+import {firstValueFrom, Observable} from "rxjs";
 import {Message} from "../../../architecture/model/Message";
 import {MessageService} from "../../../architecture/services/MessageService";
 import {ApiResponse} from "../../interfaces/ApiResponse";
@@ -8,10 +8,35 @@ import {Criteria} from "../../../architecture/io/criteria/Criteria";
 import {Filters} from "../../../architecture/io/criteria/Filters";
 import {Order} from "../../../architecture/io/criteria/Order";
 import {FilterGroupLogic} from "../../../architecture/io/criteria/FilterGroup";
+import { User } from "../../../architecture/model/User";
+import {Filter} from "../../../architecture/io/criteria/Filter";
 
 export class HTTPMessageService implements MessageService {
 
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    getUsersWithChat(id: string): Observable<ApiResponse<Message>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {
+                    logic: FilterGroupLogic.OR, filters: [
+                        {field: 'from', operator: 'eq', value: id},
+                        {field: 'to', operator: 'eq', value: id}
+                    ]
+                }
+            ])
+        ));
+        return firstValueFrom(this.http.get<ApiResponse<Message>>(`${this.url}/${serial}`)).then(res => res.data.map(m => m.from !== id ? m.from : m.to));
+    }
+
+    markAsRead(ids: string[]): Observable<void> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'id', operator: 'in', value: ids}
+            ])
+        ))
+        return this.http.patch<void>(`${this.url}/messages/${serial}`, {isRead: true});
     }
 
     send(message: Message): Observable<void> {
