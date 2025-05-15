@@ -15,6 +15,7 @@ import {Notify} from "../../services/notify";
 import {UsersListComponent} from "../users-list/users-list.component";
 import {NotificationService} from "../../../architecture/services/NotificationService";
 import {SendMessageCommand} from "../../commands/SendMessageCommand";
+import {DataCacheService} from "../../services/cache/data-cache.service";
 
 @Component({
     selector: 'app-messages',
@@ -33,10 +34,9 @@ export class MessagesComponent {
     @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
     protected users: User[] = [];
-    protected messages: {[key: string]: Message} = {};
+    protected messages: { [key: string]: Message } = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
-    protected loading: boolean = true;
 
     protected subscriptions: Subscription[] = [];
 
@@ -46,7 +46,8 @@ export class MessagesComponent {
         protected serviceFactory: ServiceFactory,
         private sockets: WebSocketFactory,
         protected auth: AuthService,
-        protected notify: Notify
+        protected notify: Notify,
+        protected cache: DataCacheService
     ) {
     }
 
@@ -54,7 +55,7 @@ export class MessagesComponent {
         this.route.paramMap.subscribe(params => {
             this.restart();
             this.recipientID = params.get('id');
-            this.loading = false;
+            if (!this.cache.containsKey('messages')) this.cache.createCacheFor('messages');
             if (this.recipientID)
                 this.subscriptions.push((this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => {
                     this.recipient = res.data[0];
@@ -62,8 +63,10 @@ export class MessagesComponent {
                 }));
             this.subscriptions.push((this.serviceFactory.get('users') as UserService).getFriends(this.auth.getUserUUID()).subscribe(res => {
                 this.users = [...res.data];
-                this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
+                if (this.cache.getCacheFor('messages').containsKey(this.recipientID!)) this.messages = this.cache.getCacheFor('messages').get(this.recipientID!);
+                else this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
+                    this.cache.getCacheFor('messages').put(this.recipientID!, {...this.messages});
                     this.markAsRead(Object.values(this.messages));
                 }));
             }));
@@ -71,6 +74,7 @@ export class MessagesComponent {
     }
 
     restart() {
+        if (this.recipientID) this.cache.getCacheFor('messages').put(this.recipientID, {...this.messages});
         this.messages = {};
         this.recipient = null;
         this.subscriptions.forEach(s => s.unsubscribe());
@@ -83,10 +87,12 @@ export class MessagesComponent {
     send(body: string) {
         SendMessageCommand.Builder.create()
             .withFactory(this.serviceFactory)
-            .withMessage({from: this.auth.getUserUUID(),
+            .withMessage({
+                from: this.auth.getUserUUID(),
                 to: this.recipientID!,
                 body: encodeURIComponent(body),
-                created_at: new Date().toISOString()})
+                created_at: new Date().toISOString()
+            })
             .build().execute()
         this.scrollToBottom();
     }
