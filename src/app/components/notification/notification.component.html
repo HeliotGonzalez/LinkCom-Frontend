@@ -1,0 +1,12 @@
+<article class="w-100 d-flex align-items-center rounded-3 bg-body-secondary p-2" style="height: 5rem">
+    <div class="w-75 h-100 d-flex align-items-center gap-1 justify-content-end">
+        <i class="bi-chat-dots" style="color: black"></i>
+        @defer (when notification) {
+            <span style="color: darkslategray; font-size: 0.8rem">{{notificationMessageMap[notification.type.toString()]}}</span>
+        }
+    </div>
+    <div class="w-25 h-100 d-flex align-items-center justify-content-center">
+        <i class="bi-x text-black"></i>
+        <i class="bi-check2 text-black"></i>
+    </div>
+</article>

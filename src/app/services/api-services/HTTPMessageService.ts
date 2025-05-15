@@ -25,7 +25,7 @@ export class HTTPMessageService implements MessageService {
                         {field: 'to', operator: 'eq', value: id}
                     ]
                 }
-            ])
+            ]),
         ));
         return this.http.get<ApiResponse<Message>>(`${this.url}/${serial}`);
     }
@@ -36,11 +36,11 @@ export class HTTPMessageService implements MessageService {
                 {field: 'id', operator: 'in', value: ids}
             ])
         ))
-        return this.http.patch<void>(`${this.url}/messages/${serial}`, {isRead: true});
+        return this.http.patch<void>(`${this.url}/messages/${serial}`, {read_at: new Date()});
     }
 
-    send(message: Message): Observable<void> {
-        return this.http.put<void>(`${this.url}/messages`, message);
+    send(message: Message): Observable<ApiResponse<Message>> {
+        return this.http.put<ApiResponse<Message>>(`${this.url}/messages`, message);
     }
 
     get(id: string): Observable<ApiResponse<Message>> {

@@ -16,11 +16,14 @@ import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
 import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
+import {NotificationsComponent} from "./components/notifications/notifications.component";
+import {HTTPNotificationService} from "./services/api-services/HTTPNotificationService";
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
     imports: [
+        NotificationsComponent,
         HeaderComponent,
         CommonModule,
         RouterOutlet,
@@ -67,6 +70,7 @@ export class AppComponent implements OnInit {
             .put('auth', this.auth)
             .put('router', this.router)
             .put('messages', new HTTPMessageService(this.http, this.url))
+            .put('notifications', new HTTPNotificationService(this.http, this.url))
     }
 
     private fillSocketFactory() {
@@ -80,6 +84,7 @@ export class AppComponent implements OnInit {
             .put('EventUser', new WebSocketService(socket, 'EventUser'))
             .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'))
             .put('Messages', new WebSocketService(socket, 'Messages'))
+            .put('Notifications', new WebSocketService(socket, 'Notifications'))
     }
 
     onSubmit() {

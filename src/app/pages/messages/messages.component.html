@@ -11,13 +11,15 @@
         <div class="separator"></div>
     </aside>
     <div class="w-75 h-100 d-flex flex-column bg-white">
-        @if (recipient) {
-            <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
-                <h1 class="fw-lighter">
-                    {{recipient.username}}
-                </h1>
-                <div class="h-separator w-100"></div>
-            </div>
+        @if (recipientID) {
+            @defer (when recipient) {
+                <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
+                    <h1 class="fw-lighter">
+                        {{recipient!.username}}
+                    </h1>
+                    <div class="h-separator w-100"></div>
+                </div>
+            }
             <section #withScroll class="messages-section flex-grow-1 d-flex flex-column p-3 overflow-y-auto">
                 @for (messageID of Object.keys(messages); track messageID) {
                     <app-message
