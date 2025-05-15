@@ -1,21 +1,24 @@
 <div class="card my-2 p-3 d-flex flex-row align-items-center justify-content-between">
     <div class="d-flex align-items-center">
-      <div class="rounded-circle bg-dark text-light d-flex justify-content-center align-items-center"
-           style="width: 40px; height: 40px;">
-        <i class="fa fa-user"></i>
-      </div>
-      <span class="ms-3">{{ user.username }}</span>
+        <div class="rounded-circle bg-dark text-light d-flex justify-content-center align-items-center"
+             style="width: 40px; height: 40px;">
+            <i class="fa fa-user"></i>
+        </div>
+        <span class="ms-3">{{ user.username }}</span>
     </div>
     <div>
-      <button class="btn btn-outline-light btn-sm me-2" (click)="viewProfile()">
-        <i class="bi bi-person-lines-fill"></i> View Profile
-      </button>
-      
-      @if (!isFriend) {
-        <button class="btn btn-success btn-sm" (click)="requestFriend()">
-          <i class="bi bi-person-plus-fill"></i> Add Friend
+        <button class="btn btn-outline-light btn-sm me-2" (click)="viewProfile()">
+            <i class="bi bi-person-lines-fill"></i> View Profile
         </button>
-      }
-    </div>    
-  </div>
+        <button class="btn btn-secondary btn-sm" (click)="goToChat()">
+            <i class="bi bi-chat-fill"></i> Go to chat
+        </button>
+
+        @if (!isFriend) {
+            <button class="btn btn-success btn-sm" (click)="requestFriend()">
+                <i class="bi bi-person-plus-fill"></i> Add Friend
+            </button>
+        }
+    </div>
+</div>
   

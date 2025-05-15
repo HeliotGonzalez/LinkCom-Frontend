@@ -1,4 +1,4 @@
-import {firstValueFrom, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {Message} from "../../../architecture/model/Message";
 import {MessageService} from "../../../architecture/services/MessageService";
 import {ApiResponse} from "../../interfaces/ApiResponse";
@@ -8,12 +8,57 @@ import {Criteria} from "../../../architecture/io/criteria/Criteria";
 import {Filters} from "../../../architecture/io/criteria/Filters";
 import {Order} from "../../../architecture/io/criteria/Order";
 import {FilterGroupLogic} from "../../../architecture/io/criteria/FilterGroup";
-import { User } from "../../../architecture/model/User";
-import {Filter} from "../../../architecture/io/criteria/Filter";
+import { UserChat } from "../../../architecture/model/UserChat";
 
 export class HTTPMessageService implements MessageService {
 
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    getChatBetween(from: string, to: string): Observable<ApiResponse<UserChat>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'from', operator: 'eq', value: from},
+                {field: 'to', operator: 'eq', value: to}
+            ]),
+            Order.asc('last_used_at')
+        ));
+        return this.http.get<ApiResponse<UserChat>>(`${this.url}/messages/chats/${serial}`);
+    }
+
+    hideChatBetween(from: string, to: string): Observable<ApiResponse<UserChat>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'from', operator: 'eq', value: from},
+                {field: 'to', operator: 'eq', value: to}
+            ])
+        ));
+        return this.http.patch<ApiResponse<UserChat>>(`${this.url}/messages/chats/${serial}`, {hidden: true});
+    }
+
+    unhideChatBetween(from: string, to: string): Observable<ApiResponse<UserChat>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'from', operator: 'eq', value: from},
+                {field: 'to', operator: 'eq', value: to}
+            ])
+        ));
+        return this.http.patch<ApiResponse<UserChat>>(`${this.url}/messages/chats/${serial}`, {last_used_at: new Date().toISOString(), hidden: false});
+    }
+
+    createChat(chat: UserChat): Observable<ApiResponse<UserChat>> {
+        return this.http.put<ApiResponse<UserChat>>(`${this.url}/messages/chats`, chat);
+    }
+
+    getChats(id: string): Observable<ApiResponse<UserChat>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'from', operator: 'eq', value: id},
+                {field: 'hidden', operator: 'neq', value: true}
+            ]),
+            Order.desc('last_used_at')
+        ));
+        return this.http.get<ApiResponse<UserChat>>(`${this.url}/messages/chats/${serial}`);
     }
 
     getUsersWithChat(id: string): Observable<ApiResponse<Message>> {
@@ -44,7 +89,12 @@ export class HTTPMessageService implements MessageService {
     }
 
     get(id: string): Observable<ApiResponse<Message>> {
-        return this.http.get<ApiResponse<Message>>(`${this.url}/messages/${id}`);
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'id', operator: 'eq', value: id}
+            ])
+        ));
+        return this.http.get<ApiResponse<Message>>(`${this.url}/messages/${serial}`);
     }
 
     getBetween(from: string, to: string): Observable<ApiResponse<Message>> {

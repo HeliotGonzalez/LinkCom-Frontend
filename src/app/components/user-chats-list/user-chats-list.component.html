@@ -1,0 +1,13 @@
+<aside class="bg-white h-100 w-100 d-flex">
+    <section class="w-100 h-100 overflow-y-auto">
+        @for (chat of Object.values(userChats); track chat.id) {
+            <app-user-card
+                    (click)="router.navigate(['/messages', chat.to])"
+                    [active]="chat.to === activeRecipientID"
+                    [chatID]="chat.id!"
+                    [userID]="chat.to"
+            ></app-user-card>
+        }
+    </section>
+    <div class="separator"></div>
+</aside>

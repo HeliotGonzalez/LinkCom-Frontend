@@ -1,27 +1,25 @@
-@if (isVisible) {
-    <div class="vh-100 vw-100 container-blur d-flex align-items-center justify-content-center">
-        <div @fadeDialog class="requests-panel w-50 h-75 p-2">
-            <div class="panel-header d-flex flex-column w-100 p-2">
-                <div>
-                    <button class="icon-button" (click)="close()"><i class="bi-arrow-left fs-1 text-white"></i></button>
-                </div>
-                <div class="text-center">
-                    <h1 class="text-white">{{ community?.name }}</h1>
-                </div>
-                <div class="text-white d-flex align-items-center flex-column p-2">
-                    <hr class="w-75">
-                    Join requests
-                </div>
+<div class="vh-100 vw-100 container-blur d-flex align-items-center justify-content-center">
+    <div @fadeDialog class="requests-panel w-50 h-75 p-2">
+        <div class="panel-header d-flex flex-column w-100 p-2">
+            <div>
+                <button class="icon-button" (click)="close()"><i class="bi-arrow-left fs-1 text-white"></i></button>
             </div>
-            <div class="requests-section-container w-100 overflow-hidden">
-                <section class="requests-section d-flex flex-column w-100 p-5 gap-3 h-100 overflow-auto">
-                    @for (user of users; track user.id) {
-                        <app-community-request (rejectRequestEmitter)="rejectRequest($event)"
-                                               (acceptRequestEmitter)="acceptRequest($event)"
-                                               [user]="user"></app-community-request>
-                    }
-                </section>
+            <div class="text-center">
+                <h1 class="text-white">{{ community?.name }}</h1>
+            </div>
+            <div class="text-white d-flex align-items-center flex-column p-2">
+                <hr class="w-75">
+                Join requests
             </div>
         </div>
+        <div class="requests-section-container w-100 overflow-hidden">
+            <section class="requests-section d-flex flex-column w-100 p-5 gap-3 h-100 overflow-auto">
+                @for (user of users; track user.id) {
+                    <app-community-request (rejectRequestEmitter)="rejectRequest($event)"
+                                           (acceptRequestEmitter)="acceptRequest($event)"
+                                           [user]="user"></app-community-request>
+                }
+            </section>
+        </div>
     </div>
-}
+</div>

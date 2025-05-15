@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Message} from "../../../architecture/model/Message";
 import {NgClass} from "@angular/common";
+import {TextDeserializer} from "../../../architecture/io/TextDeserializer";
 
 @Component({
     selector: 'app-message',
@@ -34,7 +35,7 @@ export class MessageComponent {
     }
 
     deserialize(text: string) {
-        return decodeURIComponent(text);
+        return TextDeserializer.deserialize(text);
     }
 
     addToRemoveList() {

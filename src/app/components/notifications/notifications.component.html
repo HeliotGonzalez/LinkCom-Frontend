@@ -9,7 +9,22 @@
         <section class="notifications-section bg-white d-flex flex-column position-absolute overflow-x-auto p-2 gap-2"
                  style="z-index: 1000">
             @for (notification of Object.values(notifications); track notification.id) {
-                <app-notification [notificationID]="notification.id!"></app-notification>
+                @switch (notification.type) {
+                    @case (NotificationType.MESSAGE) {
+                        <app-message-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-message-notification>
+                    }
+                    @case (NotificationType.COMMUNITY) {
+                    }
+                    @case (NotificationType.EVENT) {
+                    }
+                    @case (NotificationType.EVENT_REQUEST) {
+                    }
+                    @case (NotificationType.JOIN_REQUEST) {
+                        <app-join-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-join-request-notification>
+                    }
+                    @case (NotificationType.FRIEND_REQUEST) {
+                    }
+                }
             }
             @if (!Object.keys(notifications).length) {
                 <article class="w-100 h-100 d-flex align-items-center justify-content-center">

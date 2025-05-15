@@ -85,6 +85,7 @@ export class AppComponent implements OnInit {
             .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'))
             .put('Messages', new WebSocketService(socket, 'Messages'))
             .put('Notifications', new WebSocketService(socket, 'Notifications'))
+            .put('UserChat', new WebSocketService(socket, 'UserChat'))
     }
 
     onSubmit() {

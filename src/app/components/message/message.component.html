@@ -3,7 +3,7 @@
         @if (message.deleted_at) {
             <em>Message has been removed...</em>
         } @else {
-            {{ deserialize(message.body) }}
+            <p>{{ deserialize(message.body) }}</p>
         }
     </div>
     <div class="message-card-footer d-flex align-items-center gap-2">

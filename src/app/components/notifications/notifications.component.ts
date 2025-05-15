@@ -1,16 +1,18 @@
 import {Component, ElementRef, HostListener} from '@angular/core';
 import {Notification} from "../../../architecture/model/Notification";
-import {NotificationComponent} from "../notification/notification.component";
+import {MessageNotificationComponent} from "../message-notification/message-notification.component";
 import {NotificationType} from "../../../architecture/model/NotificationType";
 import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
 import {NotificationService} from "../../../architecture/services/NotificationService";
 import {AuthService} from "../../services/auth.service";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
+import {JoinRequestNotificationComponent} from "../join-request-notification/join-request-notification.component";
 
 @Component({
     selector: 'app-notifications',
     imports: [
-        NotificationComponent
+        MessageNotificationComponent,
+        JoinRequestNotificationComponent
     ],
     templateUrl: './notifications.component.html',
     standalone: true,
@@ -61,5 +63,10 @@ export class NotificationsComponent {
         delete this.notifications[notification.id!];
     }
 
+    close() {
+        this.open = false;
+    }
+
     protected readonly Object = Object;
+    protected readonly NotificationType = NotificationType;
 }

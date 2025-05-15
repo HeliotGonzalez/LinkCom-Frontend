@@ -1,21 +1,13 @@
 <main class="main d-flex">
-    <aside class="bg-white w-25 h-100 d-flex">
-        <section class="w-100 h-100 overflow-y-auto">
-            @for (user of users; track user.id) {
-                <app-user-card
-                        (click)="router.navigate(['/messages', user.id])"
-                    [userID]="user.id"
-                ></app-user-card>
-            }
-        </section>
-        <div class="separator"></div>
-    </aside>
+    @if (recipientID) {
+        <app-user-chats-list [activeRecipientID]="recipientID!" class="d-flex w-25 h-100"></app-user-chats-list>
+    }
     <div class="w-75 h-100 d-flex flex-column bg-white">
         @if (recipientID) {
             @if (recipient) {
                 <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
                     <h1 class="fw-lighter">
-                        {{recipient.username}}
+                        {{ recipient.username }}
                     </h1>
                     <div class="h-separator w-100"></div>
                 </div>

@@ -1,6 +1,5 @@
 import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {InputComponent} from "../../components/input/input.component";
-import {UserCardComponent} from "../../components/user-card/user-card.component";
 import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
 import {UserService} from "../../../architecture/services/UserService";
 import {User} from "../../../architecture/model/User";
@@ -15,15 +14,17 @@ import {Notify} from "../../services/notify";
 import {UsersListComponent} from "../users-list/users-list.component";
 import {NotificationService} from "../../../architecture/services/NotificationService";
 import {SendMessageCommand} from "../../commands/SendMessageCommand";
-import {DataCacheService} from "../../services/cache/data-cache.service";
+import {TextSerializer} from "../../../architecture/io/TextSerializer";
+import {UserChat} from "../../../architecture/model/UserChat";
+import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
 
 @Component({
     selector: 'app-messages',
     imports: [
         InputComponent,
-        UserCardComponent,
         MessageComponent,
-        UsersListComponent
+        UsersListComponent,
+        UserChatsListComponent
     ],
     templateUrl: './messages.component.html',
     standalone: true,
@@ -33,7 +34,7 @@ export class MessagesComponent {
     @ViewChild('withScroll') private withScroll!: ElementRef;
     @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
-    protected users: User[] = [];
+    protected userChats: {[key: string]: UserChat} = {};
     protected messages: { [key: string]: Message } = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
@@ -46,8 +47,7 @@ export class MessagesComponent {
         protected serviceFactory: ServiceFactory,
         private sockets: WebSocketFactory,
         protected auth: AuthService,
-        protected notify: Notify,
-        protected cache: DataCacheService
+        protected notify: Notify
     ) {
     }
 
@@ -55,18 +55,15 @@ export class MessagesComponent {
         this.route.paramMap.subscribe(params => {
             this.restart();
             this.recipientID = params.get('id');
-            if (!this.cache.containsKey('messages')) this.cache.createCacheFor('messages');
             if (this.recipientID)
                 this.subscriptions.push((this.serviceFactory.get('users') as UserService).getUser(this.recipientID).subscribe(res => {
                     this.recipient = res.data[0];
                     this.initializeSocketsListeners();
                 }));
-            this.subscriptions.push((this.serviceFactory.get('users') as UserService).getFriends(this.auth.getUserUUID()).subscribe(res => {
-                this.users = [...res.data];
-                if (this.cache.getCacheFor('messages').containsKey(this.recipientID!)) this.messages = this.cache.getCacheFor('messages').get(this.recipientID!);
-                else this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
+            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => {
+                res.data.forEach(c => this.userChats[c.id!] = c);
+                this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
-                    this.cache.getCacheFor('messages').put(this.recipientID!, {...this.messages});
                     this.markAsRead(Object.values(this.messages));
                 }));
             }));
@@ -74,7 +71,6 @@ export class MessagesComponent {
     }
 
     restart() {
-        if (this.recipientID) this.cache.getCacheFor('messages').put(this.recipientID, {...this.messages});
         this.messages = {};
         this.recipient = null;
         this.subscriptions.forEach(s => s.unsubscribe());
@@ -90,7 +86,7 @@ export class MessagesComponent {
             .withMessage({
                 from: this.auth.getUserUUID(),
                 to: this.recipientID!,
-                body: encodeURIComponent(body),
+                body: TextSerializer.serialize(body),
                 created_at: new Date().toISOString()
             })
             .build().execute()
