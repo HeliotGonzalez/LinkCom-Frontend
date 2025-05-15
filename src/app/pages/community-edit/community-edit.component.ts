@@ -4,6 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
 import { Community } from '../../interfaces/community';
 import Swal from 'sweetalert2';
+<<<<<<< HEAD
+=======
+import { Location } from '@angular/common';
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
 @Component({
   selector: 'app-community-edit',
@@ -17,16 +21,25 @@ export class CommunityEditComponent implements OnInit {
   communityID!: string; 
   community!: Community;
   fileToUpload: File | null = null;
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/community-edit/community-edit.component.ts
 =======
   imageBase64!: string | null;
   path: string | null = '';
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing):src/app/pages/community-edit/community-edit.component.ts
+=======
+  imageBase64!: string | null;
+  path: string | null = '';
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private apiService: ApiService,
+<<<<<<< HEAD
+=======
+    private location: Location
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
   ) {}
 
   ngOnInit() {
@@ -66,6 +79,7 @@ export class CommunityEditComponent implements OnInit {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
+<<<<<<< HEAD
 <<<<<<< HEAD:src/app/community-edit/community-edit.component.ts
     if (input.files && input.files.length) {
       this.fileToUpload = input.files[0];
@@ -110,6 +124,8 @@ export class CommunityEditComponent implements OnInit {
       alert("Formulario no válido");
     }
 =======
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     if (!input.files?.length) return;
     this.fileToUpload = input.files[0];
     const reader = new FileReader();
@@ -152,6 +168,11 @@ export class CommunityEditComponent implements OnInit {
         });
       }
     });
+<<<<<<< HEAD
 >>>>>>> 39ac1de (fix: multiple fixes for homepage, community edition, profile and landing):src/app/pages/community-edit/community-edit.component.ts
   }
+=======
+  }
+  
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 }

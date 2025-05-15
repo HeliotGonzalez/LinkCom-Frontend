@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {EventViewComponent} from "../../components/event-view/event-view.component";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
+<<<<<<< HEAD
 import {ActivatedRoute} from "@angular/router";
 <<<<<<< HEAD:src/app/community-view/community-view.component.ts
 import {AuthService} from "../services/auth.service";
@@ -42,6 +43,19 @@ import {CommunityRequestsPanelComponent} from "../../components/community-reques
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
 import {CommunityUser} from "../../../architecture/model/CommunityUser";
 import {firstValueFrom} from "rxjs";
+=======
+import {ActivatedRoute, Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
+import {Announce} from "../../interfaces/announce";
+import {AnnouncementCardComponent} from "../../pages/announcements-list/announcement-card/announcement-card.component";
+import {CommunityService} from "../../../architecture/services/CommunityService";
+import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
+import {Community} from "../../../architecture/model/Community";
+import {CommunityRequestsPanelComponent} from "../../components/community-requests-panel/community-requests-panel.component";
+import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
+import {CommunityUser} from "../../../architecture/model/CommunityUser";
+import {firstValueFrom} from "rxjs";
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 import {CommunityRole} from "../../../architecture/model/CommunityRole";
 import {EventService} from "../../../architecture/services/EventService";
 import {RouterCommand} from "../../commands/RouterCommand";
@@ -56,7 +70,10 @@ import {EventUser} from "../../../architecture/model/EventUser";
 import {BlurPanelComponent} from "../../components/blur-panel/blur-panel.component";
 import {RequestStatus} from "../../../architecture/model/RequestStatus";
 import {EventsRequestPanelComponent} from "../../components/events-request-panel/events-request-panel.component";
+<<<<<<< HEAD
 >>>>>>> 45cb51e (refactor: New directory hierarchy.):src/app/pages/community-view/community-view.component.ts
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
 @Component({
     selector: 'app-community-view',
@@ -88,7 +105,9 @@ export class CommunityViewComponent {
         protected serviceFactory: ServiceFactory,
         private socketFactory: WebSocketFactory,
         private route: ActivatedRoute,
-        protected authService: AuthService) {
+        protected authService: AuthService,
+        private router: Router
+    ) {
     }
 
      ngOnInit() {
@@ -224,6 +243,17 @@ export class CommunityViewComponent {
         this.eventsRequestPanelVisible = false;
     }
 
+<<<<<<< HEAD
+=======
+    protected editCommunity() {
+        if (!this.community) return;
+        this.router.navigate(
+          ['/editCommunity'],
+          { state: { community: this.community } }
+        );
+      }
+
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     protected canLoggedUserRemoveEvent(eventID: string) {
         const loggedUserID = this.authService.getUserUUID();
         return this.events[eventID].creatorID === loggedUserID || this.isUserModerator || this.isCreator();

@@ -8,6 +8,7 @@ import {ApiResponse} from "../interfaces/ApiResponse";
 <<<<<<< HEAD
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {CommunityEvent} from "../interfaces/CommunityEvent";
 import { Community } from '../interfaces/community';
@@ -15,6 +16,9 @@ import { Community } from '../interfaces/community';
 =======
 import { User } from '../../architecture/model/User';
 >>>>>>> 2426d70 (feat: A user can edit their data)
+=======
+import { User } from '../../architecture/model/User';
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -46,7 +50,10 @@ export class ApiService {
     getNonBelongingCommunities(userID: string): Observable<any> {
         console.log('ID: ' + userID);
         return this.http.get(`${this.baseUrl}/communities/nonBelongingCommunities/${userID}`);
+<<<<<<< HEAD
 >>>>>>> 7cbb949 (refactor: Refactored the callout to the api in the nonBelonignCommunities)
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     }
 
     // Obtener eventos para el calendario
@@ -154,6 +161,7 @@ export class ApiService {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     createAnnouncement(communityID: string, userID: string, title: string, body: string) {
@@ -192,9 +200,21 @@ export class ApiService {
 <<<<<<< HEAD
 >>>>>>> ad5282f (feat: User profile is visible)
 =======
+=======
+    updateCommunity(id: string, data: FormData): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/communities/${id}`, data);
+    }
+
+    getUserProfile(userID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
     updateUser(id: string, payload: Partial<User>): Observable<any> {
         return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
     }
+<<<<<<< HEAD
 >>>>>>> 2426d70 (feat: A user can edit their data)
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 }

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { InterestTagComponent } from "../../interest-tag/interest-tag.component";
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -20,6 +21,8 @@ import {FormStepsComponent} from "../../../components/form-steps/form-steps.comp
   ],
 >>>>>>> 393b45d (refactor: user registration steps and events views refactored.)
 =======
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 import { InterestTagComponent } from "../../../components/interest-tag/interest-tag.component";
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
@@ -27,7 +30,10 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register-third-step',
   imports: [InterestTagComponent, FormsModule],
+<<<<<<< HEAD
 >>>>>>> a31d632 (feat: added interest to register)
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
   templateUrl: './register-third-step.component.html',
   styleUrl: './register-third-step.component.css'
 })

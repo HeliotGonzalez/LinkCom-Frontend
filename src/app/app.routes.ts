@@ -19,6 +19,7 @@ import {
 import {
     SecondStepEventCreationComponent
 <<<<<<< HEAD
+<<<<<<< HEAD
 } from "./event-creation/second-step-event-creation/second-step-event-creation.component";
 import {ModeratorsManagementComponent} from "./moderators-management/moderators-management.component";
 import {CommunityViewComponent} from "./community-view/community-view.component";
@@ -48,6 +49,8 @@ import { PersonalProfileComponent } from './personal-profile/personal-profile.co
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 >>>>>>> 2426d70 (feat: A user can edit their data)
 =======
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 } from "./pages/event-creation/second-step-event-creation/second-step-event-creation.component";
 import {ModeratorsManagementComponent} from "./pages/moderators-management/moderators-management.component";
 import {CommunityViewComponent} from "./pages/community-view/community-view.component";
@@ -59,6 +62,7 @@ import {CommunityRequestsPanelComponent} from "./components/community-requests-p
 import { RegisterFirstStepComponent } from './pages/user-register/register-first-step/register-first-step.component';
 import { RegisterSecondStepComponent } from './pages/user-register/register-second-step/register-second-step.component';
 import { RegisterThirdStepComponent } from './pages/user-register/register-third-step/register-third-step.component';
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 45cb51e (refactor: New directory hierarchy.)
 =======
@@ -94,9 +98,38 @@ export const routes: Routes = [
     {path: 'communities', component: ComunitiesComponent},
     {path: 'calendar', component: EventsCommunityCalendarComponent},
 <<<<<<< HEAD
+=======
+import { CommunityEditComponent } from './pages/community-edit/community-edit.component';
+import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
+import { UsersListComponent } from './pages/users-list/users-list.component';
+import {MessagesComponent} from "./pages/messages/messages.component";
+
+export const routes: Routes = [
+    {path: '', component: DashboardComponent},
+    {path: 'homepage', component: HomepageComponent, canActivate: [NoAuthGuard]},
+    {path: 'user-register/firstStep', component: RegisterFirstStepComponent},
+    {path: 'user-register/secondStep', component: RegisterSecondStepComponent},
+    {path: 'user-register/thirdStep', component: RegisterThirdStepComponent},
+    {path: 'login', component: LoginComponent},
+    {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'moderatorsManagement', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
+    {path: 'community', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
+    {path: 'communities', component: ComunitiesComponent, canActivate: [NoAuthGuard]},
+    {path: 'calendar', component: EventsCommunityCalendarComponent, canActivate: [NoAuthGuard]},
+    {path: 'announcementCreation', component: AnnouncementCreationComponent, canActivate: [NoAuthGuard]},
+    {path: 'moderators', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
+    {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]},
+    {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
+    {path: 'header', component: HeaderComponent},
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     {path: 'announcementCreation', component: AnnouncementCreationComponent},
-    {path: 'moderators', component: ModeratorsManagementComponent},
     {path: 'announcementsList', component: AnnouncementsListComponent},
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent}
@@ -164,4 +197,13 @@ export const routes: Routes = [
 =======
     {path: 'messages/:id', component: MessagesComponent}
 >>>>>>> 2ff0225 (fix: messages pages now displays logic deletion.)
+=======
+    {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
+    {path: 'editCommunity', component: CommunityEditComponent},
+    {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
+    {path: 'edit-profile', component: EditProfileComponent },
+    {path: 'users-list', component: UsersListComponent},
+    {path: 'messages', component: MessagesComponent},
+    {path: 'messages/:id', component: MessagesComponent}
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 ];

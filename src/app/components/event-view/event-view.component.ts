@@ -8,6 +8,7 @@ import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import { EventService } from '../../../architecture/services/EventService';
 import { Comment } from '../../../architecture/model/Comment';
@@ -18,16 +19,28 @@ import {CommentModalComponent} from "../comment-modal/comment-modal.component";
 import {User} from "../../../architecture/model/User";
 import {UserService} from "../../../architecture/services/UserService";
 >>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
+=======
+import { EventService } from '../../../architecture/services/EventService';
+import { Comment } from '../../../architecture/model/Comment';
+import {CommentModalComponent} from "../comment-modal/comment-modal.component";
+import {User} from "../../../architecture/model/User";
+import {UserService} from "../../../architecture/services/UserService";
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
 @Component({
     selector: 'app-event-view',
     imports: [
+<<<<<<< HEAD
 <<<<<<< HEAD
         ImageDialogComponent
 =======
         ImageDialogComponent,
         CommentModalComponent,
 >>>>>>> 16c35fc (fix: import error fixed.)
+=======
+        ImageDialogComponent,
+        CommentModalComponent,
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
@@ -43,6 +56,7 @@ export class EventViewComponent {
     protected creator!: User;
     protected isDialogVisible: boolean = false;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     protected isCommentModalVisible: boolean = false;
     comments: Comment[] = [];
@@ -57,6 +71,17 @@ export class EventViewComponent {
     ngOnInit() {
         this.loggedUserID = (this.serviceFactory.get('auth') as AuthService).getUserUUID();
     }
+=======
+    protected isCommentModalVisible: boolean = false;
+    comments: Comment[] = [];
+
+
+    constructor(
+        private authService: AuthService,
+        protected serviceFactory: ServiceFactory,
+        private notify: Notify
+    ) {}
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
     ngOnInit() {
         (this.serviceFactory.get('events') as EventService).getEvent(this.eventID).subscribe(res => {
@@ -88,11 +113,34 @@ export class EventViewComponent {
         this.isDialogVisible = false;
     }
 
+<<<<<<< HEAD
     protected readonly EventState = EventState;
 <<<<<<< HEAD
 
 =======
 >>>>>>> 28aa5d3 (feat: messages page developed. Message service implemented.)
+=======
+    openCommentModal() {
+        this.isCommentModalVisible = true;
+    }
+
+    closeCommentModal() {
+        this.isCommentModalVisible = false;
+    }
+
+    createComment(comment: Comment) {
+        console.log(comment.body);
+        (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
+            next: () => {
+                this.notify.success(`You have published a comment`);
+                this.isCommentModalVisible = false;
+            },
+            error: (res: { message: any; }) => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+        });
+    }
+
+    protected readonly EventState = EventState;
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     protected readonly AcceptEventCommand = AcceptEventCommand;
     protected readonly AuthService = AuthService;
     protected loggedUserID!: string;

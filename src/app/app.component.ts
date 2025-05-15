@@ -20,6 +20,7 @@ import {AuthService} from "./services/auth.service";
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {Router} from "@angular/router";
 >>>>>>> ad5282f (feat: User profile is visible)
@@ -40,6 +41,9 @@ import {FilterOperator} from "../architecture/io/criteria/FilterOperator";
 >>>>>>> 2ff0225 (fix: messages pages now displays logic deletion.)
 import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
 >>>>>>> 814e53e (feat: messages functionallities implemented.)
+=======
+import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',

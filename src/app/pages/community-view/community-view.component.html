@@ -12,12 +12,21 @@
             <div id="announces-section-container" class="d-flex flex-column w-100">
                 <section id="announces-section" class="d-flex flex-column align-items-center h-100 overflow-auto">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
                     @if (isUserJoined) {
                         <div class="d-flex gap-3">
                             <button class="button mb-5 mt-5"
                                     (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementsList').withParameters({'communityID': community?.id!}).build().execute()">
                                 Go to the community news!
                             </button>
+<<<<<<< HEAD
+=======
+                            @if (this.isCreator()) {
+                                <button class="button mb-5 mt-5" (click)="editCommunity()">Edit community</button>
+                            }
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
                             <button class="button mb-5 mt-5"
                                     (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementCreation').withParameters({'communityID': community?.id!}).build().execute()">
                                 New Announcement
@@ -27,6 +36,7 @@
                         <p>You will be able to create announcements when your invitation is accepted.</p>
                     }
 
+<<<<<<< HEAD
 =======
                     <div class="d-flex gap-3">
                         <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!</button>
@@ -36,6 +46,8 @@
                         <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
                     </div>
 >>>>>>> a55b898 (feat: Community edit)
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
                     @if (announcements.length === 0) {
                         <p>There is no news yet</p>
                     } @else {
@@ -78,6 +90,9 @@
                             }
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
                         @if (!isCreator()) {
                             @if (isUserJoined) {
                                 <button class="leave-button"
@@ -97,6 +112,7 @@
                                     </button>
                                 }
                             }
+<<<<<<< HEAD
 =======
                     </div>
                     <button class="button mb-5" (click)="goToEditCommunity()">Edit community</button>
@@ -106,6 +122,8 @@
                             <button class="button mb-5" (click)="goToEditCommunity()">Edit community</button>
                             <button class="leave-button mb-5" (click)="removeCommunity()">Remove community</button>
 >>>>>>> 909b589 (feat: A user, who is leader, can edit an existing Community)
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
                         }
                     </div>
                 </div>

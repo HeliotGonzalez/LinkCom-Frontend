@@ -54,6 +54,7 @@ export class SecondEventFormComponent {
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         console.log(await this.buildEvent())
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
 =======
@@ -117,6 +118,12 @@ export class SecondEventFormComponent {
 >>>>>>> dd63d85 (fix: realtime of events panel and event form reloading error corrected.)
     }
 
+=======
+        CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
+        this.formService.remove('event');
+    }
+
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
     private parseDate(date: string, time: string): string {
         return new Date(Date.parse(`${date}T${time}`)).toISOString();
     }

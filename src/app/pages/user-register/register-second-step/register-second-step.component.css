@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* Fondo semi-transparente para el formulario de registro */
 .main{
   box-sizing: border-box;
@@ -13,6 +14,8 @@
   background: linear-gradient(to bottom, #2E3E7F, #5370E5);
 }
 
+=======
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 /* Estilo de la tarjeta del formulario */
 /* Fondo semi-transparente para el formulario de registro */
 .background {

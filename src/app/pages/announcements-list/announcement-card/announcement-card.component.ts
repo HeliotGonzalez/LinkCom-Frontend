@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+<<<<<<< HEAD
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api-service.service'; 
 import { AuthService } from '../../services/auth.service'; 
@@ -6,6 +7,15 @@ import { Announce } from '../../interfaces/announce';
 import Swal from 'sweetalert2';
 import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../architecture/services/CommunityService';
+=======
+import { ApiService } from '../../../services/api-service.service';
+import { AuthService } from '../../../services/auth.service';
+import Swal from 'sweetalert2';
+import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
+import { CommunityService } from '../../../../architecture/services/CommunityService';
+import { Router } from '@angular/router';
+import { Announce } from '../../../interfaces/announce';
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
 
 @Component({
   selector: 'app-announcement-card',
@@ -41,7 +51,11 @@ export class AnnouncementCardComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
+<<<<<<< HEAD
           next: (response) => {
+=======
+          next: () => {
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
             Swal.fire({
               title: 'Deleted!',
               text: 'This announcement has been deleted.',
@@ -50,7 +64,11 @@ export class AnnouncementCardComponent implements OnInit {
               window.location.reload(); 
             })
           },
+<<<<<<< HEAD
           error: (error) => {
+=======
+          error: () => {
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
             Swal.fire({
               title: 'Error!',
               text: 'Could not delete the announcement.',

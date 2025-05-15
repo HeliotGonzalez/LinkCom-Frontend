@@ -143,6 +143,7 @@ export class EventsCommunityCalendarComponent implements OnInit {
         this.calendarEvents = {};
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         this.events.forEach(ev => {
 <<<<<<< HEAD
 =======
@@ -152,6 +153,10 @@ export class EventsCommunityCalendarComponent implements OnInit {
 =======
           const eventDate = new Date(ev.date); 
 >>>>>>> 271a456 (refactor: callendar)
+=======
+        this.events.forEach(ev => {
+          const eventDate = new Date(ev.date); 
+>>>>>>> d89c3e6003064a9d5f07d12c4c391a4451e01c5f
           const day = eventDate.getDate();
           const month = eventDate.getMonth();
           const year = eventDate.getFullYear();
