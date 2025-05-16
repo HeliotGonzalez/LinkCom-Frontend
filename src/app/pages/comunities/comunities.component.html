@@ -7,8 +7,10 @@
                     <input
                             type="text"
                             class="form-control rounded-start-pill"
-                            placeholder="Buscar..."
-                            aria-label="Buscar"
+                            placeholder="Search..."
+                            i18n-placeholder="Placeholder del buscador|Texto que aparece en el input de búsqueda"
+                            aria-label="Search"
+                            i18n-aria-label="Etiqueta aria para el buscador|Accesibilidad para el campo de búsqueda"
                             [(ngModel)]="searchTerm"
                             name="searchTerm"
                             (input)="filterCommunities()"
@@ -21,10 +23,11 @@
 
             <!-- Info y botón crear -->
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <p class="mb-0 text-white">
-                    <strong>{{ Object.keys(communities).length }}</strong> communities were found!
+                <p class="mb-0 text-white" i18n="Mensaje número de comunidades|Indica cuántas comunidades se encontraron">
+                    <strong>{{ Object.keys(communities).length }}</strong>
+                    communities were found!
                 </p>
-                <button class="button" (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepCommunityCreation').build().execute()">
+                <button class="button" (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepCommunityCreation').build().execute()" i18n="Texto botón crear comunidad|Acción para iniciar creación de comunidad">
                     <i class="bi bi-plus-circle"></i> Create Community
                 </button>
             </div>
