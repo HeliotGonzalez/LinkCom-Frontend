@@ -2,7 +2,7 @@
 @if (this.user != null){
   <section class="card text-white profile-card mx-auto my-4 overflow-hidden" style="width: 800px; height: 800px; position: relative;">
     <!-- Banner + avatar -->
-    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="closeModal()">
+    <button type="button" class="btn btn-sm position-absolute top-0 end-0 m-2" (click)="closeModal()" >
       <i class="bi bi-x-lg text-white" style="font-size: large;"></i>
     </button>
     <div class="banner w-100"></div>
@@ -27,13 +27,13 @@
           [ngClass]="{
             'text-dark': activeTab === 'about',
             'text-white': activeTab !== 'about'
-          }" (click)="activeTab = 'about'">
+          }" (click)="activeTab = 'about'" i18n="Pestaña Sobre mí|Texto de la pestaña About me">
           About me
         </button>
       </li>
       <li class="nav-item">
         <button class="nav-link" [class.active]="activeTab === 'communities'"[ngClass]="{'text-dark': activeTab === 'communities','text-white': activeTab !== 'communities'}" 
-          (click)="activeTab = 'communities'">
+          (click)="activeTab = 'communities'" i18n="Pestaña Comunidades|Texto de la pestaña Communities">
           Communities
         </button>
       </li>
@@ -42,14 +42,21 @@
     <div class="px-4 pb-4">
       <!-- About me -->
       <div *ngIf="activeTab === 'about'">
-        <p>{{ this.user.description || '— Nothing here yet —' }}</p>
+        <div *ngIf="user.description; else noDescription">
+          <p>{{ user.description }}</p>
+        </div>
+        <ng-template #noDescription>
+          <p i18n="Fallback cuando no hay descripción|Mensaje que se muestra si no hay descripción">
+            — Nothing here yet —
+          </p>
+        </ng-template>
   
-        <h6 class="mt-4">Interests</h6>
+        <h6 class="mt-4" i18n="Encabezado Intereses|Label para sección de intereses">Interests</h6>
         <ng-container *ngIf="this.user?.interests?.length; else noTags">
           <span class="badge bg-light text-light me-1 mb-1"*ngFor="let tag of this.user?.interests">#{{ tag }}</span>
         </ng-container>
         <ng-template #noTags>
-          <span class="text-light">None</span>
+          <span class="text-light" i18n="Etiqueta sin intereses|Texto cuando no hay intereses">None</span>
         </ng-template>
       </div>
   
@@ -69,16 +76,16 @@
     
         <!-- Botones -->
         <div class="btn-group ms-auto">
-          <i class="bi bi-eye text-white me-5" (click)="viewCommunity(c.id)" style="cursor: pointer" title="View community"></i>
+          <i class="bi bi-eye text-white me-5" (click)="viewCommunity(c.id)" style="cursor: pointer" title="View community" i18n-title="Ver comunidad|Tooltip para ver comunidad"></i>
           @if (this.user.id == this.ownerId){
-            <i class="bi bi-box-arrow-left text-danger me-2" (click)="leaveCommunity(c.id, c.name)" style="cursor: pointer" title="Leave community"></i>
+            <i class="bi bi-box-arrow-left text-danger me-2" (click)="leaveCommunity(c.id, c.name)" style="cursor: pointer" title="Leave community" i18n-title="Abandonar comunidad|Tooltip para abandonar comunidad"></i>
           }
         </div>
       </div>
   </div>
     
     <!-- Sin comunidades -->
-    <p *ngIf="user && !user.communities.length" class="text-white">This user doesn't belong to any community.</p>
+    <p *ngIf="user && !user.communities.length" class="text-white" i18n="Mensaje sin comunidades|Texto cuando el usuario no pertenece a ninguna comunidad">This user doesn't belong to any community.</p>
       </div>
   
     </div>
