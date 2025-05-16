@@ -18,19 +18,15 @@ import { loadTranslations } from '@angular/localize';
 import { LanguageService } from './app/language.service';
 
 async function main() {
-  // 1️⃣ Obtenemos el idioma elegido
   const langSvc = new LanguageService();
-  const lang = langSvc.current;      // 'en' | 'es'
+  const lang = langSvc.current; 
 
-  // 2️⃣ Pipes de fecha/número
   registerLocaleData(lang === 'es' ? localeEs : localeEn);
 
-  // 3️⃣ Cargamos el JSON que corresponde
   const resp = await fetch(`/assets/i18n/${lang}.json`);
   const { translations } = await resp.json();
   loadTranslations(translations);
 
-  // 4️⃣ Bootstrap con el LOCALE_ID adecuado
   await bootstrapApplication(AppComponent, {
     providers: [
       provideRouter(routes),
