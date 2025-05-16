@@ -14,7 +14,7 @@
         @if (recipient) {
             <div class="w-100 p-3 chat-header d-flex flex-column align-items-center">
                 <h1 class="fw-lighter">
-                    {{recipient?.username}}
+                    {{recipient.username}}
                 </h1>
                 <div class="h-separator w-100"></div>
             </div>
@@ -32,7 +32,7 @@
             ></app-input>
         } @else {
             <div class="w-100 h-100 d-flex align-items-center justify-content-center">
-                <h1>Start chatting with someone you antisocial!</h1>
+                <h1 i18n="Mensaje inicio chat|Instrucción para iniciar chat">Start chatting with someone you antisocial!</h1>
             </div>
         }
     </div>

@@ -55,6 +55,7 @@ export const routes: Routes = [
     {path: 'moderators', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
     {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]},
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
+    // ------------------------------------------------------------------------------------------------------
     {path: 'header', component: HeaderComponent},
     {path: 'announcementCreation', component: AnnouncementCreationComponent},
     {path: 'announcementsList', component: AnnouncementsListComponent},
