@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ServiceFactory } from '../../../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../../../architecture/services/CommunityService';
 import { CommunityAnnouncement } from '../../../../../architecture/model/CommunityAnnouncement';
+import { Notify } from '../../../../services/notify';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class AnnouncementFormComponent implements OnInit{
     private router: Router,
     private baseRoute: ActivatedRoute,
     private serviceFactory: ServiceFactory, 
-    private authService: AuthService
+    private authService: AuthService,
+    private notify: Notify
   ) {  
     this.publisherID = this.authService.getUserUUID();
   }
@@ -57,13 +59,14 @@ export class AnnouncementFormComponent implements OnInit{
 
   exitForm(event: Event) {
     this.resetForm();
-    this.router.navigate(['community'], {queryParams: {communityID: this.communityID}}).then(r => {});
+    console.log(this.communityID);
+    this.router.navigate([`community`, this.communityID]);
   }
 
   submitData(event: Event){
     event.preventDefault();
     if (this.title.trim() === '' || this.body.trim() === '') {
-      Swal.fire('Error', 'Title and description are required!', 'error');
+      this.notify.error('Title and description are required', 'Empty fields');
       return;
     }
 
@@ -77,44 +80,13 @@ export class AnnouncementFormComponent implements OnInit{
     (this.serviceFactory.get('communities') as CommunityService).createAnnouncement(this.communityAnnouncement).subscribe({
       next: (response: any) => {
         console.log(response);
-        Swal.fire({
-          title: "Operation success",
-          icon: "success",
-          confirmButtonText: "Continue"
-        });
-        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
+        this.notify.success('News has been published!');
+        this.router.navigate(["community", this.communityID]);
       },
       error: (err: any) => {
-        Swal.fire({
-          title: "Operation error",
-          text: "Database connection error",
-          icon: "error",
-          confirmButtonText: "Continue"
-        });
+        this.notify.error('There has been an error trying to publish the announcement. Try again later.', 'Operation error');
         console.log(err);
       }
     });
-
-    /*
-    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.publisherID).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        Swal.fire({
-          title: "Operation success",
-          icon: "success",
-          confirmButtonText: "Continue"
-        });
-        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
-      },
-      error: (err: any) => {
-        Swal.fire({
-          title: "Operation error",
-          text: "Database connection error",
-          icon: "error",
-          confirmButtonText: "Continue"
-        });
-        console.log(err);
-      }
-    });*/
   }
 }
