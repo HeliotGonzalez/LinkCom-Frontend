@@ -29,13 +29,14 @@
                         <p>You will be able to create announcements when your invitation is accepted.</p>
                     }
 
-                    @if (announcements.length === 0) {
+                    @if (Object.keys(announcements).length <= 0) {
                         <p>There is no news yet</p>
                     } @else {
-                        @for (newAnnounce of announcements; track newAnnounce) {
+                        @for (announcementID of Object.keys(announcements); track announcementID) {
                             <app-announcement-card
-                                    [announce]="newAnnounce"
+                                    [announce]="announcements[announcementID]"
                                     [imgPath]="this.community!.imagePath!"
+                                    (deleted)="updateAnnouncement(announcements[$event], true)"
                             ></app-announcement-card>
                         }
                     }
