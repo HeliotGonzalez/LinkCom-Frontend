@@ -1,0 +1,25 @@
+{
+  "locale": "en-US",
+  "translations": {
+    "navHome": "Home",
+    "navCommunities": "Communities",
+    "navCalendar": "Calendar",
+    "navMessages": "Messages",
+    "btnLogin": " Login ",
+    "dropdownProfile": "Profile",
+    "dropdownUsersList": "Users list",
+    "dropdownLogout": "Log out",
+    "4418301284295834219": "Connect, Create and Grow",
+    "4978972131458972129": "Join communities filled with people who share your interests, create events, and share news. All on one platform.",
+    "8430759727245900838": "Start Now",
+    "8056722748660878957": "Join and Create",
+    "5362935867665429406": "Become part of communities that share your interests or create your own.",
+    "8166309643344481385": "Events and Calendar",
+    "1360351647490428355": "Organize events and view your calendar with all your activities.",
+    "634215892405513052": "Community News",
+    "6054281834979404877": "Publish and share the latest news from your community.",
+    "3019295522456102434": "Discover a New Way to Connect",
+    "3437774082441847572": "Experience the power of community with tools designed just for you.",
+    "4157684895303500067": "Register for Free"
+  }
+}
