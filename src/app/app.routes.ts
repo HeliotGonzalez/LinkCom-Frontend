@@ -1,21 +1,21 @@
 import {Routes} from '@angular/router';
-import {LoginComponent} from './pages/login/login.component';
-import {HeaderComponent} from './components/header/header.component';
-import {DashboardComponent} from './pages/dashboard/dashboard.component';
-import {HomepageComponent} from './pages/homepage/homepage.component';
+import {LoginComponent} from './login/login.component';
+import {HeaderComponent} from './header/header.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {HomepageComponent} from './homepage/homepage.component';
 import {NoAuthGuard} from './guards/no-auth.guard';
 import {
     FirstStepCommunityCreationComponent
-} from './pages/community-creation/first-step-community-creation/first-step-community-creation.component';
+} from './community-creation/first-step-community-creation/first-step-community-creation.component';
 import {
     SecondStepCommunityCreationComponent
-} from './pages/community-creation/second-step-community-creation/second-step-community-creation.component';
+} from './community-creation/second-step-community-creation/second-step-community-creation.component';
 import {
     ThirdStepCommunityCreationComponent
-} from './pages/community-creation/third-step-community-creation/third-step-community-creation.component';
+} from './community-creation/third-step-community-creation/third-step-community-creation.component';
 import {
     FirstStepEventCreationComponent
-} from './pages/event-creation/first-step-event-creation/first-step-event-creation.component';
+} from './event-creation/first-step-event-creation/first-step-event-creation.component';
 import {
     SecondStepEventCreationComponent
 } from "./pages/event-creation/second-step-event-creation/second-step-event-creation.component";
@@ -57,7 +57,22 @@ export const routes: Routes = [
     {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]},
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
     {path: 'header', component: HeaderComponent},
+    {path: 'homepage', component: HomepageComponent},
+    {path: 'user-register/firstStep', component: RegisterFirstStepComponent },
+    {path: 'user-register/secondStep', component: RegisterSecondStepComponent },
+    {path: 'user-register/thirdStep', component: RegisterThirdStepComponent },
+    {path: 'login', component: LoginComponent },
+    {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent},
+    {path: 'secondStepCommunityCreation', component: SecondStepCommunityCreationComponent},
+    {path: 'thirdStepCommunityCreation', component: ThirdStepCommunityCreationComponent},
+    {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent},
+    {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent},
+    {path: 'moderatorsManagement', component: ModeratorsManagementComponent},
+    {path: 'community', component: CommunityViewComponent},
+    {path: 'communities', component: ComunitiesComponent},
+    {path: 'calendar', component: EventsCommunityCalendarComponent},
     {path: 'announcementCreation', component: AnnouncementCreationComponent},
+    {path: 'moderators', component: ModeratorsManagementComponent},
     {path: 'announcementsList', component: AnnouncementsListComponent},
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent},

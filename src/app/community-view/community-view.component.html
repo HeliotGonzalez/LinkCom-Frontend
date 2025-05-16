@@ -1,20 +1,31 @@
-<main class="main d-flex flex-column flex-grow-1">
-    <div class="d-flex flex-column w-100 align-items-center">
+<main class="main d-flex flex-column">
+    <div class="members-list h-100 bg-warning w-25 position-absolute"></div>
+    <div class="community-content d-flex flex-column align-items-center">
         <div id="community-image-container"
              class="d-flex align-items-center justify-content-center overflow-hidden w-100 bg-white">
             <img [src]="this.community?.imagePath">
         </div>
-        <div id="community-name-container" class="d-flex align-items-center justify-content-center w-100">
-            <h1 class="fw-bold"> {{ this.community?.name }}'s Community </h1>
+        <div id="community-name-container" class="d-flex align-items-center justify-content-center p-4 w-100">
+            <h1 class="fw-bold"> {{ this.community?.name }} </h1>
         </div>
-        <div class="d-flex flex-column bg-white w-70">
+        <div class="d-flex flex-column bg-white w-50">
             <div id="announces-section-container" class="d-flex flex-column w-100">
                 <section id="announces-section" class="d-flex flex-column align-items-center h-100 overflow-auto">
-                    <div class="d-flex gap-3">
-                        <button class="button mb-5 mt-5" (click)="showAnnouncements()">Go to the community news!
-                        </button>
-                        <button class="button mb-5 mt-5" (click)="showAnnouncementForm()">New Announcement</button>
-                    </div>
+                    @if (isUserJoined) {
+                        <div class="d-flex gap-3">
+                            <button class="button mb-5 mt-5"
+                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementsList').withParameters({'communityID': community?.id!}).build().execute()">
+                                Go to the community news!
+                            </button>
+                            <button class="button mb-5 mt-5"
+                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementCreation').withParameters({'communityID': community?.id!}).build().execute()">
+                                New Announcement
+                            </button>
+                        </div>
+                    } @else {
+                        <p>You will be able to create announcements when your invitation is accepted.</p>
+                    }
+
                     @if (announcements.length === 0) {
                         <p>There is no news yet</p>
                     } @else {
@@ -29,29 +40,67 @@
             </div>
             <div id="community-body" class="d-flex flex-column">
                 <div class="d-flex flex-column align-items-center justify-content-center">
+                    
                     <div class="d-flex gap-3 p-3">
-                        <button class="button" (click)="showEventForm()">Create Event</button>
+                        @if (isUserJoined){
+                        <button class="button" 
+                                (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepEventCreation').withParameters({'communityID': community?.id!}).build().execute()">
+                            Create Event
+                        </button>
+                    } @else if (!isUserJoined) 
+                    {
+                        <button class="button" [disabled]="true" >
+                            Create Event
+                        </button>
+                    }
+                        @if (isCreator() || isUserModerator) {
+                            <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
+                            <button class="button" (click)="showEventsRequestPanel()">Events Panel</button>
+                            @if (isCreator()) {
+                                <button class="button"
+                                        (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/moderatorsManagement').withParameters({'communityID': community?.id!}).build().execute()">
+                                    Manage moderators
+                                </button>
+                                <button class="leave-button"
+                                        (click)="RemoveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).build().execute()">
+                                    Remove community
+                                </button>
+                            }
+                        }
                         @if (!isCreator()) {
                             @if (isUserJoined) {
-                                <button class="leave-button" (click)="leaveCommunity()">Leave Community
+                                <button class="leave-button"
+                                        (click)="LeaveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                    Leave Community
                                 </button>
                             } @else {
-                                <button class="button" (click)="joinCommunity()">Join Community</button>
+                                @if (isRequested) {
+                                    <button class="leave-button"
+                                            (click)="CancelJoinRequestCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                        Cancel Request
+                                    </button>
+                                } @else {
+                                    <button class="button"
+                                            (click)="JoinCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                        Join Community
+                                    </button>
+                                }
                             }
-                        } @else {
-                            <button class="button" (click)="showModeratorsManagement()">Manage moderators</button>
-                            <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
-                            <button class="leave-button" (click)="removeCommunity()">Remove community</button>
                         }
                     </div>
                 </div>
                 <section id="events-section" class="d-flex flex-column w-100">
-                    @for (event of events; track $index) {
-                        <app-event-view [event]="event" [isDisabled]="isUserInEvent(event)"></app-event-view>
+                    @for (eventID of Object.keys(events); track eventID) {
+                        <app-event-view [eventID]="eventID"
+                                        [canRemove]="canLoggedUserRemoveEvent(eventID)"
+                                        [isDisabled]="isUserInEvent(events[eventID])"
+                                        (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
+                                        (leaveEventEmitter)="LeaveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
+                        ></app-event-view>
                     }
                 </section>
             </div>
         </div>
     </div>
-    <app-community-requests-panel (eventEmitter)="closeRequestPanel()" [isVisible]="requestPanelVisible"></app-community-requests-panel>
+    <app-blur-panel [isVisible]="isLoaded"/>
 </main>

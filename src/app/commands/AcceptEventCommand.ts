@@ -1,7 +1,8 @@
+import {Command} from "../../architecture/Commands/Command";
 import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {Community} from "../../architecture/model/Community";
 import {EventService} from "../../architecture/services/EventService";
-import { Command } from "../../architecture/control/Command";
 
 export class AcceptEventCommand implements Command {
     private notify: Notify;
