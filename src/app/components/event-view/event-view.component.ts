@@ -9,27 +9,27 @@ import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
 import { EventService } from '../../../architecture/services/EventService';
 import { Comment } from '../../../architecture/model/Comment';
-import {CommentModalComponent} from "../comment-modal/comment-modal.component";
 import {User} from "../../../architecture/model/User";
 import {UserService} from "../../../architecture/services/UserService";
+import { EventCommentModalComponent } from '../event-comment-modal/event-comment-modal.component';
 
 @Component({
     selector: 'app-event-view',
     imports: [
         ImageDialogComponent,
-        CommentModalComponent,
+        EventCommentModalComponent
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
     styleUrl: './event-view.component.css'
 })
 export class EventViewComponent {
+    @Input() event: CommunityEvent | null = null;
     @Input() eventID!: string;
     @Input() canRemove: boolean = true;
     @Input() isDisabled: boolean = true;
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
-    protected event!: CommunityEvent;
     protected creator!: User;
     protected isDialogVisible: boolean = false;
     protected isCommentModalVisible: boolean = false;
