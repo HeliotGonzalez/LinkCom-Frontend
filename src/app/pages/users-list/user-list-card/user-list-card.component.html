@@ -8,12 +8,12 @@
     </div>
     <div>
       <button class="btn btn-outline-light btn-sm me-2" (click)="viewProfile()">
-        <i class="bi bi-person-lines-fill"></i> View Profile
+        <i class="bi bi-person-lines-fill"></i> <p i18n="Texto botón ver perfil|Etiqueta para el botón de ver perfil">View Profile</p>
       </button>
       
       @if (!isFriend) {
         <button class="btn btn-success btn-sm" (click)="requestFriend()">
-          <i class="bi bi-person-plus-fill"></i> Add Friend
+          <i class="bi bi-person-plus-fill"></i> <p i18n="Texto botón agregar amigo|Etiqueta para el botón de añadir amigo">Add Friend</p>
         </button>
       }
     </div>    

@@ -77,12 +77,12 @@
     "8991599687835763494": "Buscar…",
     "3880767814245246404": "Buscar",
     "6957595750367193031": "{$START_TAG_STRONG}{$INTERPOLATION}{$CLOSE_TAG_STRONG} comunidades encontradas! ",
-    "914527744191009732": "{$START_ITALIC_TEXT}{$CLOSE_ITALIC_TEXT} Crear comunidad ",
+    "914527744191009732": "{$START_ITALIC_TEXT}{$CLOSE_TAG_ITALIC_TEXT} Crear comunidad ",
     "4418301284295834219": "Conecta, crea y crece",
-    "4978972131458972129": "Únete a comunidades llenas de personas que comparten tus intereses, crea eventos y comparte noticias. Todo en una plataforma.",
+    "4978972131458972129": "Únete a comunidades llenas de personas que compartan tus intereses, crea eventos y comparte noticias. Todo en una plataforma.",
     "8430759727245900838": "Empieza ahora",
     "8056722748660878957": "Únete y crea",
-    "5362935867665429406": "Forma parte de comunidades que comparten tus intereses o crea la tuya propia.",
+    "5362935867665429406": "Forma parte de comunidades que compartan tus intereses o crea la tuya propia.",
     "8166309643344481385": "Eventos y calendario",
     "1360351647490428355": "Organiza eventos y visualiza tu calendario con todas tus actividades.",
     "634215892405513052": "Noticias de la comunidad",
@@ -151,6 +151,14 @@
     "6043565108296461128": "¡Casi listo! Tu registro está en proceso.",
     "5416516292332503841": "¡Añade tus intereses!",
     "3566842135691869296": " {$INTERPOLATION} ",
-    "1915382633141281046": "Finalizar"
+    "1915382633141281046": "Finalizar",
+    "1676816560569508489": "Ver perfil",
+    "3013361983939308020": "Agregar amigo",
+    "3483138002106337912": "Todos los usuarios",
+    "4661762205720244192": "Solicitudes de amistad",
+    "3851971103183401874": "Buscar usuarios...",
+    "556782945671859145": "Todos los usuarios",
+    "8202928157421474817": "Amigos",
+    "4397737279393560449": " No se encontraron usuarios "
   }
 }
