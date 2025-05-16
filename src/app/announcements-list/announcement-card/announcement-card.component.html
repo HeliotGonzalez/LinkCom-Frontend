@@ -1,5 +1,7 @@
 <div class="announcement-card">
-    <img class="announcement-card-img" [src]="imgPath" alt="Announcement image">
+    <div class="announcement-card-img-container">
+        <img class="announcement-card-img" [src]="imgPath" alt="Announcement image">
+    </div>      
     <div class="announcement-card-info">
         <h1 class="announcement-card-title"> {{ announce.title }}</h1>
         <p class="announcement-card-body"> {{ announce.body }}</p>

@@ -137,5 +137,11 @@ export class ApiService {
     }
 
 
-    
+    getUserProfile(userID: string): Observable<any> {
+        return this.http.get(`${this.baseUrl}/users/profile/${userID}`);
+    }
+
+    updateUser(id: string, payload: Partial<User>): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
+    }
 }

@@ -5,8 +5,9 @@ import {FeedItem} from '../interfaces/feed-item';
 import {Community} from '../interfaces/community';
 import {AuthService} from '../services/auth.service';
 import Swal from 'sweetalert2';
-import {FeedEventCardComponent} from "../feed-event-card/feed-event-card.component";
-import {CommunityEvent} from "../../architecture/model/CommunityEvent";
+import {FeedEventCardComponent} from "../../components/feed-event-card/feed-event-card.component";
+import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-homepage',
@@ -29,8 +30,7 @@ export class HomepageComponent implements OnInit {
     todayDay: number = 0;
     calendarEvents: { [day: number]: string[] } = {};
 
-    constructor(private apiService: ApiService, private authService: AuthService) {
-    }
+    constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
 
     ngOnInit(): void {
         this.fetchFeed();

@@ -1,17 +1,18 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommunityRequestComponent} from "../community-request/community-request.component";
-import {ActivatedRoute} from "@angular/router";
-import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
-import {CommunityService} from "../../architecture/services/CommunityService";
-import {Community} from "../../architecture/model/Community";
-import {WebSocketFactory} from "../services/api-services/WebSocketFactory.service";
-import {User} from "../../architecture/model/User";
-import {JoinRequest} from "../../architecture/model/JoinRequest";
-import {UserService} from "../../architecture/services/UserService";
-import {AuthService} from "../services/auth.service";
-import {RequestStatus} from "../../architecture/model/RequestStatus";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
+import {CommunityService} from "../../../architecture/services/CommunityService";
+import {Community} from "../../../architecture/model/Community";
+import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
+import {User} from "../../../architecture/model/User";
+import {JoinRequest} from "../../../architecture/model/JoinRequest";
+import {UserService} from "../../../architecture/services/UserService";
+import {AuthService} from "../../services/auth.service";
+import {RequestStatus} from "../../../architecture/model/RequestStatus";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {JoinCommunityCommand} from "../commands/JoinCommunityCommand";
+import {JoinCommunityCommand} from "../../commands/JoinCommunityCommand";
+import {NotificationService} from "../../../architecture/services/NotificationService";
 
 @Component({
     selector: 'app-community-requests-panel',
@@ -46,13 +47,14 @@ export class CommunityRequestsPanelComponent {
         private route: ActivatedRoute,
         private serviceFactory: ServiceFactory,
         private socketFactory: WebSocketFactory,
-        private auth: AuthService
+        private auth: AuthService,
+        private router: Router
     ) {
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            (this.serviceFactory.get('communities') as CommunityService).getCommunity(params['communityID']).subscribe(res => {
+        this.route.paramMap.subscribe(params => {
+            (this.serviceFactory.get('communities') as CommunityService).getCommunity(params.get('id')!).subscribe(res => {
                 this.community = res.data[0];
                 this.fetchRequests();
                 const socket = this.socketFactory.get('JoinRequests');
@@ -79,6 +81,7 @@ export class CommunityRequestsPanelComponent {
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
             request?.id!, this.auth.getUserUUID(), new Date(), RequestStatus.REJECTED
         ).subscribe();
+        (this.serviceFactory.get('notifications') as NotificationService).removeFromRelated([request?.id!]).subscribe();
     }
 
     acceptRequest(user: User) {
@@ -86,9 +89,10 @@ export class CommunityRequestsPanelComponent {
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
             request?.id!, this.auth.getUserUUID(), new Date(), RequestStatus.ACCEPTED
         ).subscribe();
+        (this.serviceFactory.get('notifications') as NotificationService).removeFromRelated([request?.id!]).subscribe();
     }
 
     close() {
-        this.eventEmitter.emit();
+        this.router.navigate([{outlets:{ modal: null}}]).then();
     }
 }

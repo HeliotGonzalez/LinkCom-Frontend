@@ -26,12 +26,7 @@ export class CommunityCardComponent {
     }
 
     viewCommunity() {
-        this.router.navigate(['community'], {
-            queryParams: {
-                communityID: this.community.id,
-                isUserJoined: this.isUserJoined
-            }
-        }).then();
+        this.router.navigate(['community', this.community.id]).then();
     }
 
     joinCommunity() {

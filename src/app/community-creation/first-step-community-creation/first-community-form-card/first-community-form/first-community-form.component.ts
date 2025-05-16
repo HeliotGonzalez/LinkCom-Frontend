@@ -58,7 +58,7 @@ export class FirstCommunityFormComponent {
         this.interests = this.formData.getOrDefault("interests", "");
         this.apiService.getInterests().subscribe(res => {
             // @ts-ignore
-            this.storedInterests = this.storedInterests.concat(res["data"].map(e => e["name"]));
+            this.storedInterests = [...res].map(e => e["name"]);
         });
     }
 

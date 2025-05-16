@@ -1,0 +1,17 @@
+.chat-header {
+    height: 12%;
+}
+
+.messages-section {
+    height: 50%;
+}
+
+.separator {
+    width: 3px;
+    background: radial-gradient(circle, #eaeaea, white);
+}
+
+.h-separator {
+    height: 3px;
+    background: radial-gradient(circle, #eaeaea, white);
+}

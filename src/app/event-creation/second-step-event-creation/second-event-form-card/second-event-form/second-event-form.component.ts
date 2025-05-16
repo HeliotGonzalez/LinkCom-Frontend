@@ -56,8 +56,8 @@ export class SecondEventFormComponent {
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();
     }
 
-    private parseDate(date: string, time: string): Date {
-        return new Date(Date.parse(`${date}T${time}`));
+    private parseDate(date: string, time: string): string {
+        return new Date(Date.parse(`${date}T${time}`)).toISOString();
     }
 
     onDragOver(event: DragEvent) {

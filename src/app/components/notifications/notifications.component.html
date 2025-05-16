@@ -1,0 +1,36 @@
+<div class="notifications-bell bg-transparent position-relative d-flex align-items-center justify-content-center rounded-circle position-absolute bottom-0 m-3">
+    <i (click)="toggleOpen()" class="bi-bell-fill text-white"></i>
+    @if (Object.keys(notifications).length) {
+        <div class="notifications-number bg-danger position-absolute d-flex align-items-center justify-content-center rounded-circle top-0 text-white">
+            <span>{{ Object.keys(notifications).length }}</span>
+        </div>
+    }
+    @if (open) {
+        <section class="notifications-section bg-white d-flex flex-column position-absolute overflow-x-auto p-2 gap-2"
+                 style="z-index: 1000">
+            @for (notification of Object.values(notifications); track notification.id) {
+                @switch (notification.type) {
+                    @case (NotificationType.MESSAGE) {
+                        <app-message-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-message-notification>
+                    }
+                    @case (NotificationType.COMMUNITY) {
+                    }
+                    @case (NotificationType.EVENT) {
+                    }
+                    @case (NotificationType.EVENT_REQUEST) {
+                    }
+                    @case (NotificationType.JOIN_REQUEST) {
+                        <app-join-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-join-request-notification>
+                    }
+                    @case (NotificationType.FRIEND_REQUEST) {
+                    }
+                }
+            }
+            @if (!Object.keys(notifications).length) {
+                <article class="w-100 h-100 d-flex align-items-center justify-content-center">
+                    <span style="color: gray">There is no notifications yet!</span>
+                </article>
+            }
+        </section>
+    }
+</div>

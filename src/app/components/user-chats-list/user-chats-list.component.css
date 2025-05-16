@@ -1,0 +1,9 @@
+.separator {
+    width: 3px;
+    background: radial-gradient(circle, #eaeaea, white);
+}
+
+.h-separator {
+    height: 3px;
+    background: radial-gradient(circle, #eaeaea, white);
+}
