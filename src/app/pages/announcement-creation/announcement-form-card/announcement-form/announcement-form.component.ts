@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ServiceFactory } from '../../../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../../../architecture/services/CommunityService';
 import { CommunityAnnouncement } from '../../../../../architecture/model/CommunityAnnouncement';
+import { LanguageService } from '../../../../language.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class AnnouncementFormComponent implements OnInit{
     private router: Router,
     private baseRoute: ActivatedRoute,
     private serviceFactory: ServiceFactory, 
-    private authService: AuthService
+    private authService: AuthService,
+    private languageService: LanguageService
   ) {  
     this.publisherID = this.authService.getUserUUID();
   }
@@ -63,7 +65,11 @@ export class AnnouncementFormComponent implements OnInit{
   submitData(event: Event){
     event.preventDefault();
     if (this.title.trim() === '' || this.body.trim() === '') {
-      Swal.fire('Error', 'Title and description are required!', 'error');
+      if (this.languageService.current == 'en'){
+        Swal.fire('Error', 'Title and description are required!', 'error');
+      } else {
+        Swal.fire('Error', 'Título y descripción son requeridos para continuar', 'error');
+      }
       return;
     }
 
@@ -77,44 +83,39 @@ export class AnnouncementFormComponent implements OnInit{
     (this.serviceFactory.get('communities') as CommunityService).createAnnouncement(this.communityAnnouncement).subscribe({
       next: (response: any) => {
         console.log(response);
-        Swal.fire({
-          title: "Operation success",
-          icon: "success",
-          confirmButtonText: "Continue"
-        });
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: "Operation success",
+            icon: "success",
+            confirmButtonText: "Continue"
+          });
+        } else {
+          Swal.fire({
+            title: "Éxito durante la operación",
+            icon: "success",
+            confirmButtonText: "Continuar"
+          });
+        }
         this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
       },
       error: (err: any) => {
-        Swal.fire({
-          title: "Operation error",
-          text: "Database connection error",
-          icon: "error",
-          confirmButtonText: "Continue"
-        });
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: "Operation error",
+            text: "Database connection error",
+            icon: "error",
+            confirmButtonText: "Continue"
+          });
+        } else {
+          Swal.fire({
+            title: "La operación falló",
+            text: "Error con la conexión a la base de datos",
+            icon: "error",
+            confirmButtonText: "Continuar"
+          });  
+        }
         console.log(err);
       }
     });
-
-    /*
-    this.apiService.createAnnouncement(this.title, this.body, this.communityID, this.publisherID).subscribe({
-      next: (response: any) => {
-        console.log(response);
-        Swal.fire({
-          title: "Operation success",
-          icon: "success",
-          confirmButtonText: "Continue"
-        });
-        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
-      },
-      error: (err: any) => {
-        Swal.fire({
-          title: "Operation error",
-          text: "Database connection error",
-          icon: "error",
-          confirmButtonText: "Continue"
-        });
-        console.log(err);
-      }
-    });*/
   }
 }
