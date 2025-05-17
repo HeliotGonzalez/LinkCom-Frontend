@@ -12,16 +12,30 @@
                     <div class="h-separator w-100"></div>
                 </div>
             }
-            <section #withScroll class="messages-section flex-grow-1 d-flex flex-column p-3 overflow-y-auto">
+            <section #withScroll class="messages-section flex-grow-1 d-flex gap-1 flex-column p-3 overflow-y-auto">
                 @for (messageID of Object.keys(messages); track messageID) {
                     <app-message
                             #item
                             [message]="messages[messageID]"
                             [own]="messages[messageID].from === auth.getUserUUID()"
+                            [isRemoving]="isRemoving"
                             (removeEmitter)="removeMessage($event)"
+                            (addToRemoveListEmitter)="addToList($event)"
+                            (removeFromRemoveListEmitter)="removeFromList($event)"
                     ></app-message>
                 }
             </section>
+            @if (isRemoving) {
+                <div class="removing-messages-container d-flex align-items-center justify-content-center m-1 p-2">
+                    <div class="d-flex align-items-center flex-grow-1 justify-content-start">
+                        <i (click)="cancelRemoving()" class="bi-x fs-4"></i>
+                        <span class="fw-lighter">Selected {{Object.keys(removeList).length}} messages to remove</span>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <i (click)="removeMessages()" class="bi-trash fs-5 me-2"></i>
+                    </div>
+                </div>
+            }
             <app-input class="mt-auto"
                        (sendMessageEmitter)="send($event)"
             ></app-input>

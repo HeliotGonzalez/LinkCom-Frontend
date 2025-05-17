@@ -38,6 +38,9 @@ export class MessagesComponent {
     protected messages: { [key: string]: Message } = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
+    protected isRemoving: boolean = false;
+
+    protected removeList: {[key: string]: Message} = {};
 
     protected subscriptions: Subscription[] = [];
 
@@ -93,14 +96,20 @@ export class MessagesComponent {
         this.scrollToBottom();
     }
 
-    removeMessage(id: string) {
+    removeMessages() {
         this.notify.confirm('Do you want to remove this messsage?').then(confirm => {
-            if (confirm) (this.serviceFactory.get('messages') as MessageService).delete(id).subscribe({
+            if (confirm) (this.serviceFactory.get('messages') as MessageService).deleteFrom(Object.keys(this.removeList)).subscribe({
                 next: () => this.notify.success('This message has been removed'),
                 error: err => this.notify.error(`We could not remove this message: ${err.error}`)
             });
             else this.notify.error('This message is still safe', 'Operation cancelled');
+            this.removeList = {};
+            this.isRemoving = false;
         });
+    }
+
+    removeMessage(isRemoving: boolean) {
+        this.isRemoving = isRemoving;
     }
 
     private initializeSocketsListeners() {
@@ -134,5 +143,18 @@ export class MessagesComponent {
 
     private scrollToBottom() {
         this.withScroll.nativeElement.scrollTop = this.withScroll.nativeElement.scrollHeight;
+    }
+
+    addToList(id: string) {
+        this.removeList[id] = this.messages[id];
+    }
+
+    removeFromList(id: string) {
+        delete this.removeList[id];
+    }
+
+    cancelRemoving() {
+        this.isRemoving = false
+        this.removeList = {};
     }
 }

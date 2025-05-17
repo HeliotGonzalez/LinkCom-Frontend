@@ -6,18 +6,22 @@ import {UserChat} from "../../../architecture/model/UserChat";
 import {MessageService} from "../../../architecture/services/MessageService";
 import {AuthService} from "../../services/auth.service";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
+import {FormsModule} from "@angular/forms";
 
 @Component({
   selector: 'app-user-chats-list',
     imports: [
-        UserCardComponent
+        UserCardComponent,
+        FormsModule
     ],
   templateUrl: './user-chats-list.component.html',
   styleUrl: './user-chats-list.component.css'
 })
 export class UserChatsListComponent {
     protected readonly Object = Object;
-    userChats: {[key: string]: UserChat} = {};
+    protected userChats: {[key: string]: UserChat} = {};
+    protected filteredUserChats: {[key: string]: UserChat} = {};
+    protected search = "";
 
     @Input() activeRecipientID!: string;
 
@@ -30,7 +34,10 @@ export class UserChatsListComponent {
     }
 
     ngOnInit() {
-        (this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => res.data.forEach(c => this.userChats[c.id!] = c));
+        (this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => {
+            res.data.forEach(c => this.userChats[c.id!] = c);
+            this.applyFilter();
+        });
         this.initializeSockets();
     }
 
@@ -42,7 +49,6 @@ export class UserChatsListComponent {
 
     private onChangeChat(chat: UserChat) {
         if (chat.from !== this.auth.getUserUUID()) return;
-        console.log(chat)
         if (chat.hidden) this.onDeleteChat(chat);
         else this.userChats[chat.id!] = chat;
         this.sortChats();
@@ -58,5 +64,13 @@ export class UserChatsListComponent {
             Object.entries(this.userChats)
                 .sort(([, a], [, b]) => new Date(b.last_used_at).getTime() - new Date(a.last_used_at).getTime())
         );
+        this.applyFilter();
+    }
+
+    protected applyFilter() {
+        this.filteredUserChats = Object.fromEntries(
+            Object.entries(this.userChats).filter(([id, c]) => c.toUsername.toLowerCase().includes(this.search.toLowerCase()))
+        );
+
     }
 }
