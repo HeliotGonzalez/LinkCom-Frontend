@@ -29,7 +29,6 @@ export class UserCardComponent {
     }
 
     ngOnInit() {
-        console.log(this.active);
         (this.serviceFactory.get('users') as UserService).getUser(this.userID).subscribe(res => this.user = res.data[0]);
     }
 

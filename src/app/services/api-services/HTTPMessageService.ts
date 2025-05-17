@@ -15,6 +15,17 @@ export class HTTPMessageService implements MessageService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    deleteFrom(ids: string[]): Observable<void> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([{
+                field: 'id',
+                operator: 'in',
+                value: ids
+            }])
+        ));
+        return this.http.delete<void>(`${this.url}/messages/${serial}`);
+    }
+
     getChatBetween(from: string, to: string): Observable<ApiResponse<UserChat>> {
         const serial = CriteriaSerializer.serialize(new Criteria(
             Filters.fromValues([

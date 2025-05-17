@@ -4,6 +4,7 @@ import {Command} from "../../architecture/control/Command";
 import {MessageService} from "../../architecture/services/MessageService";
 import {NotificationType} from "../../architecture/model/NotificationType";
 import {NotificationService} from "../../architecture/services/NotificationService";
+import {UserService} from "../../architecture/services/UserService";
 
 export class SendMessageCommand implements Command {
     constructor(
@@ -21,13 +22,17 @@ export class SendMessageCommand implements Command {
             }).subscribe();
             const from = res.data[0].from;
             const to = res.data[0].to;
-            (this.serviceFactory.get('messages') as MessageService).getChatBetween(from, to).subscribe(res => {
-                if (res.data.length > 0) (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(from, to).subscribe();
-                else (this.serviceFactory.get('messages') as MessageService).createChat({from: from, to: to, last_used_at: new Date().toISOString(), hidden: false}).subscribe()
-            });
-            (this.serviceFactory.get('messages') as MessageService).getChatBetween(to, from).subscribe(res => {
-                if (res.data.length > 0) (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(to, from).subscribe();
-                else (this.serviceFactory.get('messages') as MessageService).createChat({from: to, to: from, last_used_at: new Date().toISOString(), hidden: false}).subscribe()
+            (this.serviceFactory.get('users') as UserService).getUsers([from, to]).subscribe(res => {
+                const fromUsername = res.data.find(u => u.id! === from)?.username!;
+                const toUsername = res.data.find(u => u.id! === to)?.username!;
+                (this.serviceFactory.get('messages') as MessageService).getChatBetween(from, to).subscribe(res => {
+                    if (res.data.length > 0) (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(from, to).subscribe();
+                    else (this.serviceFactory.get('messages') as MessageService).createChat({from: from, to: to, fromUsername: fromUsername, toUsername: toUsername, last_used_at: new Date().toISOString(), hidden: false}).subscribe()
+                });
+                (this.serviceFactory.get('messages') as MessageService).getChatBetween(to, from).subscribe(res => {
+                    if (res.data.length > 0) (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(to, from).subscribe();
+                    else (this.serviceFactory.get('messages') as MessageService).createChat({from: to, to: from, fromUsername: toUsername, toUsername: fromUsername, last_used_at: new Date().toISOString(), hidden: false}).subscribe()
+                });
             });
         });
     }

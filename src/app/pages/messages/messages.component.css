@@ -1,5 +1,5 @@
 .chat-header {
-    height: 12%;
+    min-height: 10%;
 }
 
 .messages-section {
@@ -14,4 +14,10 @@
 .h-separator {
     height: 3px;
     background: radial-gradient(circle, #eaeaea, white);
+}
+
+.removing-messages-container {
+    width: 99%;
+    border-radius: 10px;
+    background: #eeeeee;
 }
