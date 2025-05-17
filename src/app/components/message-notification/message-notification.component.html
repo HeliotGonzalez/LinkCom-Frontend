@@ -2,7 +2,7 @@
     <div class="h-100 flex-grow-1 d-flex align-items-center gap-2">
         <i class="bi-chat-dots" style="color: black"></i>
         @defer (when notification) {
-            <span style="color: darkslategray; font-size: 0.8rem">{{notificationMessageMap[notification.type.toString()]}}</span>
+            <span style="color: darkslategray; font-size: 0.8rem">{{notificationMessageMap[notification.type.toString()]}} from <strong>{{from.username}}</strong></span>
         }
     </div>
     <div class="h-100 d-flex align-items-center justify-content-center">

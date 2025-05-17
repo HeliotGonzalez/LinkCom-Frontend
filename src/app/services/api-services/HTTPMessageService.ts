@@ -15,6 +15,32 @@ export class HTTPMessageService implements MessageService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    getBetweenAndFrom(from: string, to: string): Observable<ApiResponse<Message>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {
+                    logic: FilterGroupLogic.OR, filters: [
+                        {
+                            logic: FilterGroupLogic.AND, filters: [
+                                {field: 'from', operator: 'eq', value: from},
+                                {field: 'to', operator: 'eq', value: to}
+                            ]
+                        },
+                        {
+                            logic: FilterGroupLogic.AND, filters: [
+                                {field: 'to', operator: 'eq', value: from},
+                                {field: 'from', operator: 'eq', value: to}
+                            ]
+                        },
+                    ]
+                },
+                {field: 'from', operator: 'neq', value: to}
+            ]),
+            Order.asc('created_at')
+        ));
+        return this.http.get<ApiResponse<Message>>(`${this.url}/messages/${serial}`);
+    }
+
     deleteFrom(ids: string[]): Observable<void> {
         const serial = CriteriaSerializer.serialize(new Criteria(
             Filters.fromValues([{

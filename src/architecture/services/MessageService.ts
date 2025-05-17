@@ -9,6 +9,7 @@ export interface MessageService extends Service {
     send(message: Message): Observable<ApiResponse<Message>>;
     get(id: string): Observable<ApiResponse<Message>>;
     getBetween(from: string, to: string): Observable<ApiResponse<Message>>;
+    getBetweenAndFrom(from: string, to: string): Observable<ApiResponse<Message>>;
     edit(message: Message): Observable<void>;
     delete(id: string): Observable<void>;
     deleteFrom(ids: string[]): Observable<void>;

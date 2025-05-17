@@ -6,10 +6,20 @@
     </div>
     <div class="flex-grow-1 h-100 d-flex align-items-center p-3">
         @defer (when user) {
-            <span class="fw-light">{{ user.username }}</span>
+            @if (Object.keys(unreadMessages).length) {
+                <span class="fw-bold">{{ user.username }}</span>
+            } @else {
+                <span class="fw-light">{{ user.username }}</span>
+            }
         }
     </div>
     <div class="d-flex align-items-center justify-content-end">
+        @if (Object.keys(unreadMessages).length) {
+            <div class="d-flex align-items-center justify-content-center rounded-circle bg-danger"
+                 style="height: 1.3rem; width: 1.3rem;">
+                <span class="text-white fs-6">{{ Object.keys(unreadMessages).length }}</span>
+            </div>
+        }
         <i (click)="hideChat()" class="bi-x fs-3"></i>
     </div>
 </article>
