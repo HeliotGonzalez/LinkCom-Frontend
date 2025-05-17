@@ -160,6 +160,22 @@
     "556782945671859145": "Todos los usuarios",
     "8202928157421474817": "Amigos",
     "4397737279393560449": " No se encontraron usuarios ",
-    "4648372231381995897": "Crea una comunidad"
+    "4648372231381995897": "Crea una comunidad",
+    "3237134559142630998": "{$START_HEADING_LEVEL2}Editing {$INTERPOLATION}{$CLOSE_HEADING_LEVEL2}",
+    "7394346768660969333": "Nombre",
+    "8206693261898206429": "Nombre de la comunidad",
+    "4486803185649820613": "Descripción",
+    "4765884618179239988": "Descripción de la comunidad",
+    "379167011283174124": " ¿Desea que la comunidad sea privada? ",
+    "6905292288470530175": "Guardar cambios",
+    "1211326563783800414": "Día del evento",
+    "4288394486531144139": "Hora: {$LINE_BREAK} {$INTERPOLATION}",
+    "2097374582547081953": " Día: {$LINE_BREAK} {$INTERPOLATION} ",
+    "3699551779661901417": " Descripción ",
+    "3370024985122761451": "Comunidad:",
+    "2804755693460742859": "Intereses",
+    "6633090804268318181": " Anterior ",
+    "8622205664549908846": " Siguiente ",
+    "5610483944230396062": "Cerrar"
   }
 }
