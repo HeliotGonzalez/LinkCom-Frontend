@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import {FeedEventCardComponent} from "../../components/feed-event-card/feed-event-card.component";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
 import { Router } from '@angular/router';
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-homepage',
@@ -30,7 +31,11 @@ export class HomepageComponent implements OnInit {
     todayDay: number = 0;
     calendarEvents: { [day: number]: string[] } = {};
 
-    constructor(private apiService: ApiService, private authService: AuthService, private router: Router) {}
+    constructor(private apiService: ApiService, private authService: AuthService, private languageService: LanguageService) {
+        this.dayNames = this.languageService.current === 'es'
+            ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+            : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    }
 
     ngOnInit(): void {
         this.fetchFeed();
@@ -121,14 +126,26 @@ export class HomepageComponent implements OnInit {
         this.apiService.joinEvent(this.authService.getUserUUID(), event?.communityID, event?.id)
             .subscribe({
                 next: res => {
-                    Swal.fire({
-                        title: "Success!",
-                        text: "You have joined the event.",
-                        icon: "success"
-                    }).then(() => {
-                        this.feedEvents = this.feedEvents.filter(e => e.id !== event.id);
-                        this.fetchCalendarEvents();
-                    });
+                    if (this.languageService.current == 'en'){
+                        Swal.fire({
+                            title: "Success!",
+                            text: "You have joined the event.",
+                            icon: "success"
+                        }).then(() => {
+                            this.feedEvents = this.feedEvents.filter(e => e.id !== event.id);
+                            this.fetchCalendarEvents();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Operación exitosa",
+                            text: "Te has unido al evento.",
+                            icon: "success"
+                        }).then(() => {
+                            this.feedEvents = this.feedEvents.filter(e => e.id !== event.id);
+                            this.fetchCalendarEvents();
+                        });
+                    }
+
                 },
                 error: res => {
                     Swal.fire({
@@ -145,16 +162,30 @@ export class HomepageComponent implements OnInit {
         const userID = this.authService.getUserUUID();
         this.apiService.joinCommunity(userID, communityId).subscribe({
             next: response => {
-              Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: 'Te has unido a la comunidad correctamente.',
-                confirmButtonText: 'OK'
-              }).then(() => {
-                this.fetchCommunities();
-                this.fetchFeed();
-                this.fetchExcludedEvents();
-              });
+                if (this.languageService.current == 'es'){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: 'Te has unido a la comunidad correctamente.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        this.fetchCommunities();
+                        this.fetchFeed();
+                        this.fetchExcludedEvents();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'You have joined to the event.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        this.fetchCommunities();
+                        this.fetchFeed();
+                        this.fetchExcludedEvents();
+                    });
+                }
+
             },
             error: err => {
               Swal.fire({

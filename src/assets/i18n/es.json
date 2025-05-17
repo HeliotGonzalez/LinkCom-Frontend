@@ -124,7 +124,7 @@
     "7075048909812077704": "Introduce tu contraseña",
     "2454050363478003966": "Iniciar sesión",
     "7783030408502002648": "¿Aún no tienes una cuenta? {$LINE_BREAK}{$START_LINK}Ve a registrarte{$CLOSE_LINK}",
-    "6495120321680708111": "¡Empieza a chatear con alguien antisocial!",
+    "6495120321680708111": "¡Empieza a chatear con alguien, antisocial!",
     "7832755793225452112": "Registro de usuario",
     "322645167081016766": "Completa tus datos para registrarte",
     "3161214662025173071": "Nombre de usuario *",
@@ -159,6 +159,7 @@
     "3851971103183401874": "Buscar usuarios...",
     "556782945671859145": "Todos los usuarios",
     "8202928157421474817": "Amigos",
-    "4397737279393560449": " No se encontraron usuarios "
+    "4397737279393560449": " No se encontraron usuarios ",
+    "4648372231381995897": "Crea una comunidad"
   }
 }
