@@ -188,12 +188,22 @@ export class HomepageComponent implements OnInit {
 
             },
             error: err => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Ups',
-                text: 'Ha ocurrido un error al unirte a la comunidad: ' + (err.error?.message || err.message),
-                confirmButtonText: 'OK'
-              });
+                if (this.languageService.current == 'en'){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ups',
+                        text: 'Ha ocurrido un error al unirte a la comunidad: ' + (err.error?.message || err.message),
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Ups',
+                        text: 'An error has ocurred while joining to a community: ' + (err.error?.message || err.message),
+                        confirmButtonText: 'Continue'
+                    });
+                }
+
             }
           });
     }

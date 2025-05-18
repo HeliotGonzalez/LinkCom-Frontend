@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { InterestTagComponent } from "../../../components/interest-tag/interest-tag.component";
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { LanguageService } from '../../../language.service';
 
 @Component({
   selector: 'app-register-third-step',
@@ -18,7 +19,7 @@ export class RegisterThirdStepComponent {
   protected storedInterests: string[] = [];
   protected interestsCoincidences: string[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private languageService: LanguageService) {}
 
   goToSecondStep() {
     this.router.navigate(['/user-register/secondStep']);
@@ -35,8 +36,12 @@ export class RegisterThirdStepComponent {
   addInterestTag(event: Event, value: string) {
         event.preventDefault();
         if (!this.storedInterests.includes(value)) {
+          if (this.languageService.current == 'en') {
             Swal.fire("Error!", "Interest not found!", "error");
-            return;
+          } else {
+            Swal.fire("¡Error!", "Interés no encontrado.", "error");
+          }
+          return;
         }
         let normalizedValue = `#${value}`.toLowerCase();
         if (!(this.interests.includes(normalizedValue))) this.interests = [...this.interests, normalizedValue];

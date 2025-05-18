@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {FormService} from "../../../../../services/form-service/form.service";
 import {FormsModule} from "@angular/forms";
 import Swal from "sweetalert2";
+import { LanguageService } from '../../../../../language.service';
 
 @Component({
     selector: 'app-second-community-form',
@@ -20,7 +21,7 @@ export class SecondCommunityFormComponent {
     protected description: string = "";
     protected privateCommunity: boolean = false;
 
-    constructor(private router: Router, private formService: FormService) {
+    constructor(private router: Router, private formService: FormService, private languageService: LanguageService) {
     }
 
     previousPage() {
@@ -32,7 +33,11 @@ export class SecondCommunityFormComponent {
     nextPage(event: Event) {
         event.preventDefault()
         if (this.description === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "All required fields must be filled!", "error");
+            } else {
+                Swal.fire("¡Error!", "Todos los campos requeridos deben ser introducidos", "error");
+            }
             return;
         }
         this.router.navigate(["/thirdStepCommunityCreation"]).then(r => {
@@ -55,7 +60,11 @@ export class SecondCommunityFormComponent {
     changeFormStep(route: string) {
         this.saveFormData();
         if (this.description === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "All required fields must be filled!", "error");
+            } else {
+                Swal.fire("¡Error!", "Todos los campos requeridos deben ser introducidos", "error");
+            }
             return;
         }
     }
