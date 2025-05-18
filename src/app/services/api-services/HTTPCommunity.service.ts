@@ -8,13 +8,21 @@ import {CommunityUser} from "../../../architecture/model/CommunityUser";
 import {CommunityService} from "../../../architecture/services/CommunityService";
 import {Observable} from "rxjs";
 import {Community} from "../../../architecture/model/Community";
-import { CommunityEvent } from "../../../architecture/model/CommunityEvent";
-import { JoinRequest } from "../../../architecture/model/JoinRequest";
-import { RequestStatus } from "../../../architecture/model/RequestStatus";
-import { CommunityAnnouncement } from "../../../architecture/model/CommunityAnnouncement";
+import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
+import {JoinRequest} from "../../../architecture/model/JoinRequest";
+import {RequestStatus} from "../../../architecture/model/RequestStatus";
+import {CommunityAnnouncement} from "../../../architecture/model/CommunityAnnouncement";
+import {CriteriaSerializer} from "../../../architecture/io/criteria/CriteriaSerializer";
+import {Criteria} from "../../../architecture/io/criteria/Criteria";
+import {Filters} from "../../../architecture/io/criteria/Filters";
+import {FilterGroupLogic} from "../../../architecture/io/criteria/FilterGroup";
 
 export class HTTPCommunityService implements CommunityService {
     constructor(private http: HttpClient, private url: string) {
+    }
+
+    getJoinRequest(id: string): Observable<ApiResponse<JoinRequest>> {
+        return this.http.get<ApiResponse<JoinRequest>>(`${this.url}/communities/joinRequests/given?id=${id}`);
     }
 
     getPendingCommunityEventsRequests(communityID: string): Observable<ApiResponse<CommunityEvent>> {
@@ -30,7 +38,11 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     updateJoinRequest(joinRequestID: string, decidedBy: string, decidedAt: Date, status: RequestStatus): Observable<ApiResponse<JoinRequest>> {
-        return this.http.patch<ApiResponse<JoinRequest>>(`${this.url}/communities/${joinRequestID}/update`, {decidedBy, decidedAt, status});
+        return this.http.patch<ApiResponse<JoinRequest>>(`${this.url}/communities/${joinRequestID}/update`, {
+            decidedBy,
+            decidedAt,
+            status
+        });
     }
 
     getCommunityJoinRequests(communityID: string): Observable<ApiResponse<JoinRequest>> {
@@ -54,8 +66,19 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     getCommunityModerators(communityID: string): Observable<ApiResponse<User>> {
-        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator`)
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {
+                    logic: FilterGroupLogic.OR, filters: [
+                        {field: 'communityRole', operator: 'eq', value: 'moderator'},
+                        {field: 'communityRole', operator: 'eq', value: 'administrator'},
+                    ]
+                }
+            ])
+        ));
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members/${serial}`);
     }
+
     isUserModerator(communityID: string, userID: string): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/moderators?communityRole=moderator&userID=${userID}`)
     }
@@ -97,7 +120,7 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     joinCommunity(communityID: string, userID: string) {
-        return this.http.put<ApiResponse<Community>>(`${this.url}/communities/${communityID}/join`, { userID });
+        return this.http.put<ApiResponse<Community>>(`${this.url}/communities/${communityID}/join`, {userID});
     }
 
     leaveCommunity(communityID: string, userID: string) {
@@ -118,11 +141,10 @@ export class HTTPCommunityService implements CommunityService {
     removeCommunity(communityID: string) {
         return this.http.delete<ApiResponse<Community>>(`${this.url}/communities/${communityID}`);
     }
-    
+
     removeAnnouncement(announcementID: string): Observable<ApiResponse<Announce>> {
         return this.http.delete<ApiResponse<Announce>>(`${this.url}/communities/${announcementID}/deleteAnnouncement`)
     }
-    
 
     createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>> {
         return this.http.post<ApiResponse<CommunityAnnouncement>>(`${this.url}/communities/${announcement.communityID}/createAnnouncement`, announcement);

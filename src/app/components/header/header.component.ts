@@ -3,10 +3,11 @@ import {RouterModule, Router} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { LanguageService, Lang } from '../../language.service';
+import {NotificationsComponent} from "../notifications/notifications.component";
 
 @Component({
     selector: 'app-header',
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, NotificationsComponent, CommonModule],
     templateUrl: './header.component.html',
     standalone: true,
     styleUrl: './header.component.css'

@@ -8,7 +8,7 @@
 }
 
 .user-article:hover {
-    background: #eeeeee;
+    background: #e0dfdf;
 }
 
 .img-wrapper {
@@ -17,4 +17,8 @@
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid #5b75de;
+}
+
+.active {
+    background: #eeeeee;
 }

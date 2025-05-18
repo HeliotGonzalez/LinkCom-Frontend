@@ -1,0 +1,23 @@
+<aside class="bg-white p-2 h-100 w-100 d-flex">
+    <div class="d-flex flex-column flex-grow-1">
+        <form #form="ngForm">
+            <div class="d-flex flex-column mb-4">
+                <div class="input-with-icon gap-1 d-flex align-content-center">
+                    <i class="align-content-center bi-search"></i>
+                    <input #input="ngModel" (input)="applyFilter()" name="input" type="text" [(ngModel)]="search" class="flex-grow-1 border-0" placeholder="Search" required>
+                </div>
+            </div>
+        </form>
+        <section class="w-100 h-100 overflow-y-auto">
+            @for (chat of Object.values(filteredUserChats); track chat.id) {
+                <app-user-card
+                        (click)="router.navigate(['/messages', chat.to])"
+                        [active]="chat.to === activeRecipientID"
+                        [chatID]="chat.id!"
+                        [userID]="chat.to"
+                ></app-user-card>
+            }
+        </section>
+    </div>
+    <div class="separator"></div>
+</aside>

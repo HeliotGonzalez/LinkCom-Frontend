@@ -1,19 +1,21 @@
-<article [ngClass]="getClass()" class="message w-100 d-flex flex-column gap-2">
-    <div class="message-container d-flex align-items-center p-2">
+<article (click)="addToRemoveList()" [ngClass]="getClass()" class="message removing w-100 d-flex flex-column p-2 gap-2">
+    <div class="message-container d-flex w-50 align-items-center p-2">
         @if (message.deleted_at) {
             <em>Message has been removed...</em>
         } @else {
-            {{ deserialize(message.body) }}
+            <p>{{ deserialize(message.body) }}</p>
         }
     </div>
     <div class="message-card-footer d-flex align-items-center gap-2">
         @if (!message.deleted_at) {
             @if (own) {
-                <i (click)="removeMessage()" class="bi-trash mt-auto"></i>
+                @if (!isRemoving) {
+                    <i (click)="removeMessage()" class="bi-trash mt-auto trash-icon"></i>
+                }
+                <i [ngClass]="message.read_at ? 'bi-check2-all' : 'bi-check2'"></i>
             } @else {
                 <i class="bi-flag mt-auto"></i>
             }
-            <i class="bi-check2-all"></i>
         }
         <span class="fw-light">{{ deserializeDate(message.created_at) }}</span>
     </div>

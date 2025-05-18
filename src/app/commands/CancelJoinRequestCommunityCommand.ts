@@ -3,6 +3,7 @@ import {Notify} from "../services/notify";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {Community} from "../../architecture/model/Community";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import {NotificationService} from "../../architecture/services/NotificationService";
 
 export class CancelJoinRequestCommunityCommand implements Command {
     private notify: Notify;
@@ -18,8 +19,9 @@ export class CancelJoinRequestCommunityCommand implements Command {
     execute(): void {
         this.notify.confirm(`Your join request will disappear!`).then(confirmed => {
             if (confirmed) (this.serviceFactory.get('communities') as CommunityService).cancelRequest(this.community.id!, this.userID).subscribe({
-                next: () => {
+                next: res => {
                     this.notify.success('You have canceled this join request!');
+                    (this.serviceFactory.get('notifications') as NotificationService).removeFromRelated([res.data[0].id!]).subscribe();
                 },
                 error: res => this.notify.error(`An error occurred: ${res.message}`)
             });

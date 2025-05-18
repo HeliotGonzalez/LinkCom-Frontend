@@ -1,0 +1,11 @@
+<article class="w-100 d-flex align-items-center rounded-3 bg-body-secondary p-3" style="height: 5rem">
+    <div class="h-100 flex-grow-1 d-flex align-items-center gap-2">
+        <i class="bi-chat-dots" style="color: black"></i>
+        @defer (when notification) {
+            <span style="color: darkslategray; font-size: 0.8rem">{{notificationMessageMap[notification.type.toString()]}} from <strong>{{from.username}}</strong></span>
+        }
+    </div>
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <i (click)="goToChat()" class="bi-box-arrow-right text-black fs-5"></i>
+    </div>
+</article>
