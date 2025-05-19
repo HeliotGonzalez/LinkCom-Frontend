@@ -23,8 +23,24 @@ em {
     color: grey;
 }
 
-.removing:hover {
+.remove {
     padding: 0.7rem;
     background: #eeeeee;
     border-radius: 10px;
+}
+
+.removing:hover {
+    padding: 0.7rem;
+    background: #e0dfdf;
+    border-radius: 10px;
+}
+
+.message .trash-icon {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    cursor: pointer;
+}
+
+.message:hover .trash-icon {
+    opacity: 1;
 }

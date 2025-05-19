@@ -1,6 +1,5 @@
 import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {InputComponent} from "../../components/input/input.component";
-import {UserCardComponent} from "../../components/user-card/user-card.component";
 import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
 import {UserService} from "../../../architecture/services/UserService";
 import {User} from "../../../architecture/model/User";
@@ -13,14 +12,19 @@ import {Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Notify} from "../../services/notify";
 import {UsersListComponent} from "../users-list/users-list.component";
+import {NotificationService} from "../../../architecture/services/NotificationService";
+import {SendMessageCommand} from "../../commands/SendMessageCommand";
+import {TextSerializer} from "../../../architecture/io/TextSerializer";
+import {UserChat} from "../../../architecture/model/UserChat";
+import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
 
 @Component({
     selector: 'app-messages',
     imports: [
         InputComponent,
-        UserCardComponent,
         MessageComponent,
-        UsersListComponent
+        UsersListComponent,
+        UserChatsListComponent
     ],
     templateUrl: './messages.component.html',
     standalone: true,
@@ -30,10 +34,13 @@ export class MessagesComponent {
     @ViewChild('withScroll') private withScroll!: ElementRef;
     @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
-    protected users: User[] = [];
-    protected messages: {[key: string]: Message} = {};
+    protected userChats: {[key: string]: UserChat} = {};
+    protected messages: { [key: string]: Message } = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
+    protected isRemoving: boolean = false;
+
+    protected removeList: {[key: string]: Message} = {};
 
     protected subscriptions: Subscription[] = [];
 
@@ -48,7 +55,7 @@ export class MessagesComponent {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.route.paramMap.subscribe(params => {
+        this.route.paramMap.subscribe(params => {
             this.restart();
             this.recipientID = params.get('id');
             if (this.recipientID)
@@ -56,19 +63,18 @@ export class MessagesComponent {
                     this.recipient = res.data[0];
                     this.initializeSocketsListeners();
                 }));
-            this.subscriptions.push((this.serviceFactory.get('users') as UserService).getFriends(this.auth.getUserUUID()).subscribe(res => {
-                this.users = [...res.data];
+            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => {
+                res.data.forEach(c => this.userChats[c.id!] = c);
                 this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
                     this.markAsRead(Object.values(this.messages));
                 }));
             }));
-        }));
+        });
     }
 
     restart() {
         this.messages = {};
-        this.recipientID = null;
         this.recipient = null;
         this.subscriptions.forEach(s => s.unsubscribe());
     }
@@ -78,25 +84,32 @@ export class MessagesComponent {
     }
 
     send(body: string) {
-        const message: Message = {
-            from: this.auth.getUserUUID(),
-            to: this.recipientID!,
-            body: encodeURIComponent(body),
-            isRead: false,
-            created_at: new Date().toISOString()
-        };
-        (this.serviceFactory.get('messages') as MessageService).send(message).subscribe();
+        SendMessageCommand.Builder.create()
+            .withFactory(this.serviceFactory)
+            .withMessage({
+                from: this.auth.getUserUUID(),
+                to: this.recipientID!,
+                body: TextSerializer.serialize(body),
+                created_at: new Date().toISOString()
+            })
+            .build().execute()
         this.scrollToBottom();
     }
 
-    removeMessage(id: string) {
+    removeMessages() {
         this.notify.confirm('Do you want to remove this messsage?').then(confirm => {
-            if (confirm) (this.serviceFactory.get('messages') as MessageService).delete(id).subscribe({
+            if (confirm) (this.serviceFactory.get('messages') as MessageService).deleteFrom(Object.keys(this.removeList)).subscribe({
                 next: () => this.notify.success('This message has been removed'),
                 error: err => this.notify.error(`We could not remove this message: ${err.error}`)
             });
             else this.notify.error('This message is still safe', 'Operation cancelled');
+            this.removeList = {};
+            this.isRemoving = false;
         });
+    }
+
+    removeMessage(isRemoving: boolean) {
+        this.isRemoving = isRemoving;
     }
 
     private initializeSocketsListeners() {
@@ -119,8 +132,9 @@ export class MessagesComponent {
     protected readonly Object = Object;
 
     private markAsRead(messages: Message[]) {
-        const ids = messages.filter(m => !m.isRead && m.to === this.auth.getUserUUID()).map(m => m.id!);
+        const ids = messages.filter(m => !m.read_at && m.to === this.auth.getUserUUID()).map(m => m.id!);
         (this.serviceFactory.get('messages') as MessageService).markAsRead(ids).subscribe();
+        (this.serviceFactory.get('notifications') as NotificationService).removeFromRelated(ids).subscribe();
     }
 
     ngAfterViewInit() {
@@ -129,5 +143,18 @@ export class MessagesComponent {
 
     private scrollToBottom() {
         this.withScroll.nativeElement.scrollTop = this.withScroll.nativeElement.scrollHeight;
+    }
+
+    addToList(id: string) {
+        this.removeList[id] = this.messages[id];
+    }
+
+    removeFromList(id: string) {
+        delete this.removeList[id];
+    }
+
+    cancelRemoving() {
+        this.isRemoving = false
+        this.removeList = {};
     }
 }

@@ -3,14 +3,16 @@
         @if (message.deleted_at) {
             <em>Message has been removed...</em>
         } @else {
-            {{ deserialize(message.body) }}
+            <p>{{ deserialize(message.body) }}</p>
         }
     </div>
     <div class="message-card-footer d-flex align-items-center gap-2">
         @if (!message.deleted_at) {
             @if (own) {
-                <i (click)="removeMessage()" class="bi-trash mt-auto"></i>
-                <i [ngClass]="message.isRead ? 'bi-check2-all' : 'bi-check2'"></i>
+                @if (!isRemoving) {
+                    <i (click)="removeMessage()" class="bi-trash mt-auto trash-icon"></i>
+                }
+                <i [ngClass]="message.read_at ? 'bi-check2-all' : 'bi-check2'"></i>
             } @else {
                 <i class="bi-flag mt-auto"></i>
             }

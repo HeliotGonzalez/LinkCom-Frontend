@@ -34,6 +34,7 @@ import { PersonalProfileComponent } from './components/personal-profile/personal
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { UsersListComponent } from './pages/users-list/users-list.component';
 import {MessagesComponent} from "./pages/messages/messages.component";
+import {EventsRequestPanelComponent} from "./components/events-request-panel/events-request-panel.component";
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
@@ -48,7 +49,7 @@ export const routes: Routes = [
     {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'moderatorsManagement', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
-    {path: 'community', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
+    {path: 'community/:id', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
     {path: 'communities', component: ComunitiesComponent, canActivate: [NoAuthGuard]},
     {path: 'calendar', component: EventsCommunityCalendarComponent, canActivate: [NoAuthGuard]},
     {path: 'announcementCreation', component: AnnouncementCreationComponent, canActivate: [NoAuthGuard]},
@@ -61,6 +62,8 @@ export const routes: Routes = [
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent},
     {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
+    {path: 'communityRequestsPanel/:id', component: CommunityRequestsPanelComponent, outlet: 'modal'},
+    {path: 'eventsRequestPanel/:id', component: EventsRequestPanelComponent, outlet: 'modal'},
     {path: 'edit-profile', component: EditProfileComponent },
     {path: 'users-list', component: UsersListComponent},
     {path: 'messages', component: MessagesComponent},

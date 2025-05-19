@@ -8,7 +8,6 @@ import {AnnouncementCardComponent} from "../../pages/announcements-list/announce
 import {CommunityService} from "../../../architecture/services/CommunityService";
 import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
 import {Community} from "../../../architecture/model/Community";
-import {CommunityRequestsPanelComponent} from "../../components/community-requests-panel/community-requests-panel.component";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
 import {CommunityUser} from "../../../architecture/model/CommunityUser";
 import {firstValueFrom} from "rxjs";
@@ -32,9 +31,7 @@ import {EventsRequestPanelComponent} from "../../components/events-request-panel
     imports: [
         EventViewComponent,
         AnnouncementCardComponent,
-        CommunityRequestsPanelComponent,
-        BlurPanelComponent,
-        EventsRequestPanelComponent
+        BlurPanelComponent
     ],
     templateUrl: './community-view.component.html',
     standalone: true,
@@ -48,7 +45,6 @@ export class CommunityViewComponent {
     protected isRequested: boolean = false;
     protected isUserModerator: boolean = false;
     protected announcements: Announce[] = [];
-    protected requestPanelVisible: boolean = false;
     protected eventsRequestPanelVisible: boolean = false;
     protected isLoaded: boolean = false;
     protected eventRequests: {[key: string]: CommunityEvent} = {};
@@ -63,15 +59,15 @@ export class CommunityViewComponent {
     }
 
      ngOnInit() {
-        this.route.queryParams.subscribe(async params => {
-            this.isUserJoined = await this.checkIfIsUserJoined(params['communityID'], this.authService.getUserUUID());
-            this.isUserModerator = await this.checkIfIsUserModerator(params['communityID'], this.authService.getUserUUID());
-            this.isRequested = await this.checkIfIsRequested(params['communityID'], this.authService.getUserUUID());
-            this.community = await this.getCommunity(params['communityID']);
+        this.route.paramMap.subscribe(async params => {
+            this.isUserJoined = await this.checkIfIsUserJoined(params.get('id')!, this.authService.getUserUUID());
+            this.isUserModerator = await this.checkIfIsUserModerator(params.get('id')!, this.authService.getUserUUID());
+            this.isRequested = await this.checkIfIsRequested(params.get('id')!, this.authService.getUserUUID());
+            this.community = await this.getCommunity(params.get('id')!);
             (await this.loadEventRequests()).forEach(e => this.eventRequests[e.id!] = e);
-            (await this.getCommunityEvents(params['communityID'])).forEach(e => this.events[e.id!] = e);
-            (await this.getUserCommunityEvents(params['communityID'], this.authService.getUserUUID())).forEach(e => this.userEvents[e.id!] = e);
-            this.announcements = await this.getCommunityAnnouncements(params['communityID']);
+            (await this.getCommunityEvents(params.get('id')!)).forEach(e => this.events[e.id!] = e);
+            (await this.getUserCommunityEvents(params.get('id')!, this.authService.getUserUUID())).forEach(e => this.userEvents[e.id!] = e);
+            this.announcements = await this.getCommunityAnnouncements(params.get('id')!);
             this.initializeSockets();
             this.isLoaded = true;
         });
@@ -104,11 +100,7 @@ export class CommunityViewComponent {
     }
 
     showRequestsPanel() {
-        this.requestPanelVisible = true;
-    }
-
-    closeRequestPanel() {
-        this.requestPanelVisible = false;
+        this.router.navigate([{outlets: {modal: ['communityRequestsPanel', this.community?.id]}}]).then();
     }
 
     private async getCommunityEvents(communityID: string) {
@@ -158,7 +150,6 @@ export class CommunityViewComponent {
     protected readonly LeaveCommunityCommand = LeaveCommunityCommand;
 
     private updateRequested(joinRequest: JoinRequest, isRequested: boolean) {
-        console.log(joinRequest)
         if (joinRequest.communityID !== this.community?.id || joinRequest.userID !== this.authService.getUserUUID()) return;
         this.isRequested = isRequested;
     }
@@ -180,11 +171,7 @@ export class CommunityViewComponent {
     protected readonly Object = Object;
 
     showEventsRequestPanel() {
-        this.eventsRequestPanelVisible = true;
-    }
-
-    closeEventsRequestPanel() {
-        this.eventsRequestPanelVisible = false;
+        this.router.navigate([{outlets: {modal: ['eventsRequestPanel', this.community?.id]}}]).then();
     }
 
     protected editCommunity() {
