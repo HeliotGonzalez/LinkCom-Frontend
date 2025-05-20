@@ -28,7 +28,7 @@ export class FirstEventFormComponent {
 
     cancelForm(event: Event) {
         event.preventDefault();
-        this.router.navigate(['community'], {queryParams: {communityID: this.formData?.get('communityID')}}).then(r => {});
+        this.router.navigate(['community', this.formData?.get('communityID')]).then(r => {});
     }
 
     nextPage(event: Event) {
