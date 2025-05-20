@@ -51,7 +51,7 @@ export class EditProfileComponent implements OnInit {
 
     this.saving = true;
     this.api
-      .updateUser(this.user.id, this.profileForm.value)
+      .updateUser(this.user.id!, this.profileForm.value)
       .subscribe({
         next: () => {
           this.saving = false;

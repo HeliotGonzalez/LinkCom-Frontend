@@ -39,21 +39,21 @@ export class UsersListComponent implements OnInit {
     });
 
     userService.getFriends(this.currentUserID).subscribe(res => {
-      this.friends = res.data.map((f: User) => f.id);
+      this.friends = res.data.map((f: User) => f.id!);
     });
   }
 
 
   filteredUsers(): User[] {
     if (this.filter === 'friends') {
-      return this.users.filter(user => this.friends.includes(user.id) && user.username.toLowerCase().includes(this.searchText.toLowerCase()));
+      return this.users.filter(user => this.friends.includes(user.id!) && user.username.toLowerCase().includes(this.searchText.toLowerCase()));
     }
     return this.users.filter(user => user.username.toLowerCase().includes(this.searchText.toLowerCase()));
   }
 
   sendFriendRequest(user: User) {
     (this.serviceFactory.get('users') as UserService)
-      .makeFriendRequest(this.currentUserID, user.id)
+      .makeFriendRequest(this.currentUserID, user.id!)
       .subscribe(() => {
         this.notify.success('Friend request sent!');
       });

@@ -16,4 +16,5 @@ export interface UserService extends Service {
     updateFriendRequest(from: string, to: string, status: RequestStatus): Observable<ApiResponse<FriendRequest>>;
     cancelFriendRequest(from: string, to: string): Observable<ApiResponse<FriendRequest>>;
     getAllUsers(): Observable<ApiResponse<User>>;
+    createUser(user: User): Observable<ApiResponse<User>>;
 }

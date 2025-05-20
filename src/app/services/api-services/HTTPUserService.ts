@@ -10,6 +10,9 @@ import { RequestStatus } from "../../../architecture/model/RequestStatus";
 export class HTTPUserService implements UserService {
     constructor(private http: HttpClient, private url: string) {
     }
+    createUser(user: User): Observable<ApiResponse<User>> {
+        return this.http.post<ApiResponse<User>>(`${this.url}/users`, user);
+    }
 
     getUsers(userID: string[]): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/users?id=in;${userID}`);
@@ -47,4 +50,5 @@ export class HTTPUserService implements UserService {
     getAllUsers(): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/users`);
     }
+    
 }

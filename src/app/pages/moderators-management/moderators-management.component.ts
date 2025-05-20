@@ -59,12 +59,12 @@ export class ModeratorsManagementComponent {
     updateRole(id: string, newRole: CommunityRole) {
         const member = this.allMembers.find(m => m.id === id)!;
 
-        if (!this.changes[member.id]) this.changes[member.id] = [this.moderators.find(m => m.id === member.id) ? CommunityRole.MODERATOR : CommunityRole.MEMBER, newRole];
-        else this.changes[member.id][1] = newRole;
+        if (!this.changes[member.id!]) this.changes[member.id!] = [this.moderators.find(m => m.id === member.id!) ? CommunityRole.MODERATOR : CommunityRole.MEMBER, newRole];
+        else this.changes[member.id!][1] = newRole;
 
         this.swapUserGivenRole(member, newRole);
 
-        if (this.changes[member.id] && this.changes[member.id][0] === this.changes[member.id][1]) delete this.changes[member.id];
+        if (this.changes[member.id!] && this.changes[member.id!][0] === this.changes[member.id!][1]) delete this.changes[member.id!];
         this.orderMemberByRole();
     }
 

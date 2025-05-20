@@ -44,7 +44,7 @@ export class PersonalProfileComponent implements OnInit {
       next: (response: any) => {
         console.log('Response:', response);
         const data = response.data;
-        const createdAt = new Date(data.created_at);
+        const createdAt = (data.created_at).toISOString();
         const communities = data.communities.map((c: any) => ({
           ...c,
           created_at: new Date(c.created_at)
@@ -82,7 +82,7 @@ export class PersonalProfileComponent implements OnInit {
         (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(communityID, this.AuthService.getUserUUID()).subscribe({
             next: () => {
               this.notify.success('You have left this community!');
-              this.user!.communities = this.user!.communities.filter(c => c.id !== communityID);
+              this.user!.communities = this.user!.communities!.filter(c => c.id !== communityID);
             },
             error: res => this.notify.error(`An error occurred: ${res.message}`)
           });

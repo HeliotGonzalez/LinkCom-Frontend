@@ -27,7 +27,7 @@
                 <app-user-card
                         [username]="member.username"
                         [role]="moderators.includes(member) ? CommunityRole.MODERATOR : CommunityRole.MEMBER"
-                        (roleChanged)="updateRole(member.id, $event)"
+                        (roleChanged)="updateRole(member.id!, $event)"
                 >
                 </app-user-card>
             }
