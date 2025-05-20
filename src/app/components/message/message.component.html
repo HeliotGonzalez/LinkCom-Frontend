@@ -13,8 +13,6 @@
                     <i (click)="removeMessage()" class="bi-trash mt-auto trash-icon"></i>
                 }
                 <i [ngClass]="message.read_at ? 'bi-check2-all' : 'bi-check2'"></i>
-            } @else {
-                <i class="bi-flag mt-auto"></i>
             }
         }
         <span class="fw-light">{{ deserializeDate(message.created_at) }}</span>
