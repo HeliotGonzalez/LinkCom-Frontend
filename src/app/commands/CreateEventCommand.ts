@@ -26,7 +26,7 @@ export class CreateEventCommand implements Command {
                 const event = res.data[0];
                 (this.serviceFactory.get('events') as EventService).joinEvent(event.communityID, event.id!, this.auth.getUserUUID()).subscribe();
                 this.notify.success('Your event has been created!');
-                this.router.navigate(["/community"], {queryParams: {communityID: this.event.communityID!}}).then();
+                this.router.navigate(["/community", this.event.communityID]).then();
             },
             error: res => this.notify.error(`We could not create your event: ${res.message}`)
         })

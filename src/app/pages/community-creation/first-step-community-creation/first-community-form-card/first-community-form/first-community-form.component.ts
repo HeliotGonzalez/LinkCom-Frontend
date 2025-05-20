@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {InterestTagComponent} from '../../../../../components/interest-tag/interest-tag.component';
 import {ApiService} from "../../../../../services/api-service.service";
 import Swal from "sweetalert2";
+import {Notify} from "../../../../../services/notify";
 
 @Component({
     selector: 'app-first-community-form',
@@ -28,7 +29,7 @@ export class FirstCommunityFormComponent {
     protected storedInterests: string[] = [];
     protected interestsCoincidences: string[] = [];
 
-    constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
+    constructor(private router: Router, private formService: FormService, private apiService: ApiService, private notify: Notify) {
     }
 
     cancel() {
@@ -41,6 +42,7 @@ export class FirstCommunityFormComponent {
             Swal.fire("Error!", "All required fields must be filled!", "error");
             return;
         }
+        if (this.interests.length === 0) this.notify.error('At least one interest must be selected!');
         this.router.navigate(["/secondStepCommunityCreation"]).then(r => {
         });
         this.saveFormData();
@@ -78,7 +80,7 @@ export class FirstCommunityFormComponent {
     }
 
     getCoincidences(event: Event, value: string) {
-        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.startsWith(value)).filter(i => !this.interests.includes(`#${i}`.toLowerCase()));
+        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.toLowerCase().includes(value.toLowerCase())).filter(i => !this.interests.includes(`#${i}`.toLowerCase()));
     }
 
     moveFocus(event: Event, tagNameInput: HTMLInputElement) {
@@ -87,7 +89,7 @@ export class FirstCommunityFormComponent {
     }
 
     addInterestTagFromCoincidence($event: MouseEvent, interest: string) {
-        this.interestsCoincidences = this.interestsCoincidences.filter(i => i !== interest);
+        this.interestsCoincidences = this.interestsCoincidences.filter(i => i.toLowerCase().includes(interest.toLowerCase()));
         this.addInterestTag($event, interest);
     }
 
