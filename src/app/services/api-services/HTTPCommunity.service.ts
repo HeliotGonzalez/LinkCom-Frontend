@@ -73,7 +73,8 @@ export class HTTPCommunityService implements CommunityService {
                         {field: 'communityRole', operator: 'eq', value: 'moderator'},
                         {field: 'communityRole', operator: 'eq', value: 'administrator'},
                     ]
-                }
+                },
+                {field: 'communityID', operator: 'eq', value: communityID}
             ])
         ));
         return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members/${serial}`);

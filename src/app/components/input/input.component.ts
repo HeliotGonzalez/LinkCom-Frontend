@@ -39,11 +39,13 @@ export class InputComponent {
     }
 
     send() {
+        if (this.body.length === 0) return;
         this.sendMessageEmitter.emit(this.body);
         this.body = '';
         const textarea = this.textareaRef.nativeElement;
         textarea.textContent = null;
-        this.adjustFormHeight();
         this.textareaRef.nativeElement.value = '';
+        textarea.style.height = 'auto';
+        this.adjustFormHeight();
     }
 }

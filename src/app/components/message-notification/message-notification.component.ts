@@ -5,6 +5,8 @@ import {NotificationService} from "../../../architecture/services/NotificationSe
 import {Message} from "../../../architecture/model/Message";
 import {MessageService} from "../../../architecture/services/MessageService";
 import {Router} from "@angular/router";
+import {User} from "../../../architecture/model/User";
+import {UserService} from "../../../architecture/services/UserService";
 
 @Component({
     selector: 'app-message-notification',
@@ -18,6 +20,7 @@ export class MessageNotificationComponent {
 
     protected notification!: Notification;
     protected related!: Message;
+    protected from!: User;
 
     protected notificationMessageMap: {[key: string]: string} = {
         'community': 'The are new communities available!',
@@ -37,7 +40,10 @@ export class MessageNotificationComponent {
     ngOnInit() {
         (this.serviceFactory.get('notifications') as NotificationService).get(this.notificationID).subscribe(res => {
             this.notification = res.data[0];
-            (this.serviceFactory.get('messages') as MessageService).get(this.notification.relatedID).subscribe(res => this.related = res.data[0]);
+            (this.serviceFactory.get('messages') as MessageService).get(this.notification.relatedID).subscribe(res => {
+                this.related = res.data[0];
+                (this.serviceFactory.get('users') as UserService).getUser(this.related.from).subscribe(res => this.from = res.data[0]);
+            });
         });
     }
 

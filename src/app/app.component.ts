@@ -23,7 +23,6 @@ import {HTTPNotificationService} from "./services/api-services/HTTPNotificationS
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
     imports: [
-        NotificationsComponent,
         HeaderComponent,
         CommonModule,
         RouterOutlet,
