@@ -66,21 +66,20 @@ export class FirstCommunityFormComponent {
 
     addInterestTag(event: Event, value: string) {
         event.preventDefault();
-        if (!this.storedInterests.includes(value)) {
+        if (!this.storedInterests.find(i => i.toLowerCase() === value.toLowerCase())) {
             Swal.fire("Error!", "Interest not found!", "error");
             return;
         }
-        let normalizedValue = `#${value}`.toLowerCase();
-        if (!(this.interests.includes(normalizedValue))) this.interests = [...this.interests, normalizedValue];
+        if (!this.interests.includes(value.toLowerCase())) this.interests = [...this.interests, value];
         this.newTag = "";
     }
 
     removeInterest(interestName: string) {
-        this.interests = this.interests.filter(i => i !== interestName);
+        this.interests = this.interests.filter(i => i.toLowerCase() !== interestName.toLowerCase());
     }
 
     getCoincidences(event: Event, value: string) {
-        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.toLowerCase().includes(value.toLowerCase())).filter(i => !this.interests.includes(`#${i}`.toLowerCase()));
+        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.toLowerCase().includes(value.toLowerCase())).filter(i => !this.interests.includes(i.toLowerCase()));
     }
 
     moveFocus(event: Event, tagNameInput: HTMLInputElement) {
@@ -89,7 +88,7 @@ export class FirstCommunityFormComponent {
     }
 
     addInterestTagFromCoincidence($event: MouseEvent, interest: string) {
-        this.interestsCoincidences = this.interestsCoincidences.filter(i => i.toLowerCase().includes(interest.toLowerCase()));
+        this.interestsCoincidences = this.interestsCoincidences.filter(i => i.toLowerCase() !== interest.toLowerCase());
         this.addInterestTag($event, interest);
     }
 
