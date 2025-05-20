@@ -65,4 +65,48 @@ export class AnnouncementCardComponent implements OnInit {
       }
     });
   }
+
+
+  editAnnouncement(announcementId: string) {
+  const currentContent = this.announce?.body ?? '';
+
+  Swal.fire({
+    title: 'Edit Announcement',
+    input: 'textarea',
+    inputLabel: 'Edit the content of the announcement',
+    inputValue: currentContent,
+    inputAttributes: {
+      'aria-label': 'Edit announcement content'
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Save',
+    cancelButtonText: 'Cancel'
+  }).then(result => {
+    if (result.isConfirmed && result.value?.trim()) {
+      const updatedContent = result.value.trim();
+
+      (this.serviceFactory.get('communities') as CommunityService).editAnnouncement(announcementId, updatedContent).subscribe({
+        next: () => {
+          Swal.fire({
+            title: 'Updated!',
+            text: 'The announcement was updated successfully.',
+            icon: 'success'
+          }).then(() => {
+            window.location.reload(); // O actualiza el estado del componente
+          });
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error!',
+            text: 'There was a problem updating the announcement.',
+            icon: 'error'
+          });
+        }
+      });
+    }
+  });
+}
+
+
+
 }

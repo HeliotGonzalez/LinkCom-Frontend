@@ -10,9 +10,11 @@
             <button 
             (click)="deleteAnnouncement(announce.id)"
             type="button"
-            class="btn btn-danger">
+            class="leave-button">
                 Delete
             </button>
+            <button
+            type="button" class="button" (click)="editAnnouncement(announce.id)">Edit</button>
         }
     </div>
 </div>

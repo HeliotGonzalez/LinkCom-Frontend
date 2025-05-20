@@ -149,4 +149,11 @@ export class HTTPCommunityService implements CommunityService {
     createAnnouncement(announcement: CommunityAnnouncement): Observable<ApiResponse<CommunityAnnouncement>> {
         return this.http.post<ApiResponse<CommunityAnnouncement>>(`${this.url}/communities/${announcement.communityID}/createAnnouncement`, announcement);
     }
+
+editAnnouncement(announcementID: string, updatedContent: string): Observable<ApiResponse<Announce>> {
+return this.http.patch<ApiResponse<Announce>>(`http://localhost:3000/editAnnouncement/${announcementID}`, {
+  body: updatedContent
+});
+
+}
 }
