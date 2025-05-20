@@ -22,9 +22,7 @@ export class CreateCommunityCommand implements Command {
 
     execute(): void {
         (this.serviceFactory.get('communities') as CommunityService).createCommunity(this.community).subscribe({
-            next: res => {
-                const event = res.data[0];
-                (this.serviceFactory.get('communities') as CommunityService).joinCommunity(this.community!.id!, this.auth.getUserUUID()).subscribe();
+            next: () => {
                 this.notify.success('Your event has been created!');
                 this.router.navigate(["/communities"]).then();
             },

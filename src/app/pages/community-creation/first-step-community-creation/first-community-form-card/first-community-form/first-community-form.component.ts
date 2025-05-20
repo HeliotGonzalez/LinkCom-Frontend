@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {InterestTagComponent} from '../../../../../components/interest-tag/interest-tag.component';
 import {ApiService} from "../../../../../services/api-service.service";
 import Swal from "sweetalert2";
+import {Notify} from "../../../../../services/notify";
 
 @Component({
     selector: 'app-first-community-form',
@@ -28,7 +29,7 @@ export class FirstCommunityFormComponent {
     protected storedInterests: string[] = [];
     protected interestsCoincidences: string[] = [];
 
-    constructor(private router: Router, private formService: FormService, private apiService: ApiService) {
+    constructor(private router: Router, private formService: FormService, private apiService: ApiService, private notify: Notify) {
     }
 
     cancel() {
@@ -41,6 +42,7 @@ export class FirstCommunityFormComponent {
             Swal.fire("Error!", "All required fields must be filled!", "error");
             return;
         }
+        if (this.interests.length === 0) this.notify.error('At least one interest must be selected!');
         this.router.navigate(["/secondStepCommunityCreation"]).then(r => {
         });
         this.saveFormData();
@@ -64,21 +66,20 @@ export class FirstCommunityFormComponent {
 
     addInterestTag(event: Event, value: string) {
         event.preventDefault();
-        if (!this.storedInterests.includes(value)) {
+        if (!this.storedInterests.find(i => i.toLowerCase() === value.toLowerCase())) {
             Swal.fire("Error!", "Interest not found!", "error");
             return;
         }
-        let normalizedValue = `#${value}`.toLowerCase();
-        if (!(this.interests.includes(normalizedValue))) this.interests = [...this.interests, normalizedValue];
+        if (!this.interests.includes(value.toLowerCase())) this.interests = [...this.interests, value];
         this.newTag = "";
     }
 
     removeInterest(interestName: string) {
-        this.interests = this.interests.filter(i => i !== interestName);
+        this.interests = this.interests.filter(i => i.toLowerCase() !== interestName.toLowerCase());
     }
 
     getCoincidences(event: Event, value: string) {
-        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.startsWith(value)).filter(i => !this.interests.includes(`#${i}`.toLowerCase()));
+        this.interestsCoincidences = this.storedInterests.filter(i => value !== '' && i.toLowerCase().includes(value.toLowerCase())).filter(i => !this.interests.includes(i.toLowerCase()));
     }
 
     moveFocus(event: Event, tagNameInput: HTMLInputElement) {
@@ -87,7 +88,7 @@ export class FirstCommunityFormComponent {
     }
 
     addInterestTagFromCoincidence($event: MouseEvent, interest: string) {
-        this.interestsCoincidences = this.interestsCoincidences.filter(i => i !== interest);
+        this.interestsCoincidences = this.interestsCoincidences.filter(i => i.toLowerCase() !== interest.toLowerCase());
         this.addInterestTag($event, interest);
     }
 
