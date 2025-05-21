@@ -80,7 +80,7 @@ export class ModeratorsManagementComponent {
                 this.notify.error(title, text);
             } 
         })
-        else this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}}).then();
+        else this.router.navigate(["/community", this.communityID]).then();
     }
 
     filterMembers() {
