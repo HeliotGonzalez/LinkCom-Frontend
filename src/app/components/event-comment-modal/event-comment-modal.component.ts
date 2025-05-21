@@ -8,6 +8,7 @@ import { Notify } from '../../services/notify';
 import { ApiService }   from '../../services/api-service.service';
 import { User } from '../../../architecture/model/User';
 import { WebSocketFactory } from '../../services/api-services/WebSocketFactory.service';
+import { Lang, LanguageService } from '../../language.service';
 declare var bootstrap: any;
 
 @Component({
@@ -39,7 +40,8 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
       private serviceFactory: ServiceFactory,
       private api: ApiService,
       private notify: Notify,
-      private socketFactory: WebSocketFactory
+      private socketFactory: WebSocketFactory,
+      private languageService: LanguageService
     ) {
       this.userID = this.authService.getUserUUID();
     }
@@ -89,7 +91,8 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
             },
             error: (err: any) => {
                 this.loadingComments = false;
-                this.notify.error(`We have problems getting the comments: ${err.message}`);
+                if (this.languageService.current == 'en') this.notify.error(`We have problems getting the comments: ${err.message}`);
+                else this.notify.error(`Hemos encontrado un error al obtener los comentarios: ${err.message}`);
             }
         });
     }

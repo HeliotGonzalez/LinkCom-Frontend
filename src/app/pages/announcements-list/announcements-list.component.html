@@ -1,8 +1,8 @@
 <main class="main">
     <div class="announcements-list">
-        <h1 id="announcements-list-title"> Announcements table</h1>
+        <h1 id="announcements-list-title" i18n="Título lista anuncios|Encabezado de la tabla de anuncios"> Announcements table</h1>
         @if (announcements.length === 0) {
-            <p>There is no news yet</p>
+            <p i18n="Mensaje sin noticias|Texto cuando no hay anuncios">There is no news yet</p>
         } @else {
             @for (newAnnounce of announcements; track newAnnounce) {
                 <app-announcement-card
@@ -11,6 +11,6 @@
                 ></app-announcement-card>
             }
         }
-        <button class="announcement-list-button" (click)="exitPage($event)">Go back to the main page</button>
+        <button class="announcement-list-button" (click)="exitPage($event)" i18n="Botón volver a página principal|Acción para volver a la página principal">Go back to the main page</button>
     </div>
 </main>

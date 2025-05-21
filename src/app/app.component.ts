@@ -16,8 +16,8 @@ import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
 import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
-import {NotificationsComponent} from "./components/notifications/notifications.component";
 import {HTTPNotificationService} from "./services/api-services/HTTPNotificationService";
+import { LanguageService } from './language.service';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -46,7 +46,8 @@ export class AppComponent implements OnInit {
         private notify: Notify,
         private auth: AuthService,
         private router: Router,
-        private commandBuilderFactory: CommandBuilderFactory
+        private commandBuilderFactory: CommandBuilderFactory,
+        private languageService: LanguageService
     ) {
     }
 
@@ -67,6 +68,7 @@ export class AppComponent implements OnInit {
             .put('users', new HTTPUserService(this.http, this.url))
             .put('notify', this.notify)
             .put('auth', this.auth)
+            .put('languageService', this.languageService)
             .put('router', this.router)
             .put('messages', new HTTPMessageService(this.http, this.url))
             .put('notifications', new HTTPNotificationService(this.http, this.url))

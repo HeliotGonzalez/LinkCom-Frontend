@@ -6,6 +6,7 @@ import {NotificationService} from "../../../architecture/services/NotificationSe
 import {CommunityService} from "../../../architecture/services/CommunityService";
 import {JoinRequest} from "../../../architecture/model/JoinRequest";
 import {Community} from "../../../architecture/model/Community";
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-join-request-notification',
@@ -32,8 +33,19 @@ export class JoinRequestNotificationComponent {
 
     constructor(
         private serviceFactory: ServiceFactory,
-        protected router: Router
+        protected router: Router,
+        private languageService: LanguageService
     ) {
+        if (this.languageService.current == 'es'){
+            this.notificationMessageMap = {
+                'community': 'Hay nuevas comunidades disponibles',
+                'event': 'Hay nuevos eventos disponibles',
+                'message': 'Tienes nuevos mensajes',
+                'friend_request': 'Nueva solicitud de amistad recibida',
+                'event_request': 'Alguien quiere publicar un nuevo evento',
+                'join_request': 'Alguien quiere unirse a tu comunidad'
+            }
+        }
     }
 
     ngOnInit() {

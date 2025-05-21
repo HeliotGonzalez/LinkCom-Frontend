@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { HTTPUserService } from '../../../services/api-services/HTTPUserService';
 import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
 import { UserService } from '../../../../architecture/services/UserService';
+import { LanguageService } from '../../../language.service';
 
 @Component({
   selector: 'app-register-third-step',
@@ -28,7 +29,8 @@ export class RegisterThirdStepComponent {
     private apiService: ApiService, 
     private formData: FormService, 
     private http: HttpClient, 
-    private serviceFactory: ServiceFactory) {}
+    private serviceFactory: ServiceFactory,
+    private languageService: LanguageService) {}
 
     ngOnInit() {
     this.userData = this.formData.get('userRegister');
@@ -37,6 +39,8 @@ export class RegisterThirdStepComponent {
         this.storedInterests = [...res].map(e => e["name"]);
     });
   }
+
+
   goToSecondStep() {
     this.router.navigate(['/user-register/secondStep']);
   }
@@ -103,8 +107,12 @@ export class RegisterThirdStepComponent {
   addInterestTag(event: Event, value: string) {
         event.preventDefault();
         if (!this.storedInterests.includes(value)) {
+          if (this.languageService.current == 'en') {
             Swal.fire("Error!", "Interest not found!", "error");
-            return;
+          } else {
+            Swal.fire("¡Error!", "Interés no encontrado.", "error");
+          }
+          return;
         }
         let normalizedValue = `#${value}`.toLowerCase();
         if (!(this.interests.includes(normalizedValue))) this.interests = [...this.interests, normalizedValue];

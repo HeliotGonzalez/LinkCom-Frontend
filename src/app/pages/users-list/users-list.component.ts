@@ -7,6 +7,7 @@ import {User} from '../../../architecture/model/User';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../../architecture/services/UserService';
 import { Notify } from '../../services/notify';
+import { LanguageService } from '../../language.service';
 
 @Component({
   selector: 'app-user-list',
@@ -26,7 +27,8 @@ export class UsersListComponent implements OnInit {
   constructor(
     private serviceFactory: ServiceFactory,
     private auth: AuthService,
-    private notify: Notify
+    private notify: Notify,
+    private languageService: LanguageService
   ) {}
 
 
@@ -55,7 +57,8 @@ export class UsersListComponent implements OnInit {
     (this.serviceFactory.get('users') as UserService)
       .makeFriendRequest(this.currentUserID, user.id!)
       .subscribe(() => {
-        this.notify.success('Friend request sent!');
+        if (this.languageService.current == 'en') this.notify.success('Friend request sent!');
+        else this.notify.success('Solicitud de amistad enviada');
       });
   }
 

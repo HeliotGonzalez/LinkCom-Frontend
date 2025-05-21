@@ -9,7 +9,7 @@
                         <app-feed-event-card (joinEventEmitter)="joinEvent($event)" [event]="event"></app-feed-event-card>
                     }
                     <div class="text-center">
-                        <button class="button" (click)="loadMoreFeed()">Show more</button>
+                        <button class="button" (click)="loadMoreFeed()" i18n="Texto botón mostrar más feed|Mostrar más eventos en el feed">Show more</button>
                     </div>
                 </section>
             </div>
@@ -18,14 +18,14 @@
                 <!-- Una sola tarjeta para comunidades -->
                 <div class="card mb-4 shadow-card overflow-auto">
                     <div class="card-body recommended-communities">
-                        <h4 class="mb-3 text-center">Recommended communities</h4>
+                        <h4 class="mb-3 text-center" i18n="Título comunidades recomendadas|Encabezado de comunidades recomendadas">Recommended communities</h4>
                         @for (community of communities; track community) {
                             <div class="community-item mb-2">
                                 <strong>{{ community.name }}</strong>
                                 <p class="mb-1" [innerHTML]="community.description"></p>
                                 <div class="text-end">
                                     <a class="button"
-                                    (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
+                                    (click)="joinCommunity(community.id); $event.preventDefault()" i18n="Texto enlace unirse comunidad|Acción para unirse a una comunidad">Join</a>
                                 </div>
                                 <hr>
                             </div>
@@ -34,7 +34,7 @@
                 </div>
                 <!-- Calendario en la parte inferior derecha -->
                 <div class="calendar">
-                    <h3 class="mb-3">Calendar</h3>
+                    <h3 class="mb-3" i18n="Título sección calendario|Encabezado del calendario">Calendar</h3>
                     <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-bordered mb-0 text-center">

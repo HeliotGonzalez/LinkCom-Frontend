@@ -6,6 +6,7 @@ import {ApiService} from '../../services/api-service.service';
 import {AuthService} from '../../services/auth.service';
 import {HeaderVisibilityService} from '../../services/header-visibility.service';
 import Swal from 'sweetalert2';
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-login',
@@ -18,29 +19,51 @@ export class LoginComponent implements OnInit {
     protected email: string = '';
     protected password: string = '';
 
-    constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private authService: AuthService, private headerService: HeaderVisibilityService) {
+    constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private authService: AuthService, private headerService: HeaderVisibilityService, private languageService: LanguageService) {
     }
 
     onSubmit(): void {
         if (!this.email || !this.password) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'Please enter email and password.',
-                icon: 'error',
-                confirmButtonText: 'Retry',
-                backdrop: false,
-                customClass: {popup: 'custom-swal-popup'},
-                didOpen: () => {
-                    document.body.insertAdjacentHTML(
-                        'beforeend',
-                        '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-                    );
-                },
-                didClose: () => {
-                    const blurOverlay = document.getElementById('blur-overlay');
-                    if (blurOverlay) blurOverlay.remove();
-                }
-            });
+            if (this.languageService.current == 'en'){
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please enter email and password.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                    backdrop: false,
+                    customClass: {popup: 'custom-swal-popup'},
+                    didOpen: () => {
+                        document.body.insertAdjacentHTML(
+                            'beforeend',
+                            '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+                        );
+                    },
+                    didClose: () => {
+                        const blurOverlay = document.getElementById('blur-overlay');
+                        if (blurOverlay) blurOverlay.remove();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: '¡Error!',
+                    text: 'Introduzca su email y contraseña',
+                    icon: 'error',
+                    confirmButtonText: 'Reintentar',
+                    backdrop: false,
+                    customClass: {popup: 'custom-swal-popup'},
+                    didOpen: () => {
+                        document.body.insertAdjacentHTML(
+                            'beforeend',
+                            '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+                        );
+                    },
+                    didClose: () => {
+                        const blurOverlay = document.getElementById('blur-overlay');
+                        if (blurOverlay) blurOverlay.remove();
+                    }
+                });
+            }
+
             return;
         }
 
@@ -62,24 +85,46 @@ export class LoginComponent implements OnInit {
             },
             (error) => {
                 console.error('Error during login:', error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Invalid email or password. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'Retry',
-                    backdrop: false,
-                    customClass: {popup: 'custom-swal-popup'},
-                    didOpen: () => {
-                        document.body.insertAdjacentHTML(
-                            'beforeend',
-                            '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-                        );
-                    },
-                    didClose: () => {
-                        const blurOverlay = document.getElementById('blur-overlay');
-                        if (blurOverlay) blurOverlay.remove();
-                    }
-                });
+                if (this.languageService.current == 'en'){
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Invalid email or password. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'Retry',
+                        backdrop: false,
+                        customClass: {popup: 'custom-swal-popup'},
+                        didOpen: () => {
+                            document.body.insertAdjacentHTML(
+                                'beforeend',
+                                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+                            );
+                        },
+                        didClose: () => {
+                            const blurOverlay = document.getElementById('blur-overlay');
+                            if (blurOverlay) blurOverlay.remove();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: '¡Error!',
+                        text: 'Email o contraseña inválido',
+                        icon: 'error',
+                        confirmButtonText: 'Reintentar',
+                        backdrop: false,
+                        customClass: {popup: 'custom-swal-popup'},
+                        didOpen: () => {
+                            document.body.insertAdjacentHTML(
+                                'beforeend',
+                                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+                            );
+                        },
+                        didClose: () => {
+                            const blurOverlay = document.getElementById('blur-overlay');
+                            if (blurOverlay) blurOverlay.remove();
+                        }
+                    });
+                }
+
             }
         );
     }

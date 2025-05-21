@@ -8,34 +8,39 @@
   
       <!-- username -->
       <div class="mb-3">
-        <label class="form-label fw-bold" for="userName">Name</label>
+        <label class="form-label fw-bold" for="userName" i18n="Etiqueta campo Nombre|Label para el campo de nombre de usuario">Name</label>
         <input id="userName"
                class="form-control"
                formControlName="username"
-               placeholder="Your display name" />
+               placeholder="Your display name"
+               i18n-placeholder="Placeholder nombre de usuario|Placeholder para el nombre a mostrar" />
       </div>
   
       <!-- description -->
       <div class="mb-3">
-        <label class="form-label fw-bold" for="userDescription">Description</label>
+        <label class="form-label fw-bold" for="userDescription" i18n="Etiqueta campo Descripción|Label para el campo de descripción">Description</label>
         <textarea id="userDescription"
                   class="form-control"
                   formControlName="description"
                   rows="3"
-                  placeholder="Tell something about you"></textarea>
+                  placeholder="Tell something about you"
+                  i18n-placeholder="Placeholder descripción|Placeholder para contar sobre el usuario"></textarea>
       </div>
   
       <!-- e-mail -->
       <div class="mb-3">
-        <label class="form-label fw-bold" for="userEmail">E-mail</label>
-        <input id="userEmail" type="email" class="form-control" formControlName="email" placeholder="you@example.com" />
+        <label class="form-label fw-bold" for="userEmail" i18n="Etiqueta campo Correo|Label para el campo de correo electrónico">E-mail</label>
+        <input id="userEmail" type="email" class="form-control" formControlName="email" placeholder="you@example.com" i18n-placeholder="Placeholder email|Placeholder para el correo electrónico" />
       </div>
   
-      <div class="d-flex justify-content-center">
-        <button class="button" type="submit" [disabled]="saving">
-          {{ saving ? 'Saving…' : 'Save changes' }}
-        </button>
-      </div>
+        <ng-container *ngIf="saving; else saveLabel">
+          <span i18n="Indicador guardando…|Texto mientras se guardan los cambios">Saving…</span>
+        </ng-container>
+        <ng-template #saveLabel>
+          <button class="button" type="submit" [disabled]="saving" i18n="Texto botón Guardar cambios|Label para el botón de guardar cambios">
+            Save changes
+          </button>
+        </ng-template>
     </form>
   </div>
   

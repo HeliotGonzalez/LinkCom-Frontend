@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
 import { FormService } from '../../../services/form-service/form.service';
+import { LanguageService } from '../../../language.service';
 
 @Component({
   selector: 'app-register-first-step',
@@ -34,7 +35,7 @@ export class RegisterFirstStepComponent {
   protected confirmPassword: string = '';
   protected userData!: FormService;
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private formData: FormService) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private formData: FormService, private languageService: LanguageService) {}
 
   ngOnInit() {
     this.formData.createFormEntry('userRegister');
@@ -43,35 +44,161 @@ export class RegisterFirstStepComponent {
 
   goToSecondStep() {
     if (this.password !== this.confirmPassword) {
-      Swal.fire({
-        title: 'Error!',
-        text: 'Passwords do not match. Please try again.',
-        icon: 'error',
-        confirmButtonText: 'Retry',
-        backdrop: false, // Evita que SweetAlert2 cambie el <body>
-        customClass: {
-          popup: 'custom-swal-popup' // Añade una clase personalizada
-        },
-        didOpen: () => {
-          document.body.insertAdjacentHTML(
-            'beforeend',
-            '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-          );
-        },
-        didClose: () => {
-          const blurOverlay = document.getElementById('blur-overlay');
-          if (blurOverlay) blurOverlay.remove();
-        }
-      });
+      if (this.languageService.current == 'en'){
+        Swal.fire({
+          title: 'Error!',
+          text: 'Passwords do not match. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'Retry',
+          backdrop: false, // Evita que SweetAlert2 cambie el <body>
+          customClass: {
+            popup: 'custom-swal-popup' // Añade una clase personalizada
+          },
+          didOpen: () => {
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+            );
+          },
+          didClose: () => {
+            const blurOverlay = document.getElementById('blur-overlay');
+            if (blurOverlay) blurOverlay.remove();
+          }
+        });
+      } else {
+        Swal.fire({
+          title: '¡Error!',
+          text: 'Las contraseñas no coinciden',
+          icon: 'error',
+          confirmButtonText: 'Reintentar',
+          backdrop: false, // Evita que SweetAlert2 cambie el <body>
+          customClass: {
+            popup: 'custom-swal-popup' // Añade una clase personalizada
+          },
+          didOpen: () => {
+            document.body.insertAdjacentHTML(
+              'beforeend',
+              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+            );
+          },
+          didClose: () => {
+            const blurOverlay = document.getElementById('blur-overlay');
+            if (blurOverlay) blurOverlay.remove();
+          }
+        });
+      }
+
       return;
     }
 
-    this.userData.put('payload',{
+    const payload = {
       username: this.username,
       email: this.email,
       password: this.password,
       description: this.description,
-      })
+    };
+    
+    console.log('Payload enviado:', payload); // <-- Agregado para depuración
+  
+    const apiUrl = 'http://localhost:3000/user-register';
+    this.http.post(apiUrl, payload).subscribe(
+      (response) => {
+        console.log('User registered successfully:', response);
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: 'Success!',
+            text: 'User registered successfully.',
+            icon: 'success',
+            confirmButtonText: 'Continue',
+            backdrop: false, // Evita que SweetAlert2 cambie el <body>
+            customClass: {
+              popup: 'custom-swal-popup' // Añade una clase personalizada
+            },
+            didOpen: () => {
+              document.body.insertAdjacentHTML(
+                'beforeend',
+                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+              );
+            },
+            didClose: () => {
+              const blurOverlay = document.getElementById('blur-overlay');
+              if (blurOverlay) blurOverlay.remove();
+            }
+          });
+        } else {
+          Swal.fire({
+            title: 'Todo correcto',
+            text: 'Usuario registrado éxitosamente',
+            icon: 'success',
+            confirmButtonText: 'Continuar',
+            backdrop: false, // Evita que SweetAlert2 cambie el <body>
+            customClass: {
+              popup: 'custom-swal-popup' // Añade una clase personalizada
+            },
+            didOpen: () => {
+              document.body.insertAdjacentHTML(
+                'beforeend',
+                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+              );
+            },
+            didClose: () => {
+              const blurOverlay = document.getElementById('blur-overlay');
+              if (blurOverlay) blurOverlay.remove();
+            }
+          });
+        }
+
+          // Si la respuesta es exitosa, redirige al segundo paso
+          this.router.navigate(['/user-register/secondStep']);
+      },
+      (error) => {
+        console.error('Error during registration:', error);
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: 'Error!',
+            text: 'Error during registration. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'Retry',
+            backdrop: false, // Evita que SweetAlert2 cambie el <body>
+            customClass: {
+              popup: 'custom-swal-popup' // Añade una clase personalizada
+            },
+            didOpen: () => {
+              document.body.insertAdjacentHTML(
+                'beforeend',
+                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+              );
+            },
+            didClose: () => {
+              const blurOverlay = document.getElementById('blur-overlay');
+              if (blurOverlay) blurOverlay.remove();
+            }
+          });
+        } else {
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Error durante el registro, inténtelo de nuevo más tarde',
+            icon: 'error',
+            confirmButtonText: 'Reintentar',
+            backdrop: false, // Evita que SweetAlert2 cambie el <body>
+            customClass: {
+              popup: 'custom-swal-popup' // Añade una clase personalizada
+            },
+            didOpen: () => {
+              document.body.insertAdjacentHTML(
+                'beforeend',
+                '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
+              );
+            },
+            didClose: () => {
+              const blurOverlay = document.getElementById('blur-overlay');
+              if (blurOverlay) blurOverlay.remove();
+            }
+          });
+        }
+
+      }
+    );
 
     this.router.navigate(['/user-register/secondStep']);
   }

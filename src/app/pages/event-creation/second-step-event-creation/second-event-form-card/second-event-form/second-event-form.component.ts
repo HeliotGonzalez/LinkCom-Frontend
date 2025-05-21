@@ -12,6 +12,7 @@ import {marked} from "marked";
 import {CreateEventCommand} from "../../../../../commands/CreateEventCommand";
 import {first, firstValueFrom} from "rxjs";
 import {CommunityService} from "../../../../../../architecture/services/CommunityService";
+import { LanguageService } from '../../../../../language.service';
 
 @Component({
     selector: 'app-second-event-form',
@@ -34,7 +35,8 @@ export class SecondEventFormComponent {
         private formService: FormService,
         private serviceFactory: ServiceFactory,
         private authService: AuthService,
-        private notify: Notify
+        private notify: Notify,
+        private languageService: LanguageService
     ) {
     }
 
@@ -49,7 +51,8 @@ export class SecondEventFormComponent {
         event.preventDefault();
         this.saveFormData();
         if (this.eventDescription === "") {
-            this.notify.error("All required fields must be filled!");
+            let text = (this.languageService.current == 'en') ? "All required fields must be filled!" : "Todos los campos obligatorios deben ser introducidos";
+            this.notify.error(text);
             return;
         }
         CreateEventCommand.Builder.create().withFactory(this.serviceFactory).withEvent(await this.buildEvent()).build().execute();

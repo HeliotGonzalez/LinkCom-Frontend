@@ -5,11 +5,13 @@ import {EventService} from "../../architecture/services/EventService";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import { Command } from "../../architecture/control/Command";
+import { LanguageService } from "../language.service";
 
 export class CreateEventCommand implements Command {
     private notify: Notify;
     private router: Router;
     private auth: AuthService;
+    private languageService: LanguageService;
 
     constructor(
         private serviceFactory: ServiceFactory,
@@ -18,17 +20,22 @@ export class CreateEventCommand implements Command {
         this.notify = this.serviceFactory.get('notify') as Notify;
         this.router = this.serviceFactory.get('router') as Router;
         this.auth = this.serviceFactory.get('auth') as AuthService;
+        this.languageService = this.serviceFactory.get('languageService') as LanguageService;
     }
 
     execute(): void {
         (this.serviceFactory.get('events') as EventService).createEvent(this.event as CommunityEvent).subscribe({
             next: res => {
                 const event = res.data[0];
+                let text = (this.languageService.current == 'en') ? 'Your event has been created!' : '¡Tu evento acaba de ser creado!';
                 (this.serviceFactory.get('events') as EventService).joinEvent(event.communityID, event.id!, this.auth.getUserUUID()).subscribe();
-                this.notify.success('Your event has been created!');
+                this.notify.success(text);
                 this.router.navigate(["/community"], {queryParams: {communityID: this.event.communityID!}}).then();
             },
-            error: res => this.notify.error(`We could not create your event: ${res.message}`)
+            error: res =>{
+                let text = (this.languageService.current == 'en') ? `We could not create your event: ${res.message}` : `Ha ocurrido un error al crear tu evento: ${res.message}`;
+                this.notify.error(text) 
+            } 
         })
     }
 

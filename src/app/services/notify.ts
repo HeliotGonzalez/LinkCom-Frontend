@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import Swal, {SweetAlertOptions} from "sweetalert2";
+import { LanguageService } from '../language.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class Notify {
 
-    constructor() {
+    constructor(private languageService: LanguageService) {
     }
 
     info(title: string, msg: string) {
@@ -14,7 +15,8 @@ export class Notify {
     }
 
     success(msg: string) {
-        Swal.fire('Success!', msg, 'success');
+        if (this.languageService.current == 'en') Swal.fire('Success!', msg, 'success');
+        else Swal.fire('¡Todo correcto!', msg, 'success')
     }
 
     error(msg: string, title: string = 'An error occurred') {
@@ -22,14 +24,27 @@ export class Notify {
     }
 
     async confirm(message: string): Promise<boolean> {
-        const result = await Swal.fire({
-            title: 'Are you sure?',
-            text: message,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes!',
-            cancelButtonText: 'No, cancel!'
-        });
-        return result.isConfirmed;
+        if (this.languageService.current == 'en'){
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes!',
+                cancelButtonText: 'No, cancel!'
+            });
+            return result.isConfirmed;
+        } else {
+            const result = await Swal.fire({
+                title: '¿Seguro?',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, estoy seguro',
+                cancelButtonText: 'Cancelar'
+            });
+            return result.isConfirmed;
+        }
+
     }
 }

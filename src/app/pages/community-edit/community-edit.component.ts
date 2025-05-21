@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../services/api-service.service';
 import { Community } from '../../interfaces/community';
 import Swal from 'sweetalert2';
 import { Location } from '@angular/common';
+import { LanguageService } from '../../language.service';
 
 @Component({
   selector: 'app-community-edit',
@@ -23,9 +23,9 @@ export class CommunityEditComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router,
     private apiService: ApiService,
-    private location: Location
+    private location: Location,
+    private languageService: LanguageService
   ) {}
 
   ngOnInit() {
@@ -88,23 +88,45 @@ export class CommunityEditComponent implements OnInit {
   
     this.apiService.updateCommunity(this.community.id, payload).subscribe({
       next: (response: any) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Community updated',
-          text: 'The community has been updated successfully.',
-          confirmButtonText: 'Continue'
-          }).then(() => {
-            this.location.back();
-        });
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            icon: 'success',
+            title: 'Community updated',
+            text: 'The community has been updated successfully.',
+            confirmButtonText: 'Continue'
+            }).then(() => {
+              this.location.back();
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Comunidad actualizada',
+            text: 'La comunidad ha sido actualizada con éxito.',
+            confirmButtonText: 'Continuar'
+            }).then(() => {
+              this.location.back();
+          });
+        }
+
       }, 
       error: (error: any) => {
         console.error('Error al actualizar la comunidad', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'An error has occurred while updating the community.',
-          confirmButtonText: 'Accept'
-        });
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error has occurred while updating the community.',
+            confirmButtonText: 'Accept'
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Sucedió un error al actualizar la comunidad',
+            confirmButtonText: 'Accept'
+          });
+        }
+
       }
     });
   }
