@@ -85,7 +85,7 @@
   </div>
     
     <!-- Sin comunidades -->
-    <p *ngIf="user && !user.communities.length" class="text-white" i18n="Mensaje sin comunidades|Texto cuando el usuario no pertenece a ninguna comunidad">This user doesn't belong to any community.</p>
+    <p *ngIf="user && !user.communities?.length" class="text-white" i18n="Mensaje sin comunidades|Texto cuando el usuario no pertenece a ninguna comunidad">This user doesn't belong to any community.</p>
       </div>
   
     </div>

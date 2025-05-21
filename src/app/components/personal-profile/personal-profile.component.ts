@@ -84,7 +84,7 @@ export class PersonalProfileComponent implements OnInit {
             next: () => {
               let text = (this.languageService.current == 'en') ? 'You have left this community!' : 'Abandonaste esta comunidad'
               this.notify.success(text);
-              this.user!.communities = this.user!.communities.filter(c => c.id !== communityID);
+              this.user!.communities = this.user!.communities?.filter(c => c.id !== communityID);
             },
             error: res => {
               if (this.languageService.current == 'en') this.notify.error(`An error occurred: ${res.message}`);

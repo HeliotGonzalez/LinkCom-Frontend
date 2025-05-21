@@ -75,22 +75,32 @@ export class RegisterSecondStepComponent implements OnInit {
 protected handleFile(file: File) {
   if (file && file.type.startsWith('image/')) {
     const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const result = e.target?.result as string;
+      reader.onload = async () => {
+        const result = reader.result as string;
+        const resized = await this.reduceImageSize(result); // Reduce la imagen
 
-      this.setImageValue(result);
-      this.imageFile = file;
-      this.imagePreview = result;
-      this.image = result;
+        this.imagePreview = resized;
+        this.image = resized;
+        this.imageFile = file;
 
-      localStorage.setItem('imagePreview', result);
+        localStorage.setItem('imagePreview', resized); // Guarda la imagen reducida
 
-      this.formData.createFormEntry('imageUpload');
-      const imageForm = this.formData.get('imageUpload');
-      imageForm.image = result;
+        // Actualiza imageUpload
+        this.formData.createFormEntry('imageUpload');
+        const imageForm = this.formData.get('imageUpload');
+        imageForm.image = resized;
 
-      console.log('Imagen guardada en formData desde drag & drop o selección directa:', imageForm.image);
-    };
+        const currentPayload = this.userData.get('payload') || {};
+        const updatedPayload = {
+          ...currentPayload,
+          imagePath: resized
+        };
+        this.userData.put('payload', updatedPayload);
+
+
+        console.log('Imagen redimensionada y guardada en formData:', imageForm.image);
+        console.log('Payload actualizado con imagePath:', updatedPayload);
+      };
     reader.readAsDataURL(file);
   }
 }
@@ -115,5 +125,31 @@ protected onFileSelected(event: any) {
     this.handleFile(file);
   }
 }
+
+reduceImageSize(base64: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Reducimos al 70%
+      const scale = 0.7;
+      const width = img.width * scale;
+      const height = img.height * scale;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      // Exportamos a JPEG con calidad 0.7 (también 70%)
+      const resizedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      resolve(resizedBase64);
+    };
+    img.src = base64;
+  });
+}
+
 
 }
