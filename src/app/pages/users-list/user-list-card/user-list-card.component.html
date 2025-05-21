@@ -1,4 +1,4 @@
-<div class="card my-2 p-3 d-flex flex-row align-items-center justify-content-between">
+<article class="user-article my-2 p-3 d-flex flex-row align-items-center justify-content-between text-black">
     <div class="d-flex align-items-center">
         <div class="rounded-circle bg-dark text-light d-flex justify-content-center align-items-center"
              style="width: 40px; height: 40px;">
@@ -7,18 +7,31 @@
         <span class="ms-3">{{ user.username }}</span>
     </div>
     <div class="d-flex gap-2">
-        <button class="btn btn-outline-light btn-sm me-2" (click)="viewProfile()">
-            <i class="bi bi-person-lines-fill"></i> <p i18n="Texto botón ver perfil|Etiqueta para el botón de ver perfil">View Profile</p>
+        <div class="rounded-div" (click)="viewProfile()">
+            <i class="bi bi-person-lines-fill fs-3"></i>
+        </div>
+        <div class="rounded-div" (click)="goToChat()">
+            <i class="bi bi-chat-fill fs-3"></i>
+        </div>
+        @if (!isFriend) {
+            <div class="rounded-div">
+                <i class="bi bi-person-plus-fill fs-3" (click)="requestFriend()"></i>
+            </div>
+        }
+        <!--
+        <button class="gap-2 btn btn-outline-light btn-sm" (click)="viewProfile()">
+            <i class="bi bi-person-lines-fill"></i> <span i18n="Texto botón ver perfil|Etiqueta para el botón de ver perfil">View Profile</span>
         </button>
-        <button class="btn btn-secondary btn-sm me-3" (click)="goToChat()">
-            <i class="bi bi-chat-fill"></i> <p i18n="Texto botón chatear|Etiqueta para el botón de chatear">Go to chat</p>
+        <button class="gap-2 d-flex align-items-center btn btn-secondary btn-sm" (click)="goToChat()">
+            <i class="bi bi-chat-fill"></i> <span i18n="Texto botón chatear|Etiqueta para el botón de chatear">Go to chat</span>
         </button>
 
         @if (!isFriend) {
-            <button class="btn btn-success btn-sm" (click)="requestFriend()">
-                <i class="bi bi-person-plus-fill"></i> <p i18n="Texto botón agregar amigo|Etiqueta para el botón de añadir amigo">Add Friend</p>
+            <button class="gap-2 btn btn-success btn-sm" (click)="requestFriend()">
+                <i class="bi bi-person-plus-fill"></i> <span i18n="Texto botón agregar amigo|Etiqueta para el botón de añadir amigo">Add Friend</span>
             </button>
         }
+        -->
     </div>
-</div>
+</article>
   

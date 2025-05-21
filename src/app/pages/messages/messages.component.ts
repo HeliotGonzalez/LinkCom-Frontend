@@ -8,7 +8,7 @@ import {AuthService} from "../../services/auth.service";
 import {Message} from "../../../architecture/model/Message";
 import {MessageComponent} from "../../components/message/message.component";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
-import {Subscription} from "rxjs";
+import {firstValueFrom, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Notify} from "../../services/notify";
 import {UsersListComponent} from "../users-list/users-list.component";
@@ -38,7 +38,7 @@ export class MessagesComponent {
     @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
     protected userChats: {[key: string]: UserChat} = {};
-    protected messages: { [key: string]: Message } = {};
+    protected messages: {[key: string]: Message} = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
     protected isRemoving: boolean = false;
@@ -67,8 +67,22 @@ export class MessagesComponent {
                     this.recipient = res.data[0];
                     this.initializeSocketsListeners();
                 }));
-            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => {
+            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(async res => {
                 res.data.forEach(c => this.userChats[c.id!] = c);
+                const currentChat = Object.values(this.userChats).find(c => c.to === this.recipientID);
+                if (this.recipientID && currentChat) this.subscriptions.push(
+                    (this.serviceFactory.get('messages') as MessageService).createChat({
+                        from: this.auth.getUserUUID(),
+                        fromUsername: (await firstValueFrom((this.serviceFactory.get('users') as UserService).getUser(this.auth.getUserUUID()))).data[0].username,
+                        hidden: false,
+                        last_used_at: new Date().toISOString(),
+                        to: this.recipientID,
+                        toUsername: this.recipient!.username!
+                    }).subscribe()
+                );
+                else if (this.recipientID && currentChat?.hidden) this.subscriptions.push(
+                    (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(this.auth.getUserUUID(), this.recipientID).subscribe()
+                );
                 this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
                     this.markAsRead(Object.values(this.messages));

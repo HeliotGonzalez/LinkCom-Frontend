@@ -1,44 +1,46 @@
-<main>
-    <div class="container mt-4 p-4 rounded bg-primary text-light" id="user-list-container">
-      <div class="d-flex justify-content-between align-items-center">
-        <h2 i18n="Título lista de usuarios|Encabezado de la sección de usuarios">All Users</h2>
-        <button class="btn btn-outline-light" (click)="toggleFriendRequestsPanel()">
-          <i class="bi bi-envelope-fill" ></i> <p i18n="Texto botón solicitudes de amistad|Etiqueta para el botón de abrir panel de solicitudes">Friend Requests</p>
+<div class="d-flex h-100 flex-column text-light p-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-black" i18n="Título lista de usuarios|Encabezado de la sección de usuarios">All Users</h2>
+        <button class="gap-2 button p-2 rounded d-flex align-items-center" (click)="toggleFriendRequestsPanel()">
+            <i class="bi bi-envelope-fill"></i>
+            <span i18n="Texto botón solicitudes de amistad|Etiqueta para el botón de abrir panel de solicitudes">Friend
+                Requests</span>
         </button>
-      </div>
-  
-      <div class="d-flex justify-content-between align-items-center my-3">
-        <input type="text" class="form-control w-50" placeholder="Search users..."  i18n-placeholder="Placeholder buscar usuarios|Texto del placeholder de búsqueda de usuarios" [(ngModel)]="searchText">
-      
-        <select class="form-select w-25" [(ngModel)]="filter">
-          <option value="all" i18n="Opción todos usuarios|Texto de opción filtrar todos">All Users</option>
-          <option value="friends" i18n="Opción amigos|Texto de opción filtrar amigos">Friends</option>
-        </select>
-      </div>
-      
-      <div class="user-cards-container mt-3">
-        @if (filteredUsers().length > 0) {
-          @for (user of filteredUsers(); track user.id) {
-            <app-user-list-card
-              [user]="user"
-              [isFriend]="friends.includes(user.id!)"
-              (addFriend)="sendFriendRequest($event)">
-            </app-user-list-card>
-          }
-        } @else {
-          <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4" i18n="Mensaje sin usuarios|Texto cuando no se encuentran usuarios">
-            No users found
-          </p>
-        }
-      </div>
     </div>
-  
-    <!-- Friend Requests Panel -->
-    @if (showRequestsPanel) {
-      <app-friend-requests-panel
-        [isVisible]="showRequestsPanel"
-        (closePanel)="toggleFriendRequestsPanel()"
-      ></app-friend-requests-panel>
-    }
-  </main>
-  
+
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <input type="text" class="w-75 input-with-icon" placeholder="Search users..."
+               i18n-placeholder="Placeholder buscar usuarios|Texto del placeholder de búsqueda de usuarios"
+               [(ngModel)]="searchText">
+
+        <select class="form-select w-25 input-with-icon" [(ngModel)]="filter">
+            <option value="all" i18n="Opción todos usuarios|Texto de opción filtrar todos">All Users</option>
+            <option value="friends" i18n="Opción amigos|Texto de opción filtrar amigos">Friends</option>
+        </select>
+    </div>
+
+    <section class="d-flex flex-column user-cards-container overflow-y-auto mt-3">
+        @if (filteredUsers().length > 0) {
+            @for (user of filteredUsers(); track user.id) {
+                <app-user-list-card
+                        [user]="user"
+                        [isFriend]="friends.includes(user.id!)"
+                        (addFriend)="sendFriendRequest($event)">
+                </app-user-list-card>
+            }
+        } @else {
+            <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4"
+               i18n="Mensaje sin usuarios|Texto cuando no se encuentran usuarios">
+                No users found
+            </p>
+        }
+    </section>
+</div>
+
+<!-- Friend Requests Panel -->
+@if (showRequestsPanel) {
+    <app-friend-requests-panel
+            [isVisible]="showRequestsPanel"
+            (closePanel)="toggleFriendRequestsPanel()"
+    ></app-friend-requests-panel>
+}

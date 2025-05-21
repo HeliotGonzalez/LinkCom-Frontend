@@ -32,10 +32,6 @@
     background: transparent;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
-}
-
 i {
     margin-right: 0.5rem;
 }

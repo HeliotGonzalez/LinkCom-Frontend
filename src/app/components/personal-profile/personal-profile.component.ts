@@ -43,7 +43,7 @@ export class PersonalProfileComponent implements OnInit {
       next: (response: any) => {
         console.log('Response:', response);
         const data = response.data;
-        const createdAt = (data.created_at).toISOString();
+        const createdAt = new Date(data.created_at).toISOString();
         const communities = data.communities.map((c: any) => ({
           ...c,
           created_at: new Date(c.created_at)
