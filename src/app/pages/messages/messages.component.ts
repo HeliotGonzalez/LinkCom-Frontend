@@ -19,6 +19,7 @@ import {UserChat} from "../../../architecture/model/UserChat";
 import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
 import { LanguageService } from '../../language.service';
 import {NgClass} from "@angular/common";
+import {marked} from "marked";
 
 @Component({
     selector: 'app-messages',
@@ -101,13 +102,13 @@ export class MessagesComponent {
         this.restart();
     }
 
-    send(body: string) {
+    async send(body: string) {
         SendMessageCommand.Builder.create()
             .withFactory(this.serviceFactory)
             .withMessage({
                 from: this.auth.getUserUUID(),
                 to: this.recipientID!,
-                body: TextSerializer.serialize(body),
+                body: TextSerializer.serialize(await marked(body)),
                 created_at: new Date().toISOString()
             })
             .build().execute()
