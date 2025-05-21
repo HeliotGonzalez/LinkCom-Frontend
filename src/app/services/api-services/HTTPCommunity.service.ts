@@ -109,7 +109,13 @@ export class HTTPCommunityService implements CommunityService {
     }
 
     getCommunityMembers(communityID: string): Observable<ApiResponse<User>> {
-        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members`);
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'communityRole', operator: 'eq', value: 'member'},
+                {field: 'communityID', operator: 'eq', value: communityID}
+            ])
+        ));
+        return this.http.get<ApiResponse<User>>(`${this.url}/communities/${communityID}/members/${serial}`);
     }
 
     getCommunityInterests(communityID: string) {
