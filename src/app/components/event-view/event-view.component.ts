@@ -86,12 +86,10 @@ export class EventViewComponent {
     }
 
     createComment(comment: Comment) {
-        console.log(comment.body);
         (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
             next: () => {
-                if (this.languageService.current == 'en') this.notify.success(`You have published a comment`);
-                else this.notify.success(`Acabas de publicar un comentario`)
-                this.isCommentModalVisible = false;
+                //if (this.languageService.current == 'en') this.notify.success(`You have published a comment`);
+                //else this.notify.success(`Acabas de publicar un comentario`)
             },
             error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
         });

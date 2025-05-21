@@ -1,5 +1,5 @@
 import { NgFor, NgIf } from '@angular/common';
-import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, ViewChild, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, Output, EventEmitter, AfterViewInit, ElementRef, ViewChild, OnChanges, SimpleChanges, ViewChildren, QueryList} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Comment } from '../../../architecture/model/Comment';
 import { AuthService } from '../../services/auth.service';
@@ -9,6 +9,7 @@ import { ApiService }   from '../../services/api-service.service';
 import { User } from '../../../architecture/model/User';
 import { WebSocketFactory } from '../../services/api-services/WebSocketFactory.service';
 import { Lang, LanguageService } from '../../language.service';
+import { UserService } from '../../../architecture/services/UserService';
 declare var bootstrap: any;
 
 @Component({
@@ -22,10 +23,12 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
     @Input() visible = false;
     @Input() eventID!: string;
     userID!: string;
+    @ViewChild('withScroll') private withScroll!: ElementRef;
+    @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
     @Output() closed = new EventEmitter<void>();
     @Output() commentSubmitted = new EventEmitter<Comment>();
-    @Input() comments: Comment[] = [];
+    @Input() comments: { [id: string]: Comment } = {};
     @ViewChild('modal') modalRef!: ElementRef;
     user!: User
     saving = false;
@@ -33,7 +36,9 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
     loadingComments = true;
     commentText: string = '';
 
+    protected readonly Object = Object;
     private modalInstance: any;
+
 
     constructor(
       private authService: AuthService,
@@ -44,14 +49,19 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
       private languageService: LanguageService
     ) {
       this.userID = this.authService.getUserUUID();
+      (this.serviceFactory.get('users') as UserService).getUser(this.userID).subscribe(res => {
+        this.user = res.data[0];
+      });
     }
     
 
     ngOnInit() {
       this.fetchComments();
+      this.initializeSocket();
     }
 
     ngAfterViewInit() {
+        this.itemsElements.changes.subscribe(() => this.scrollToBottom());
         this.modalInstance = new bootstrap.Modal(this.modalRef.nativeElement);
         this.modalRef.nativeElement.addEventListener('hidden.bs.modal', () => {
             this.closed.emit();
@@ -73,20 +83,15 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
         }
     }
 
-
-
     fetchComments() {
         this.loadingComments = true;
         (this.serviceFactory.get('events') as any).getComments(this.eventID).subscribe({
             next: async (res: any) => {
                 const comments: Comment[] = res.data.flat();
-    
-                const enrichedComments = await Promise.all(comments.map(async (comment: Comment) => {
-                    comment.username = await this.fetchUsername(comment.userID);
-                    return comment;
-                }));
-    
-                this.comments = enrichedComments;
+                this.comments = comments.reduce((acc: { [id: string]: Comment }, comment: Comment) => {
+                    acc[comment.id!] = comment;
+                    return acc;
+                }, {});
                 this.loadingComments = false;
             },
             error: (err: any) => {
@@ -96,7 +101,7 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
             }
         });
     }
-    
+
 
     closeModal() {
         this.modalInstance.hide();
@@ -107,10 +112,29 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
             this.commentSubmitted.emit({
                 body: this.commentText.trim(),
                 eventID: this.eventID,
-                userID: this.userID
+                userID: this.userID,
+                username: this.user.username,
             });
-            this.closeModal();
         }
+    }
+
+    onDeleteComment(comment: Comment) {
+        if (comment.eventID !== this.eventID) return;
+        delete this.comments[comment.id!];
+    }
+
+    async onInsertComment(comment: Comment) {
+        comment.username = await this.fetchUsername(comment.userID);
+        if (comment.eventID !== this.eventID) return;
+        this.comments[comment.id!] = comment;
+        this.commentText = ''; // Clear the input field when the modal is closed
+
+    }
+
+    private initializeSocket() {
+        const socket = this.socketFactory.get('Comments');
+        socket.onDelete().subscribe(res => this.onDeleteComment(res.old as Comment));
+        socket.onInsert().subscribe(res => this.onInsertComment(res.new as Comment));
     }
 
     async fetchUsername(id: string): Promise<string> {
@@ -123,6 +147,10 @@ export class EventCommentModalComponent implements AfterViewInit, OnChanges {
         console.error('Error fetching user profile:', error);
       }
       return username;
+    }
+
+    private scrollToBottom() {
+        this.withScroll.nativeElement.scrollTop = this.withScroll.nativeElement.scrollHeight;
     }
     
 }
