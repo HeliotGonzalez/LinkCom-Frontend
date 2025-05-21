@@ -14,10 +14,13 @@
                         <app-message-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-message-notification>
                     }
                     @case (NotificationType.COMMUNITY) {
+                        <app-community-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-community-notification>
                     }
                     @case (NotificationType.EVENT) {
+                        <app-event-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-event-notification>
                     }
                     @case (NotificationType.EVENT_REQUEST) {
+                        <app-event-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-event-request-notification>
                     }
                     @case (NotificationType.JOIN_REQUEST) {
                         <app-join-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-join-request-notification>

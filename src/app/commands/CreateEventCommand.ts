@@ -4,8 +4,11 @@ import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {EventService} from "../../architecture/services/EventService";
 import {Router} from "@angular/router";
 import {AuthService} from "../services/auth.service";
-import { Command } from "../../architecture/control/Command";
-import { LanguageService } from "../language.service";
+import {Command} from "../../architecture/control/Command";
+import {LanguageService} from "../language.service";
+import {CommunityService} from "../../architecture/services/CommunityService";
+import {NotificationService} from "../../architecture/services/NotificationService";
+import {NotificationType} from "../../architecture/model/NotificationType";
 
 export class CreateEventCommand implements Command {
     private notify: Notify;
@@ -30,7 +33,17 @@ export class CreateEventCommand implements Command {
                 let text = (this.languageService.current == 'en') ? 'Your event has been created!' : '¡Tu evento acaba de ser creado!';
                 (this.serviceFactory.get('events') as EventService).joinEvent(event.communityID, event.id!, this.auth.getUserUUID()).subscribe();
                 this.notify.success(text);
-                this.router.navigate(["/community"], {queryParams: {communityID: this.event.communityID!}}).then();
+                this.router.navigate(["/community", this.event.communityID]).then();
+                (this.serviceFactory.get('communities') as CommunityService).getCommunityModerators(this.event.communityID).subscribe(res => {
+                    if (res.data.find(m => m.id === this.auth.getUserUUID())) return;
+                    res.data.forEach(
+                        m => (this.serviceFactory.get('notifications') as NotificationService).send({
+                            recipientID: m.id!,
+                            relatedID: event.id!,
+                            type: NotificationType.EVENT_REQUEST
+                        }).subscribe()
+                    )
+                })
             },
             error: res =>{
                 let text = (this.languageService.current == 'en') ? `We could not create your event: ${res.message}` : `Ha ocurrido un error al crear tu evento: ${res.message}`;

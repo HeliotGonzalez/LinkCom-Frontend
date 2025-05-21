@@ -8,13 +8,19 @@ import {AuthService} from "../../services/auth.service";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
 import {JoinRequestNotificationComponent} from "../join-request-notification/join-request-notification.component";
 import {FriendRequestNotificationComponent} from "../friend-request-notification/friend-request-notification.component";
+import {CommunityNotificationComponent} from "../community-notification/community-notification.component";
+import {EventRequestNotificationComponent} from "../event-request-notification/event-request-notification.component";
+import {EventNotificationComponent} from "../event-notification/event-notification.component";
 
 @Component({
     selector: 'app-notifications',
     imports: [
         MessageNotificationComponent,
         JoinRequestNotificationComponent,
-        FriendRequestNotificationComponent
+        FriendRequestNotificationComponent,
+        CommunityNotificationComponent,
+        EventRequestNotificationComponent,
+        EventNotificationComponent
     ],
     templateUrl: './notifications.component.html',
     standalone: true,

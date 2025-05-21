@@ -11,8 +11,8 @@ import {UserService} from "../../../architecture/services/UserService";
 import {AuthService} from "../../services/auth.service";
 import {RequestStatus} from "../../../architecture/model/RequestStatus";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {JoinCommunityCommand} from "../../commands/JoinCommunityCommand";
 import {NotificationService} from "../../../architecture/services/NotificationService";
+import {NotificationType} from "../../../architecture/model/NotificationType";
 
 @Component({
     selector: 'app-community-requests-panel',
@@ -89,6 +89,11 @@ export class CommunityRequestsPanelComponent {
         (this.serviceFactory.get('communities') as CommunityService).updateJoinRequest(
             request?.id!, this.auth.getUserUUID(), new Date(), RequestStatus.ACCEPTED
         ).subscribe();
+        (this.serviceFactory.get('notifications') as NotificationService).send({
+            recipientID: user.id!,
+            relatedID: this.community?.id!,
+            type: NotificationType.COMMUNITY
+        }).subscribe();
         (this.serviceFactory.get('notifications') as NotificationService).removeFromRelated([request?.id!]).subscribe();
     }
 
