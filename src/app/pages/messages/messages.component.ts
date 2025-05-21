@@ -18,6 +18,7 @@ import {TextSerializer} from "../../../architecture/io/TextSerializer";
 import {UserChat} from "../../../architecture/model/UserChat";
 import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
 import { LanguageService } from '../../language.service';
+import {NgClass} from "@angular/common";
 
 @Component({
     selector: 'app-messages',
@@ -25,7 +26,8 @@ import { LanguageService } from '../../language.service';
         InputComponent,
         MessageComponent,
         UsersListComponent,
-        UserChatsListComponent
+        UserChatsListComponent,
+        NgClass
     ],
     templateUrl: './messages.component.html',
     standalone: true,

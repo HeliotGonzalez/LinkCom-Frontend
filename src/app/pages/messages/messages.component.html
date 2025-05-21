@@ -1,7 +1,17 @@
 <main class="main d-flex">
-    @if (recipientID) {
-        <app-user-chats-list [activeRecipientID]="recipientID!" class="d-flex w-25 h-100"></app-user-chats-list>
-    }
+    <aside class="d-flex flex-column w-25 h-100 bg-white">
+        <div>
+            <nav class="d-flex bg-white flex-column p-2 gap-1">
+                <div [ngClass]="!this.recipientID ? 'active' : ''" (click)="router.navigate(['messages'])" class="aside-nav-item d-flex align-items-center p-3 gap-2">
+                    <i class="bi-person-fill fs-3"></i>
+                    <span class="fs-5">Social Panel</span>
+                </div>
+            </nav>
+        </div>
+        <div class="h-separator m-2"></div>
+        <span class="text-center m-2 fw-light">Messages</span>
+        <app-user-chats-list [activeRecipientID]="recipientID!" class="d-flex w-100 h-100"></app-user-chats-list>
+    </aside>
     <div class="w-75 h-100 d-flex flex-column bg-white">
         @if (recipientID) {
             @if (recipient) {
@@ -29,7 +39,7 @@
                 <div class="removing-messages-container d-flex align-items-center justify-content-center m-1 p-2">
                     <div class="d-flex align-items-center flex-grow-1 justify-content-start">
                         <i (click)="cancelRemoving()" class="bi-x fs-4"></i>
-                        <span class="fw-lighter" i18n="Mensaje selección de mensajes|Texto que muestra cuántos mensajes han sido seleccionados para eliminar">Selected {{Object.keys(removeList).length}} messages to remove</span>
+                        <span class="fw-lighter" i18n="Mensaje selección de mensajes|Texto que muestra cuántos mensajes han sido seleccionados para eliminar">Selected {{ Object.keys(removeList).length }} messages to remove</span>
                     </div>
                     <div class="d-flex align-items-center justify-content-end">
                         <i (click)="removeMessages()" class="bi-trash fs-5 me-2"></i>

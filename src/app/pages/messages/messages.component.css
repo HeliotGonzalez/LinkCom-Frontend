@@ -21,3 +21,16 @@
     border-radius: 10px;
     background: #eeeeee;
 }
+
+.aside-nav-item {
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+.aside-nav-item:hover {
+    background: #e0dfdf;
+}
+
+.active {
+    background: #eeeeee;
+}

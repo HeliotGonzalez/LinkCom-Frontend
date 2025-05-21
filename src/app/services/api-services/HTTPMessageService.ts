@@ -84,6 +84,7 @@ export class HTTPMessageService implements MessageService {
     }
 
     createChat(chat: UserChat): Observable<ApiResponse<UserChat>> {
+        console.log(chat)
         return this.http.put<ApiResponse<UserChat>>(`${this.url}/messages/chats`, chat);
     }
 
