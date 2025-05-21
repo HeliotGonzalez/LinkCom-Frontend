@@ -66,13 +66,14 @@ export class RegisterFirstStepComponent {
       return;
     }
 
-    this.formData.put('payload',{
+    this.userData.put('payload',{
       username: this.username,
       email: this.email,
       password: this.password,
       description: this.description,
       })
-    
+
+    this.router.navigate(['/user-register/secondStep']);
   }
   
   // Method to set focus on a specific input field

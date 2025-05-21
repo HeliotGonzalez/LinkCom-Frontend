@@ -8,6 +8,8 @@ import { ApiService } from '../../../services/api-service.service';
 import { FormService } from '../../../services/form-service/form.service';
 import { HttpClient } from '@angular/common/http';
 import { HTTPUserService } from '../../../services/api-services/HTTPUserService';
+import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
+import { UserService } from '../../../../architecture/services/UserService';
 
 @Component({
   selector: 'app-register-third-step',
@@ -22,8 +24,19 @@ export class RegisterThirdStepComponent {
   protected storedInterests: string[] = [];
   protected interestsCoincidences: string[] = [];
   protected userData!: FormService;
-  constructor(private router: Router, private apiService: ApiService, private formData: FormService, private http: HttpClient, private userService: HTTPUserService) {}
+  constructor(private router: Router, 
+    private apiService: ApiService, 
+    private formData: FormService, 
+    private http: HttpClient, 
+    private serviceFactory: ServiceFactory) {}
 
+    ngOnInit() {
+    this.userData = this.formData.get('userRegister');
+    this.apiService.getInterests().subscribe(res => {
+        // @ts-ignore
+        this.storedInterests = [...res].map(e => e["name"]);
+    });
+  }
   goToSecondStep() {
     this.router.navigate(['/user-register/secondStep']);
   }
@@ -55,8 +68,6 @@ export class RegisterThirdStepComponent {
             if (blurOverlay) blurOverlay.remove();
           }
         });
-          // Si la respuesta es exitosa, redirige al segundo paso
-          this.router.navigate(['/user-register/secondStep']);
       },
       (error) => {
         console.error('Error during registration:', error);
@@ -83,34 +94,10 @@ export class RegisterThirdStepComponent {
       }
     );
 
-    //Crear usuario
-    const user = {
-      username: this.userData.get('payload').username,
-      description: this.userData.get('payload').description,
-      email: this.userData.get('payload').email,
-      interests: this.interests
-    };
-
-    this.userService.createUser(user).subscribe(
-      (response) => {
-        console.log('User created successfully:', response);
-        // Aquí puedes manejar la respuesta del servidor si es necesario
-      },
-      (error) => {
-        console.error('Error creating user:', error);
-        // Aquí puedes manejar el error si es necesario
-      }
-    );
-
     this.router.navigate(['/login']);
   }
-  ngOnInit() {
-    this.userData = this.formData.get('userRegister');
-    this.apiService.getInterests().subscribe(res => {
-        // @ts-ignore
-        this.storedInterests = [...res].map(e => e["name"]);
-    });
-  }
+
+
 
   
   addInterestTag(event: Event, value: string) {

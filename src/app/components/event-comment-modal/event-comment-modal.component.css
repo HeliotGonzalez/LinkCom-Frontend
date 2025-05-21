@@ -1,10 +1,75 @@
+.whatsapp-modal {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.chat-header {
+  background-color: #2E3E7F;
+  color: white;
+  border-bottom: none;
+  text-align: center;
+}
+
+.chat-body {
+  background-color: #ccc;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comments-container {
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bubble-content {
+  background-color: #ffffff;
+  padding: 10px 15px;
+  border-radius: 0px 10px 10px 10px;
+  max-width: 70%;
+  align-self: flex-start;
+  transition: transform 0.2s ease;
+  box-shadow: 0 4px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.bubble-content:hover {
+  transform: scale(1.03);
+  cursor: pointer;
+}
+
+.chat-footer {
+  background-color: #f0f0f0;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chat-input {
+  flex: 1;
+  border-radius: 20px;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+}
+
 .spinner-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100px; /* o lo que necesites */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
 .button {
     border-radius: 5px;
     padding: 0.5rem 1.7rem;
@@ -17,20 +82,4 @@
 
 .button:hover {
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-.leave-button {
-    border-radius: 5px;
-    padding: 0.5rem 1.7rem;
-    background: white;
-    border: 2px solid #d31f1f;
-    color: darkred;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    transition: box-shadow 0.3s ease, background 0.3s ease;
-}
-
-.leave-button:hover {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-    background: #d31f1f;
-    color: white;
 }

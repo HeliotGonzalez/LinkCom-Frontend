@@ -11,7 +11,7 @@ export class HTTPUserService implements UserService {
     constructor(private http: HttpClient, private url: string) {
     }
     createUser(user: User): Observable<ApiResponse<User>> {
-        return this.http.post<ApiResponse<User>>(`${this.url}/users`, user);
+        return this.http.post<ApiResponse<User>>(`${this.url}/users/register`, user);
     }
 
     getUsers(userID: string[]): Observable<ApiResponse<User>> {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
+import { FormService } from '../../../services/form-service/form.service';
 
 @Component({
     selector: 'app-register-second-step',
@@ -15,28 +16,26 @@ export class RegisterSecondStepComponent implements OnInit {
   imagePreview: string | null = null; // Variable para almacenar la vista previa de la imagen
   imageFile: File | null = null; // Archivo de la imagen seleccionada
   protected image: string = '';
+  protected userData!: FormService;
+  protected ImageForm!: FormService;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private formData: FormService) {}
 
   ngOnInit(): void {
-    // Cargar la imagen desde localStorage si existe
+    this.formData.createFormEntry('image');
+    this.ImageForm = this.formData.get('imageUpload');
+
+    this.userData = this.formData.get('userRegister');    // Cargar la imagen desde localStorage si existe
     const savedImage = localStorage.getItem('imagePreview');
     if (savedImage) {
-      this.imagePreview = savedImage; // Asigna la imagen guardada en localStorage
-    }
-  }
+      this.imagePreview = savedImage;
+      this.image = savedImage;
 
-  // Método para manejar la imagen seleccionada
-  onImageSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string; // Asigna la imagen al src para la vista previa
-        this.imageFile = file; // Guarda el archivo para la subida
-        localStorage.setItem('imagePreview', this.imagePreview); // Guardamos la URL de la imagen en localStorage
-      };
-      reader.readAsDataURL(file);
+      this.formData.createFormEntry('imageUpload');
+      const imageForm = this.formData.get('imageUpload');
+      imageForm.image = savedImage;
+
+      console.log('Imagen cargada desde localStorage en formData:', imageForm.image);
     }
   }
 
@@ -48,6 +47,7 @@ export class RegisterSecondStepComponent implements OnInit {
   }
 
   goToThirdStep() {
+
     this.router.navigate(['/user-register/thirdStep']);
   }
 
@@ -72,15 +72,28 @@ export class RegisterSecondStepComponent implements OnInit {
     }
   }
 
-  protected handleFile(file: File) {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.setImageValue(e.target?.result);
-      };
-      reader.readAsDataURL(file);
-    }
+protected handleFile(file: File) {
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const result = e.target?.result as string;
+
+      this.setImageValue(result);
+      this.imageFile = file;
+      this.imagePreview = result;
+      this.image = result;
+
+      localStorage.setItem('imagePreview', result);
+
+      this.formData.createFormEntry('imageUpload');
+      const imageForm = this.formData.get('imageUpload');
+      imageForm.image = result;
+
+      console.log('Imagen guardada en formData desde drag & drop o selección directa:', imageForm.image);
+    };
+    reader.readAsDataURL(file);
   }
+}
 
   protected triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -89,10 +102,18 @@ export class RegisterSecondStepComponent implements OnInit {
     }
   }
 
-  protected onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.handleFile(file);
-    }
+onImageSelected(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    this.handleFile(file);
   }
+}
+
+protected onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.handleFile(file);
+  }
+}
+
 }
