@@ -179,6 +179,14 @@
     "5610483944230396062": "Cerrar",
     "4218856999030566694": "Ir al chat",
     "2720646798116789543": "Todavía no hay notificationes",
-    "6681753490088569188": "Seleccionado {$INTERPOLATION} mensajes para eliminar."
+    "6681753490088569188": "Seleccionado {$INTERPOLATION} mensajes para eliminar.",
+    "1869292813599336619": "Miembros",
+    "4580988005648117665": "Buscar",
+    "4612442075379397348": "Todos",
+    "5026731650367812158": "Moderadores",
+    "928104259148106709": "Miembros",
+    "594259736910220845": "Miembros no encontrados",
+    "7000649363168371045": "Guardar cambios",
+    "5431339671573205842": "Cancelar"
   }
 }
