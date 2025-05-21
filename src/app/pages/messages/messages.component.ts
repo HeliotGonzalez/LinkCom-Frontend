@@ -17,6 +17,7 @@ import {SendMessageCommand} from "../../commands/SendMessageCommand";
 import {TextSerializer} from "../../../architecture/io/TextSerializer";
 import {UserChat} from "../../../architecture/model/UserChat";
 import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-messages',
@@ -50,7 +51,8 @@ export class MessagesComponent {
         protected serviceFactory: ServiceFactory,
         private sockets: WebSocketFactory,
         protected auth: AuthService,
-        protected notify: Notify
+        protected notify: Notify,
+        private languageService: LanguageService
     ) {
     }
 
@@ -97,12 +99,23 @@ export class MessagesComponent {
     }
 
     removeMessages() {
-        this.notify.confirm('Do you want to remove this messsage?').then(confirm => {
+        let inform = (this.languageService.current == 'en') ? 'Do you want to remove this messsage?' : '¿Quieres eliminar este mensaje?'
+        this.notify.confirm(inform).then(confirm => {
             if (confirm) (this.serviceFactory.get('messages') as MessageService).deleteFrom(Object.keys(this.removeList)).subscribe({
-                next: () => this.notify.success('This message has been removed'),
-                error: err => this.notify.error(`We could not remove this message: ${err.error}`)
+                next: () =>{
+                    let text =  (this.languageService.current == 'en') ? 'This message has been removed' : 'Este mensaje ha sido eliminado'
+                    this.notify.success(text)
+                },
+                error: err =>{
+                    let text =  (this.languageService.current == 'en') ? `We could not remove this message: ${err.error}` : `No se pudo eliminar el mensaje: ${err.error}`
+                    this.notify.error(text)
+                }
             });
-            else this.notify.error('This message is still safe', 'Operation cancelled');
+            else {
+                let title = (this.languageService.current == 'en') ? 'Operation cancelled' : 'Operación cancelada'
+                let text =  (this.languageService.current == 'en') ? 'This message is still safe' : 'El mensaje no fue eliminado'
+                this.notify.error(text, title);
+            } 
             this.removeList = {};
             this.isRemoving = false;
         });

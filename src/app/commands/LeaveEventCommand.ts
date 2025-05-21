@@ -3,9 +3,12 @@ import {Notify} from "../services/notify";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {EventService} from "../../architecture/services/EventService";
+import { LanguageService } from "../language.service";
 
 export class LeaveEventCommand implements Command {
     private notify: Notify;
+    private languageService: LanguageService;
+    
 
     constructor(
         private serviceFactory: ServiceFactory,
@@ -13,15 +16,23 @@ export class LeaveEventCommand implements Command {
         private userID: string
     ) {
         this.notify = this.serviceFactory.get('notify') as Notify;
+        this.languageService = this.serviceFactory.get('languageService') as LanguageService;
     }
 
     execute(): void {
-        this.notify.confirm(`Are you sure you want to leave ${this.event?.title} event?`).then(confirmed => {
+        let inform = (this.languageService.current == 'en') ? `Are you sure you want to leave ${this.event?.title} event?`
+                        : `¿Estás seguro de que quieres salir del evento ${this.event?.title}?`;
+                        
+        this.notify.confirm(inform).then(confirmed => {
             if (confirmed) (this.serviceFactory.get('events') as EventService).leaveEvent(this.event?.id!, this.userID).subscribe({
                 next: () => {
-                    this.notify.success(`You have left ${this.event?.title}`);
+                    let text = (this.languageService.current == 'en') ? `You have left ${this.event?.title}` : `Dejaste la comunidad ${this.event?.title}`;
+                    this.notify.success(text);
                 },
-                error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
+                error: res => {
+                    let text = (this.languageService.current == 'en') ? `We have problems adding you to this event: ${res.message}` : `Tuvimos un problema al intentar añadirte a este evento: ${res.message}`;
+                    this.notify.error(text)
+                } 
             });
         });
     }
