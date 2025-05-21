@@ -23,6 +23,7 @@
                         <app-join-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-join-request-notification>
                     }
                     @case (NotificationType.FRIEND_REQUEST) {
+                        <app-friend-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-friend-request-notification>
                     }
                 }
             }

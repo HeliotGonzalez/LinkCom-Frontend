@@ -6,8 +6,10 @@ import {ServiceFactory} from '../../services/api-services/ServiceFactory.service
 import {User} from '../../../architecture/model/User';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../../architecture/services/UserService';
-import { Notify } from '../../services/notify';
-import { LanguageService } from '../../language.service';
+import {Notify} from '../../services/notify';
+import {LanguageService} from '../../language.service';
+import {NotificationService} from "../../../architecture/services/NotificationService";
+import {NotificationType} from "../../../architecture/model/NotificationType";
 
 @Component({
   selector: 'app-user-list',
@@ -56,9 +58,15 @@ export class UsersListComponent implements OnInit {
   sendFriendRequest(user: User) {
     (this.serviceFactory.get('users') as UserService)
       .makeFriendRequest(this.currentUserID, user.id!)
-      .subscribe(() => {
+      .subscribe(res => {
         if (this.languageService.current == 'en') this.notify.success('Friend request sent!');
         else this.notify.success('Solicitud de amistad enviada');
+        const request = res.data[0];
+        (this.serviceFactory.get('notifications') as NotificationService).send({
+          recipientID: request.to,
+          relatedID: request.id!,
+          type: NotificationType.FRIEND_REQUEST
+        }).subscribe()
       });
   }
 
