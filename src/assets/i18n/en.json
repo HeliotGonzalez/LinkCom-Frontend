@@ -70,8 +70,8 @@
     "2513561222176694566": "You will be able to create announcements when your invitation is accepted.",
     "9159618486268604940": " Create Event ",
     "2558855155176673299": " Create Event ",
-    "2116780094142174472": "Requests Panel",
-    "7616391408859783183": "Events Panel",
+    "8559046002819792444": " Requests Panel ",
+    "2955348373717197104": " Events Panel ",
     "8894989650563588181": " Manage moderators ",
     "6947667272423244663": " Remove community ",
     "4231684551935263637": " Leave Community ",
@@ -187,6 +187,10 @@
     "3851971103183401874": "Search users...",
     "556782945671859145": "All Users",
     "8202928157421474817": "Friends",
+    "1913662342208717295": "Social Panel",
+    "6452372740127749380": "Messages",
+    "4535402259835731154": "Friend Requests",
+    "111064207711013124": "Pending requests",
     "4397737279393560449": " No users found "
   }
 }

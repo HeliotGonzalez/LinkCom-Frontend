@@ -4,7 +4,7 @@
             <div class="d-flex flex-column mb-4">
                 <div class="input-with-icon gap-1 d-flex align-content-center">
                     <i class="align-content-center bi-search"></i>
-                    <input #input="ngModel" (input)="applyFilter()" name="input" type="text" [(ngModel)]="search" class="flex-grow-1 border-0" placeholder="Search" required>
+                    <input #input="ngModel" (input)="applyFilter()" name="input" type="text" [(ngModel)]="search" class="flex-grow-1 border-0" placeholder="Search"  i18n-placeholder="Search placeholder"required>
                 </div>
             </div>
         </form>
