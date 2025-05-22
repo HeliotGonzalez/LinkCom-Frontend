@@ -4,12 +4,12 @@
             <nav class="d-flex bg-white flex-column p-2 gap-1">
                 <div [ngClass]="!this.recipientID ? 'active' : ''" (click)="router.navigate(['messages'])" class="aside-nav-item d-flex align-items-center p-3 gap-2">
                     <i class="bi-person-fill fs-3"></i>
-                    <span class="fs-5">Social Panel</span>
+                    <span class="fs-5" i18n="Social panel text">Social Panel</span>
                 </div>
             </nav>
         </div>
         <div class="h-separator m-2"></div>
-        <span class="text-center m-2 fw-light">Messages</span>
+        <span class="text-center m-2 fw-light" i18n="Messages texto">Messages</span>
         <app-user-chats-list [activeRecipientID]="recipientID!" class="d-flex w-100 h-100"></app-user-chats-list>
     </aside>
     <div class="w-75 h-100 d-flex flex-column bg-white">
