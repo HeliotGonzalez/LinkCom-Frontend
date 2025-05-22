@@ -35,12 +35,14 @@ import { EditProfileComponent } from './pages/edit-profile/edit-profile.componen
 import { UsersListComponent } from './pages/users-list/users-list.component';
 import {MessagesComponent} from "./pages/messages/messages.component";
 import {EventsRequestPanelComponent} from "./components/events-request-panel/events-request-panel.component";
+import { StadisticsComponent } from './pages/stadistics/stadistics.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
     {path: 'homepage', component: HomepageComponent, canActivate: [NoAuthGuard]},
     {path: 'user-register/firstStep', component: RegisterFirstStepComponent},
     {path: 'user-register/secondStep', component: RegisterSecondStepComponent},
+     {path: 'stadistics', component: StadisticsComponent},
     {path: 'user-register/thirdStep', component: RegisterThirdStepComponent},
     {path: 'login', component: LoginComponent},
     {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
