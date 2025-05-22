@@ -48,6 +48,7 @@ export class CommunityViewComponent {
     protected eventsRequestPanelVisible: boolean = false;
     protected isLoaded: boolean = false;
     protected eventRequests: {[key: string]: CommunityEvent} = {};
+    protected menuOpen = false;
 
     constructor(
         protected serviceFactory: ServiceFactory,
@@ -71,6 +72,10 @@ export class CommunityViewComponent {
             this.initializeSockets();
             this.isLoaded = true;
         });
+    }
+
+    toggleMenu() {
+        this.menuOpen = !this.menuOpen;
     }
 
     private async loadEventRequests() {

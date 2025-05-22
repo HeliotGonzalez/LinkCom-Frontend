@@ -9,6 +9,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommunityService } from '../../../architecture/services/CommunityService';
 import { Notify } from '../../services/notify';
 import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
+import { LanguageService } from '../../language.service';
 
 @Component({
   selector: 'app-personal-profile',
@@ -25,7 +26,7 @@ export class PersonalProfileComponent implements OnInit {
   ownerId: string = '';
   imagePath: string = 'LogoLinkComNegro.svg'
 
-  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory, private route: ActivatedRoute) {
+  constructor(private apiService: ApiService, private AuthService: AuthService, protected router: Router, private notify: Notify, private serviceFactory: ServiceFactory, private route: ActivatedRoute, private languageService: LanguageService) {
     this.ownerId = this.AuthService.getUserUUID();
   }
 
@@ -35,8 +36,6 @@ export class PersonalProfileComponent implements OnInit {
       this.userIdToShow = idFromRoute ?? this.AuthService.getUserUUID();
       this.loadProfile(this.userIdToShow);
     });
-
-
   }
 
   loadProfile(id: string){
@@ -44,7 +43,7 @@ export class PersonalProfileComponent implements OnInit {
       next: (response: any) => {
         console.log('Response:', response);
         const data = response.data;
-        const createdAt = new Date(data.created_at);
+        const createdAt = new Date(data.created_at).toISOString();
         const communities = data.communities.map((c: any) => ({
           ...c,
           created_at: new Date(c.created_at)
@@ -75,16 +74,22 @@ export class PersonalProfileComponent implements OnInit {
   leaveCommunity(communityID?: string, name?: string): void {
     if (!communityID) { return; }
 
-    this.notify.confirm(`You will be leaving ${name ?? 'this'} community`)
+    let inform = (this.languageService.current == 'en') ? `You will be leaving ${name ?? 'this'} community` : `Vas a abanadonar ${name ?? 'esta'} comunidad`
+
+    this.notify.confirm(inform)
       .then(confirmed => {
         if (!confirmed) { return; }
 
         (this.serviceFactory.get('communities') as CommunityService).leaveCommunity(communityID, this.AuthService.getUserUUID()).subscribe({
             next: () => {
-              this.notify.success('You have left this community!');
-              this.user!.communities = this.user!.communities.filter(c => c.id !== communityID);
+              let text = (this.languageService.current == 'en') ? 'You have left this community!' : 'Abandonaste esta comunidad'
+              this.notify.success(text);
+              this.user!.communities = this.user!.communities?.filter(c => c.id !== communityID);
             },
-            error: res => this.notify.error(`An error occurred: ${res.message}`)
+            error: res => {
+              if (this.languageService.current == 'en') this.notify.error(`An error occurred: ${res.message}`);
+              else this.notify.error(`Hubo un error: ${res.message}`);
+            }
           });
       }).then(() => {
         window.location.reload();

@@ -66,8 +66,9 @@ export class ComunitiesComponent {
     }
 
     private onDeleteCommunity(community: Community) {
-        console.log(community)
         delete this.communities[community.id!];
+        if (community.id! in this.joinedCommunities) delete this.joinedCommunities[community.id!]
+        else delete this.notJoinedCommunities[community.id!]
     }
 
     private getCommunitiesIDsFrom(data: Community[]) {

@@ -8,17 +8,17 @@
         @defer (when community) {
             <h1>{{ community.name }}'s</h1>
         }
-        <h2>MEMBERS</h2>
+        <h2 i18n="Texto members|managements">MEMBERS</h2>
         <hr class="w-75">
     </div>
 
     <!-- Search & Filter -->
     <div class="d-flex justify-content-between align-items-center my-3">
-        <input type="text" class="form-control w-50" placeholder="Search" [(ngModel)]="searchText">
+        <input type="text" class="form-control w-50" placeholder="Search" i18n-placeholder="Placeholder de buscar"  [(ngModel)]="searchText">
         <select class="form-select w-25" [(ngModel)]="filter" (change)="filterMembers()">
-          <option value="all">Everyone</option>
-          <option value="moderator">Moderators</option>
-          <option value="member">Members</option>
+          <option value="all" i18n="Opcion | todos">Everyone</option>
+          <option value="moderator" i18n="Opcion | Moderadores">Moderators</option>
+          <option value="member" i18n="Opcion | Miembros">Members</option>
         </select>
       </div>
     <section class="h-50 overflow-auto">
@@ -27,17 +27,17 @@
                 <app-user-card
                         [username]="member.username"
                         [role]="moderators.includes(member) ? CommunityRole.MODERATOR : CommunityRole.MEMBER"
-                        (roleChanged)="updateRole(member.id, $event)"
+                        (roleChanged)="updateRole(member.id!, $event)"
                 >
                 </app-user-card>
             }
         } @else {
-            <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4">No members found</p>
+            <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4" i18n="Miembros no encontrados | texto">No members found</p>
         }
     </section>
     <div class="d-flex align-items-center justify-content-center p-3 gap-5">
-        <button (click)="saveChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-success fs-5">Save changes</button>
-        <button (click)="resetChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-danger fs-5">Reset changes</button>
+        <button (click)="saveChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-success fs-5" i18n="Guardar cambios">Save changes</button>
+        <button (click)="resetChanges()" [disabled]="!Object.keys(changes).length" class="btn p-2 btn-danger fs-5" i18n="Resetear">Reset changes</button>
     </div>
   </div>
 </main>

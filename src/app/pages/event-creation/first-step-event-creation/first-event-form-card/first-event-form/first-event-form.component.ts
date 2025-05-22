@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FormService} from '../../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
 import Swal from "sweetalert2";
+import { LanguageService } from '../../../../../language.service';
 
 @Component({
     selector: 'app-first-event-form',
@@ -23,7 +24,7 @@ export class FirstEventFormComponent {
     protected eventTime: string | null = "";
     protected eventLocation: string | null = "";
 
-    constructor(private router: Router, private route: ActivatedRoute, private formService: FormService) {
+    constructor(private router: Router, private route: ActivatedRoute, private formService: FormService, private languageService: LanguageService) {
     }
 
     cancelForm(event: Event) {
@@ -34,7 +35,11 @@ export class FirstEventFormComponent {
     nextPage(event: Event) {
         event.preventDefault();
         if (this.eventName === "" || this.eventName === "" || this.eventLocation === "" || this.eventLocation === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "All required fields must be filled!", "error");
+            } else {
+                Swal.fire("¡Error!", "Todos los campos requeridos deben ser introducidos.", "error");
+            }
             return;
         }
         this.router.navigate(["/secondStepEventCreation"]).then(r => {

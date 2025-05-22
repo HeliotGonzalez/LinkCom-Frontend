@@ -6,6 +6,7 @@ import { ServiceFactory } from '../../../services/api-services/ServiceFactory.se
 import { CommunityService } from '../../../../architecture/services/CommunityService';
 import { Router } from '@angular/router';
 import { Announce } from '../../../interfaces/announce';
+import { LanguageService } from '../../../language.service';
 
 @Component({
     selector: 'app-announcement-card',
@@ -24,7 +25,8 @@ export class AnnouncementCardComponent implements OnInit {
     private router: Router, 
     private authService: AuthService, 
     private apiService: ApiService,
-    private serviceFactory: ServiceFactory
+    private serviceFactory: ServiceFactory,
+    private languageService: LanguageService
   ) {}
 
   ngOnInit() {
@@ -33,36 +35,71 @@ export class AnnouncementCardComponent implements OnInit {
 
   // Método para eliminar el anuncio
   deleteAnnouncement(announcementId: string) {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'This announcement will be deleted!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
-          next: (response) => {
-            Swal.fire({
-              title: 'Deleted!',
-              text: 'This announcement has been deleted.',
-              icon: 'success',              
-            }).then(() => {
-              window.location.reload(); 
-            })
-          },
-          error: (error) => {
-            Swal.fire({
-              title: 'Error!',
-              text: 'Could not delete the announcement.',
-              icon: 'error',
-              confirmButtonText: 'Retry',
-            });
-          }
-        });
+    if (this.languageService.current=='en'){
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'This announcement will be deleted!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
+            next: (response) => {
+              Swal.fire({
+                title: 'Deleted!',
+                text: 'This announcement has been deleted.',
+                icon: 'success',              
+              }).then(() => {
+                window.location.reload(); 
+              })
+            },
+            error: (error) => {
+              Swal.fire({
+                title: 'Error!',
+                text: 'Could not delete the announcement.',
+                icon: 'error',
+                confirmButtonText: 'Retry',
+              });
+            }
+          });
 
-      }
-    });
+        }
+      });
+    } else {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Este anuncio va a ser eliminado',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, bórralo',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          (this.serviceFactory.get('communities') as CommunityService).removeAnnouncement(announcementId).subscribe({
+            next: (response) => {
+              Swal.fire({
+                title: 'Anuncio eliminado',
+                text: 'El anuncio fue eliminado',
+                icon: 'success',              
+              }).then(() => {
+                window.location.reload(); 
+              })
+            },
+            error: (error) => {
+              Swal.fire({
+                title: 'Error!',
+                text: 'No se pudo eliminar el anuncio, inténtelo más tarde',
+                icon: 'error',
+                confirmButtonText: 'Reintentar',
+              });
+            }
+          });
+
+        }
+      });
+    }
+
   }
 }

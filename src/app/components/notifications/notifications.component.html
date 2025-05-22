@@ -14,21 +14,25 @@
                         <app-message-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-message-notification>
                     }
                     @case (NotificationType.COMMUNITY) {
+                        <app-community-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-community-notification>
                     }
                     @case (NotificationType.EVENT) {
+                        <app-event-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-event-notification>
                     }
                     @case (NotificationType.EVENT_REQUEST) {
+                        <app-event-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-event-request-notification>
                     }
                     @case (NotificationType.JOIN_REQUEST) {
                         <app-join-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-join-request-notification>
                     }
                     @case (NotificationType.FRIEND_REQUEST) {
+                        <app-friend-request-notification (closeEmitter)="close()" [notificationID]="notification.id!"></app-friend-request-notification>
                     }
                 }
             }
             @if (!Object.keys(notifications).length) {
                 <article class="w-100 h-100 d-flex align-items-center justify-content-center">
-                    <span style="color: gray">There is no notifications yet!</span>
+                    <span style="color: gray" i18n="Texto sin notificaciones|Etiqueta para el texto de no notificaciones">There is no notifications yet!</span>
                 </article>
             }
         </section>

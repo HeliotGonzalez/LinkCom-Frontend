@@ -5,24 +5,24 @@
     { step: 3, route: '/thirdStepCommunityCreation' }
   ]" [currentStep]="2" class="form-steps-circles-container"></app-form-steps>
   <div class="community-form-title-container text-center">
-    <h1 class="community-form-title">Community creation</h1>
-    <h2 class="community-form-subtitle">Let others know about it!</h2>
+    <h1 class="community-form-title" i18n="Título creación comunidad|Encabezado del primer paso">Community creation</h1>
+    <h2 class="community-form-subtitle" i18n="Subtítulo descripción comunidad|Instrucción descripción">Let others know about it!</h2>
   </div>
 </div>
 <form class="community-form">
   <div class="community-form-inputs flex-grow-1">
     <div class="input-container d-flex flex-column">
-      <label for="community-form-description-input">Community description *</label>
-      <textarea [(ngModel)]="description" name="community-form-description-input" id="community-form-description-input" placeholder="Tell others about your community!"></textarea>
+      <label for="community-form-description-input" i18n="Etiqueta descripción comunidad|Label para descripción">Community description *</label>
+      <textarea [(ngModel)]="description" name="community-form-description-input" id="community-form-description-input" placeholder="Tell others about your community!" i18n-placeholder="Placeholder descripción comunidad|Placeholder para descripción"></textarea>
     </div>
     <div class="input-container d-flex flex-row justify-content-center" id="interests-input-container">
-      <label for="community-privacy-input">Private community</label>
+      <label for="community-privacy-input" i18n="Etiqueta privacidad comunidad|Label para checkbox privacidad">Private community</label>
       <input [(ngModel)]="privateCommunity" name="community-privacy-input" id="community-privacy-input" type="checkbox">
     </div>
   </div>
   <div class="community-form-footer d-flex align-items-end justify-content-center">
-    <button (click)="previousPage()" class="form-button normal-empty-button">PREVIOUS</button>
-    <button (click)="nextPage($event)" class="form-button normal-button">NEXT</button>
+    <button (click)="previousPage()" class="form-button normal-empty-button" i18n="Texto botón anterior creación|Volver al paso 1">PREVIOUS</button>
+    <button (click)="nextPage($event)" class="form-button normal-button" i18n="Texto botón siguiente creación paso 2|Avanzar al paso 3">NEXT</button>
   </div>
 </form>
 

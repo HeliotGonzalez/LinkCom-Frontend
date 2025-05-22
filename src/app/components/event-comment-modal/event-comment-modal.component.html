@@ -1,40 +1,40 @@
 <div #modal class="modal fade" tabindex="-1" aria-labelledby="eventCommentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="eventCommentModalLabel">Comentario del Evento</h5>
-          <button type="button" class="btn-close" (click)="closeModal()" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body">
-          <div *ngIf="comments.length > 0" class="mb-3">
-            <label class="form-label fw-bold">Comentarios:</label>
-            <ul class="list-group mb-2">
-            <!-- Spinner visible mientras se cargan los comentarios -->
-            <div *ngIf="loadingComments" class="spinner-container">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-            </div>
-
-            <!-- Comentarios -->
-            <div *ngIf="!loadingComments">
-              <div *ngFor="let comment of comments">
-                <strong>{{ comment.username }}</strong>: {{ comment.body }}
-              </div>
-            </div>
-            </ul>
+  <div class="modal-dialog  modal-dialog-centered modal-lg">
+    <div class="modal-content  whatsapp-modal">
+      <div class="modal-header chat-header">
+        <h5 class="modal-title" id="eventCommentModalLabel">Comentarios del Evento</h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Cerrar"></button>
+      </div>
+      <div #withScroll class="modal-body chat-body">
+        <div *ngIf="loadingComments" class="spinner-container">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
-        
-          <textarea [(ngModel)]="commentText"
-                    class="form-control"
-                    rows="1"
-                    placeholder="Escribe tu comentario aquí..."></textarea>
         </div>
-        <div class="modal-footer gap-2">
-          <button type="button" class="button" (click)="submitComment()">Publicar</button>
-          <button type="button" class="leave-button" (click)="closeModal()">Cerrar</button>
+ 
+        <div *ngIf="!loadingComments && Object.keys(comments).length > 0" class="comments-container">
+          <div *ngFor="let comment of Object.values(comments)" class="d-flex align-items-start mb-3">
+            <img src="https://picsum.photos/40/40" alt="avatar" class="rounded-circle profile-img me-2">
+            <div class="bubble-content" #item>
+              <strong>{{ comment.username }}</strong>
+              <p class="mb-0">{{ comment.body }}</p>
+            </div>
+          </div>
         </div>
+
+        <div *ngIf="!loadingComments && Object.keys(comments).length === 0" class="text-center text-muted">
+          No hay comentarios todavía.
+        </div>
+      </div>
+
+      <div class="modal-footer chat-footer">
+        <input [(ngModel)]="commentText"
+               type="text"
+               class="form-control chat-input"
+               placeholder="Escribe tu comentario aquí..." 
+               (keydown.enter)="submitComment()"/>
+        <button type="button" class="button" (click)="submitComment()">Enviar</button>
       </div>
     </div>
   </div>
-  
+</div>

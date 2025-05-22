@@ -9,6 +9,7 @@ import {User} from "../../../architecture/model/User";
 import {CommunityRole} from "../../../architecture/model/CommunityRole";
 import {Community} from "../../../architecture/model/Community";
 import {Notify} from "../../services/notify";
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-moderators-management',
@@ -31,8 +32,8 @@ export class ModeratorsManagementComponent {
         private route: ActivatedRoute,
         private serviceFactory: ServiceFactory,
         private router: Router,
-        private notify: Notify
-
+        private notify: Notify,
+        private languageService: LanguageService
     ) {
     }
 
@@ -59,22 +60,27 @@ export class ModeratorsManagementComponent {
     updateRole(id: string, newRole: CommunityRole) {
         const member = this.allMembers.find(m => m.id === id)!;
 
-        if (!this.changes[member.id]) this.changes[member.id] = [this.moderators.find(m => m.id === member.id) ? CommunityRole.MODERATOR : CommunityRole.MEMBER, newRole];
-        else this.changes[member.id][1] = newRole;
+        if (!this.changes[member.id!]) this.changes[member.id!] = [this.moderators.find(m => m.id === member.id!) ? CommunityRole.MODERATOR : CommunityRole.MEMBER, newRole];
+        else this.changes[member.id!][1] = newRole;
 
         this.swapUserGivenRole(member, newRole);
 
-        if (this.changes[member.id] && this.changes[member.id][0] === this.changes[member.id][1]) delete this.changes[member.id];
+        if (this.changes[member.id!] && this.changes[member.id!][0] === this.changes[member.id!][1]) delete this.changes[member.id!];
         this.orderMemberByRole();
     }
 
     exitPage(event: Event) {
         event.preventDefault();
-        if (Object.keys(this.changes).length) throw this.notify.confirm('Do you want to leave without saving?').then(confirm => {
+        let inform = (this.languageService.current == 'en') ? 'Do you want to leave without saving?' : '¿Quieres salir sin guardar?'
+        if (Object.keys(this.changes).length) throw this.notify.confirm(inform).then(confirm => {
             if (confirm) this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}}).then();
-            else this.notify.error('Save changes before leaving this panel', 'Your changes could still be saved!');
+            else {
+                let title = (this.languageService.current == 'en') ? 'Save changes before leaving this panel' : 'Guarda los cambios antes de salir'
+                let text = (this.languageService.current == 'en') ? 'Your changes could still be saved!' : 'Los cambios pueden ser guardados'
+                this.notify.error(title, text);
+            } 
         })
-        else this.router.navigate(["/community"], {queryParams: {communityID: this.communityID, isUserJoined: true}}).then();
+        else this.router.navigate(["/community", this.communityID]).then();
     }
 
     filterMembers() {
@@ -92,9 +98,14 @@ export class ModeratorsManagementComponent {
     }
 
     protected saveChanges() {
-        if (this.changes) this.notify.confirm('Do you want to save the changes?').then(confirm => {
+        let inform = (this.languageService.current == 'en') ? 'Do you want to save the changes?' : '¿Quieres guardar los cambios?';
+        if (this.changes) this.notify.confirm(inform).then(confirm => {
             if (confirm) this.changeUsersRoles();
-            else this.notify.error('Changes not saved', 'Changes cancelled');
+            else {
+                let title = (this.languageService.current == 'en') ? 'Changes not saved' : 'Cambios no guardados'
+                let text = (this.languageService.current == 'en') ? 'Changes cancelled' : 'Los cambios no fueron efectuados'
+                this.notify.error(title, text);
+            } 
         });
     }
 
@@ -106,7 +117,11 @@ export class ModeratorsManagementComponent {
                 this.notify.success('Changes successfully saved!');
                 this.changes = {};
             },
-            error: res => this.notify.error(`An error occurred!: ${res.error}`, 'Changes could not be saved')
+            error: res =>{
+                let title = (this.languageService.current == 'en') ? `An error occurred!: ${res.error}` : `Ocurrió un error: ${res.error}`
+                let text = (this.languageService.current == 'en') ? 'Changes could not be saved' : 'Los cambios no fueron efectuados'
+                this.notify.error(title, text)
+            } 
         }));
     }
 

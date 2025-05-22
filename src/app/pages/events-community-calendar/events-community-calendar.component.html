@@ -102,6 +102,68 @@
   </div>
 
   <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" [@zoom]="selectedEvent">
+        <h1 class=" modal-title fs-5" id="exampleModalLabel">{{selectedEvent?.title}}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body internal-modal">
+        <div [@slide]="selectedEvent" class="image-modal d-flex justify-content-center align-items-center">
+        <img [src]="selectedEvent?.imagePath">
+        </div>
+        <div [@fade]>
+        <h5 i18n="Encabezado fecha|Label para la fecha del evento">Date</h5>
+        <div class="row">
+          <div class="col">
+            <p i18n="Encabezado hora|Label para la hora del evento">Hour: <br> {{selectedEvent?.date | date:'HH:mm' : 'Atlantic/Canary'}}</p>
+        </div>
+        <div class="col">
+          <p i18n="Etiqueta fecha evento|Etiqueta para mostrar la fecha del evento">
+            Day: <br> {{ selectedEvent?.date | date:'dd/MM/yy':'es-ES' }}
+          </p>
+      </div>
+        </div>
+         
+        <h5 i18n="Encabezado descripción|Label para descripción del evento">
+          Description
+        </h5>
+         <p [innerHTML]="selectedEvent?.description"> </p>
+         <div class="row">
+          <div class="col">
+         <h6 i18n="Encabezado comunidad|Label para el nombre de la comunidad">Comunity:</h6>
+         <p [innerHTML]="getCommunityName(selectedEvent?.communityID)"></p>
+          </div>
+          <div class="col">
+            <h6 i18n="Encabezado intereses|Label para lista de intereses">Interests</h6>
+            <p [innerHTML]="getCommunityInterests(selectedEvent?.communityID)"></p>
+          </div>
+         </div>
+      </div>
+    </div>
+      <div class="modal-footer">
+        <div class="d-flex justify-content-center gap-3 w-100">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="prevEvent()"
+            [disabled]="selectedDayEvents.length < 2"
+            i18n="Botón evento anterior|Acción para ver el evento anterior"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="nextEvent()"
+            [disabled]="selectedDayEvents.length < 2"
+            i18n="Botón evento siguiente|Acción para ver el siguiente evento"
+          >
+            Next
+          </button>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" i18n="Botón cerrar modal|Acción para cerrar el modal">Close</button>
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api-service.service';
 import { AuthService } from '../../services/auth.service';
 import { FeedItem } from '../../interfaces/feed-item';
+import { LanguageService } from '../../language.service';
 import { Router } from '@angular/router';
 import {ApiResponse} from "../../interfaces/ApiResponse";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
@@ -65,6 +66,7 @@ export class EventsCommunityCalendarComponent implements OnInit {
     imagePath: string;
     communityID: string;
   }[] = [];
+  
   selectedIdx = 0;
   openEventModal(day: number, idx: number): void {
     this.selectedDayEvents = this.calendarEvents[day] || [];
@@ -116,7 +118,8 @@ export class EventsCommunityCalendarComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) {
     this.userid = this.authService.getUserUUID();
   }
@@ -178,6 +181,7 @@ getEventWithParsedDate(ev: any): any {
 
 
   ngOnInit(): void {
+    this.checkLanguage();
     this.generateCalendarMonth();
     this.loadCommunities();
     if (this.userid === 'user_id') {
@@ -221,6 +225,12 @@ getEventWithParsedDate(ev: any): any {
         console.error('Error al obtener eventos:', err);
       }
     });
+  }
+
+  private checkLanguage(): void {
+    this.dayNames = this.languageService.current === 'es'
+      ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+      : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   }
 
   public getCommunityName(id?: string): string {
@@ -287,8 +297,11 @@ getEventWithParsedDate(ev: any): any {
   }
 
   getMonthName(month: number): string {
-    return new Date(this.currentDate.getFullYear(), month).toLocaleString('en-US', { month: 'long' });
+    const locale = this.languageService.current === 'es' ? 'es-ES' : 'en-US';
+    let monthName = new Date(this.currentDate.getFullYear(), month).toLocaleString(locale, { month: 'long' });
+    return monthName.charAt(0).toUpperCase() + monthName.slice(1);
   }
+
 
   navigateToEvent(day: number | null): void {
     if (!day) return;

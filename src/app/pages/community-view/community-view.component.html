@@ -14,23 +14,22 @@
                     @if (isUserJoined) {
                         <div class="d-flex gap-3">
                             <button class="button mb-5 mt-5"
-                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementsList').withParameters({'communityID': community?.id!}).build().execute()">
+                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementsList').withParameters({'communityID': community?.id!}).build().execute()"
+                                    i18n="Botón ir a noticias|Acción para ir al listado de anuncios">
                                 Go to the community news!
                             </button>
-                            @if (this.isCreator()) {
-                                <button class="button mb-5 mt-5" (click)="editCommunity()">Edit community</button>
-                            }
                             <button class="button mb-5 mt-5"
-                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementCreation').withParameters({'communityID': community?.id!}).build().execute()">
+                                    (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/announcementCreation').withParameters({'communityID': community?.id!}).build().execute()"
+                                    i18n="Botón nuevo anuncio|Acción para crear un nuevo anuncio">
                                 New Announcement
                             </button>
                         </div>
                     } @else {
-                        <p>You will be able to create announcements when your invitation is accepted.</p>
+                        <p i18n="Mensaje sin permiso anuncios|Indica que no puede crear anuncios">You will be able to create announcements when your invitation is accepted.</p>
                     }
 
                     @if (announcements.length === 0) {
-                        <p>There is no news yet</p>
+                        <p i18n="Mensaje sin noticias|Texto cuando no hay anuncios">There is no news yet</p>
                     } @else {
                         @for (newAnnounce of announcements; track newAnnounce) {
                             <app-announcement-card
@@ -47,44 +46,78 @@
                     <div class="d-flex gap-3 p-3">
                         @if (isUserJoined){
                         <button class="button" 
-                                (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepEventCreation').withParameters({'communityID': community?.id!}).build().execute()">
+                                (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/firstStepEventCreation').withParameters({'communityID': community?.id!}).build().execute()"
+                                i18n="Botón crear evento|Acción para crear evento">
                             Create Event
                         </button>
                     } @else if (!isUserJoined) 
                     {
-                        <button class="button" [disabled]="true" >
+                        <button class="button" [disabled]="true" i18n="Botón crear evento deshabilitado|Texto de botón deshabilitado">
                             Create Event
                         </button>
                     }
-                        @if (isCreator() || isUserModerator) {
-                            <button class="button" (click)="showRequestsPanel()">Requests Panel</button>
-                            <button class="button" (click)="showEventsRequestPanel()">Events Panel</button>
-                            @if (isCreator()) {
-                                <button class="button"
-                                        (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/moderatorsManagement').withParameters({'communityID': community?.id!}).build().execute()">
+
+                        @if(isUserModerator || isCreator()) {
+                    
+                        <div class="dropdown">
+                            <button class="button" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menu
+                            </button>
+
+                            <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                                <li>
+                                <button class="dropdown-item" (click)="showRequestsPanel()" i18n="Botón panel solicitudes|Acción para mostrar panel de solicitudes">
+                                    Requests Panel
+                                </button>
+                                </li>
+                                <li>
+                                <button class="dropdown-item" (click)="showEventsRequestPanel()" i18n="Botón panel eventos|Acción para mostrar panel de solicitudes de eventos">
+                                    Events Panel
+                                </button>
+                                </li>
+
+                                @if (isCreator()) {
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <button class="dropdown-item"
+                                            (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/moderatorsManagement').withParameters({'communityID': community?.id!}).build().execute()"
+                                            i18n="Botón gestionar moderadores|Acción para gestionar moderadores">
                                     Manage moderators
-                                </button>
-                                <button class="leave-button"
-                                        (click)="RemoveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).build().execute()">
+                                    </button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item" (click)="editCommunity()" i18n="Botón editar comunidad|Acción para editar comunidad">Edit community</button>
+                                </li>
+                                <li>
+                                    <button class="dropdown-item text-danger"
+                                            (click)="RemoveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).build().execute()"
+                                            i18n="Botón eliminar comunidad|Acción para eliminar comunidad">
                                     Remove community
-                                </button>
-                            }
-                        }
+                                    </button>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                        }   
+
                         @if (!isCreator()) {
                             @if (isUserJoined) {
                                 <button class="leave-button"
-                                        (click)="LeaveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                        (click)="LeaveCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()"
+                                        i18n="Botón abandonar comunidad|Acción para abandonar comunidad">
                                     Leave Community
                                 </button>
                             } @else {
                                 @if (isRequested) {
                                     <button class="leave-button"
-                                            (click)="CancelJoinRequestCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                            (click)="CancelJoinRequestCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()"
+                                            i18n="Botón cancelar solicitud|Acción para cancelar solicitud de unión">
                                         Cancel Request
                                     </button>
                                 } @else {
                                     <button class="button"
-                                            (click)="JoinCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()">
+                                            (click)="JoinCommunityCommand.Builder.create().withFactory(serviceFactory).withCommunity(community!).withUser(this.authService.getUserUUID()).build().execute()"
+                                            i18n="Botón unirse comunidad|Acción para solicitar unión a la comunidad">
                                         Join Community
                                     </button>
                                 }

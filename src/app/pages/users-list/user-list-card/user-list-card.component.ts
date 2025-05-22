@@ -35,7 +35,7 @@ export class UserListCardComponent {
             fromUsername: (await firstValueFrom((this.serviceFactory.get('users') as UserService).getUser(this.auth.getUserUUID()))).data[0].username,
             hidden: false,
             last_used_at: new Date().toISOString(),
-            to: this.user.id,
+            to: this.user.id!,
             toUsername: this.user.username
         }).subscribe();
         this.router.navigate(['messages', this.user.id]).then();

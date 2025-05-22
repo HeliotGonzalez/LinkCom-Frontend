@@ -3,24 +3,40 @@ import {Notify} from "../services/notify";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {Community} from "../../architecture/model/Community";
 import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
+import { LanguageService } from "../language.service";
 
 export class RemoveCommunityCommand implements Command {
     private notify: Notify;
+    private languageService: LanguageService;
+    
 
     constructor(
         private serviceFactory: ServiceFactory,
         private community: Community,
     ) {
         this.notify = this.serviceFactory.get('notify') as Notify;
+        this.languageService = this.serviceFactory.get('languageService') as LanguageService;
     }
 
     execute(): void {
-        this.notify.confirm(`You will not be able to revert this: REMOVE ${this.community?.name}'s community`).then(confirmed => {
+        let inform = (this.languageService.current == 'en') ? `You will not be able to revert this: REMOVE ${this.community?.name}'s community` 
+                        : `No podrás revertir esta acción: Eliminando ${this.community?.name}`;
+                        
+        this.notify.confirm(inform).then(confirmed => {
             if (confirmed) (this.serviceFactory.get('communities') as CommunityService).removeCommunity(this.community!.id!).subscribe({
-                next: () => this.notify.success('You have removed this community!'),
-                error: res => this.notify.error(`An error occurred: ${res.message}`)
+                next: () => {
+                    let text = (this.languageService.current == 'en') ? 'You have removed this community!' : '¡Has eliminado esta comunidad!';
+                    this.notify.success(text)
+                },
+                error: res => {
+                    let text = (this.languageService.current == 'en') ? `An error occurred: ${res.message}` : `Ha habido un error: ${res.message}`;
+                    this.notify.error(text)
+                } 
             });
-            else this.notify.success('Your community is still safe!');
+            else {
+                let text = (this.languageService.current == 'en') ? 'Your community is still safe!' : '¡Tu comunidad está segura!';
+                this.notify.success(text);
+            } 
         });
     }
 

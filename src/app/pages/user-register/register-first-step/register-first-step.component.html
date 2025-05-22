@@ -8,15 +8,15 @@
         ></app-form-steps>
         <div class="register-form-header">
             <div class="register-form-title-container text-center">
-                <h1 class="register-form-title">User Register</h1>
-                <h2 class="register-form-subtitle">Fill in your details to register</h2>
+                <h1 class="register-form-title" i18n="Título registro usuario|Título principal del formulario">User Register</h1>
+                <h2 class="register-form-subtitle" i18n="Subtítulo registro usuario|Instrucción para el usuario">Fill in your details to register</h2>
             </div>
         </div>
 
         <form class="register-form">
             <div class="register-form-inputs d-flex flex-column gap-4 flex-grow-1">
                 <div class="input-container d-flex flex-column">
-                    <label for="username-input">Username *</label>
+                    <label for="username-input" i18n="Etiqueta campo Usuario|Label para username">Username *</label>
 
                     <input
                             [(ngModel)]="username"
@@ -24,17 +24,18 @@
                             name="username"
                             id="username-input"
                             placeholder="Choose a unique username"
+                            i18n-placeholder="Placeholder username|Placeholder para username"
                             required
                             [class.input-error]="usernameTaken"
                     >
 
-                    <div *ngIf="usernameTaken" class="error-message">
+                    <div *ngIf="usernameTaken" class="error-message" i18n="Error username tomado|Mensaje cuando el usuario ya existe">
                         Username already taken
                     </div>
                 </div>
 
                 <div class="input-container d-flex flex-column">
-                    <label for="email-input">Email *</label>
+                    <label for="email-input" i18n="Etiqueta campo Email|Label para email">Email *</label>
                     <input
                             [(ngModel)]="email"
                             (focusout)="checkEmail(email)"
@@ -42,46 +43,49 @@
                             id="email-input"
                             placeholder="Enter your email address"
                             type="email"
+                            i18n-placeholder="Placeholder email|Placeholder para email"
                             required
                             [class.input-error]="emailTaken">
-                    <div *ngIf="emailTaken" class="error-message">
+                    <div *ngIf="emailTaken" class="error-message" i18n="Error email tomado|Mensaje cuando el email ya existe">
                         Email already taken
                     </div>
                 </div>
 
                 <div class="input-container d-flex flex-column">
-                    <label for="description-input">Description *</label>
-                    <input [(ngModel)]="description" name="description" placeholder="Talk about yourself" required>
+                    <label for="description-input" i18n="Etiqueta campo Descripción|Label para descripción">Description *</label>
+                    <input [(ngModel)]="description" name="description" placeholder="Talk about yourself" i18n-placeholder="Placeholder descripción|Placeholder para descripción" required>
                 </div>
 
                 <div class="input-container d-flex flex-column">
-                    <label for="password-input">Password *</label>
+                    <label for="password-input" i18n="Etiqueta campo Contraseña|Label para contraseña">Password *</label>
                     <input (focusout)="checkPassLength(password)" [(ngModel)]="password" name="password"
-                           id="password-input" placeholder="Choose a secure password" type="password" required
+                           id="password-input" placeholder="Choose a secure password" type="password"
+                            i18n-placeholder="Placeholder contraseña|Placeholder para contraseña" required
                            [class.input-error]="passwordLengthError">
-                    <div *ngIf="passwordLengthError" class="error-message">
+                    <div *ngIf="passwordLengthError" class="error-message" i18n="Error longitud contraseña|Aviso mínimo 6 caracteres">
                         Password must be at least 6 characters long
                     </div>
                 </div>
 
                 <div class="input-container d-flex flex-column">
-                    <label for="confirm-password-input">Confirm Password *</label>
+                    <label for="confirm-password-input" i18n="Etiqueta confirmar contraseña|Label para confirmar contraseña">Confirm Password *</label>
                     <input (focusout)="checkConfPassLength(confirmPassword)" [(ngModel)]="confirmPassword"
                            name="confirm-password" id="confirm-password-input" placeholder="Confirm your password"
+                           i18n-placeholder="Placeholder confirmar contraseña|Placeholder para confirmar contraseña"
                            type="password" required [class.input-error]="confPasswordLengthError">
-                    <div *ngIf="confPasswordLengthError" class="error-message">
+                    <div *ngIf="confPasswordLengthError" class="error-message" i18n="Error longitud confirmar contraseña|Aviso mínimo 6 caracteres">
                         Password must be at least 6 characters long
                     </div>
                 </div>
 
                 <div class="register-form-footer d-flex justify-content-center gap-2">
-                    <button (click)="goToSecondStep()" class="form-button normal-button">Continuar</button>
+                    <button (click)="goToSecondStep()" class="form-button normal-button" i18n="Texto botón Continuar|Avanzar al siguiente paso">Continue</button>
                 </div>
             </div>
         </form>
 
         <div class="register-form-footer text-center">
-            <p>Already have an account? <a href="/login" class="login-link">Go to login instead</a></p>
+            <p i18n="Pie registro: ¿ya tienes cuenta?|Texto previo al enlace de login">Already have an account? <a href="/login" class="login-link">Go to login instead</a></p>
         </div>
     </div>
 </main>
