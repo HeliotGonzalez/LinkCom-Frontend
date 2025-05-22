@@ -20,7 +20,9 @@
   align-content: center;
   display: flex;
 }
-
+main {
+  padding-top: 300px;
+}
 
 img
 {

@@ -7,6 +7,7 @@ import {CreateEventParameters} from "../interfaces/create-event-parameters";
 import {ApiResponse} from "../interfaces/ApiResponse";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import { User } from '../../architecture/model/User';
+import { Announce } from '../interfaces/announce';
 
 interface GetUserCommunitiesResponse {
     data: { id: string }[];
@@ -149,4 +150,10 @@ export class ApiService {
     updateUser(id: string, payload: Partial<User>): Observable<any> {
         return this.http.patch(`${this.baseUrl}/users/${id}`, payload);
     }
+
+    editAnnouncement(announcementID: string, updatedContent: string): Observable<ApiResponse<Announce>> {
+  return this.http.patch<ApiResponse<Announce>>(`/api/announcements/${announcementID}`, {
+    content: updatedContent
+  });
+}
 }
