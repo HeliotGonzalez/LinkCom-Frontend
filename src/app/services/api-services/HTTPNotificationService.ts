@@ -12,6 +12,15 @@ export class HTTPNotificationService implements NotificationService {
     constructor(private http: HttpClient, private url: string) {
     }
 
+    remove(id: string): Observable<ApiResponse<Notification>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'id', operator: 'eq', value: id}
+            ])
+        ));
+        return this.http.delete<ApiResponse<Notification>>(`${this.url}/notifications/${serial}`)
+    }
+
     removeFromRelated(ids: string[]): Observable<ApiResponse<Notification>> {
         const serial = CriteriaSerializer.serialize(new Criteria(
             Filters.fromValues([

@@ -6,6 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {InterestTagComponent} from '../../../../../components/interest-tag/interest-tag.component';
 import {ApiService} from "../../../../../services/api-service.service";
 import Swal from "sweetalert2";
+import { LanguageService } from '../../../../../language.service';
 import {Notify} from "../../../../../services/notify";
 
 @Component({
@@ -29,7 +30,7 @@ export class FirstCommunityFormComponent {
     protected storedInterests: string[] = [];
     protected interestsCoincidences: string[] = [];
 
-    constructor(private router: Router, private formService: FormService, private apiService: ApiService, private notify: Notify) {
+    constructor(private router: Router, private formService: FormService, private apiService: ApiService, private notify: Notify, private languageService: LanguageService) {
     }
 
     cancel() {
@@ -39,7 +40,11 @@ export class FirstCommunityFormComponent {
     nextPage(event: Event) {
         event.preventDefault();
         if (this.name === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "All required fields must be filled!", "error");
+            } else {
+                Swal.fire("¡Error!", "Todos los campos aleatorios deben ser introducidos", "error");
+            }
             return;
         }
         if (this.interests.length === 0) this.notify.error('At least one interest must be selected!');
@@ -67,7 +72,11 @@ export class FirstCommunityFormComponent {
     addInterestTag(event: Event, value: string) {
         event.preventDefault();
         if (!this.storedInterests.find(i => i.toLowerCase() === value.toLowerCase())) {
-            Swal.fire("Error!", "Interest not found!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "Interest not found!", "error");
+            } else {
+                Swal.fire("¡Error!", "Interés no encontrado", "error");
+            }
             return;
         }
         if (!this.interests.includes(value.toLowerCase())) this.interests = [...this.interests, value];

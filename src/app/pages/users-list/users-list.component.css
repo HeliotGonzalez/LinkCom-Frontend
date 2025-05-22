@@ -1,10 +1,29 @@
 button.btn-outline-light {
   border: 1px solid white;
 }
-.user-cards-container {
-  max-height: 60vh;
-  overflow-y: auto;
-  padding-right: 10px;
-  margin-top: 1rem;
+
+.input-with-icon {
+  border: none;
+  outline: none;
+  margin: 0 1rem;
+  height: 3rem;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  padding-right: 0.5rem;
+  padding-left: 1rem;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
-  
+
+.input-with-icon:hover {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.input-with-icon:focus-within {
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.input-with-icon input {
+  outline: none;
+  background: transparent;
+}

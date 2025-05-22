@@ -6,6 +6,7 @@ import { ApiService } from '../../../services/api-service.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
+import { FormService } from '../../../services/form-service/form.service';
 
 @Component({
   selector: 'app-register-first-step',
@@ -18,6 +19,7 @@ import {FormStepsComponent} from "../../../components/form-steps/form-steps.comp
   styleUrls: ['./register-first-step.component.css'],
   standalone: true,
 })
+
 export class RegisterFirstStepComponent {
   protected usernameTaken: boolean = false;
   protected emailTaken: boolean = false;
@@ -25,14 +27,20 @@ export class RegisterFirstStepComponent {
   protected confPasswordLengthError: boolean = false;
   protected passwordsMatch: boolean = false;
 
-  protected username: string = '';
+  protected username: string = '' ;
   protected email: string = '';
   protected password: string = '';
   protected description: string = '';
   protected confirmPassword: string = '';
+  protected imagePath: string = '';
+  protected userData!: FormService;
 
-  constructor(private http: HttpClient, private router: Router, private apiService: ApiService) {}
+  constructor(private http: HttpClient, private router: Router, private apiService: ApiService, private formData: FormService) {}
 
+  ngOnInit() {
+    this.formData.createFormEntry('userRegister');
+    this.userData = this.formData.get('userRegister');
+  }
 
   goToSecondStep() {
     if (this.password !== this.confirmPassword) {
@@ -59,67 +67,15 @@ export class RegisterFirstStepComponent {
       return;
     }
 
-    const payload = {
+    this.userData.put('payload',{
       username: this.username,
       email: this.email,
       password: this.password,
       description: this.description,
-    };
-    
-    console.log('Payload enviado:', payload); // <-- Agregado para depuración
-  
-    const apiUrl = 'http://localhost:3000/user-register';
-    this.http.post(apiUrl, payload).subscribe(
-      (response) => {
-        console.log('User registered successfully:', response);
-        Swal.fire({
-          title: 'Success!',
-          text: 'User registered successfully.',
-          icon: 'success',
-          confirmButtonText: 'Continue',
-          backdrop: false, // Evita que SweetAlert2 cambie el <body>
-          customClass: {
-            popup: 'custom-swal-popup' // Añade una clase personalizada
-          },
-          didOpen: () => {
-            document.body.insertAdjacentHTML(
-              'beforeend',
-              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-            );
-          },
-          didClose: () => {
-            const blurOverlay = document.getElementById('blur-overlay');
-            if (blurOverlay) blurOverlay.remove();
-          }
-        });
-          // Si la respuesta es exitosa, redirige al segundo paso
-          this.router.navigate(['/user-register/secondStep']);
-      },
-      (error) => {
-        console.error('Error during registration:', error);
-        Swal.fire({
-          title: 'Error!',
-          text: 'Error during registration. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'Retry',
-          backdrop: false, // Evita que SweetAlert2 cambie el <body>
-          customClass: {
-            popup: 'custom-swal-popup' // Añade una clase personalizada
-          },
-          didOpen: () => {
-            document.body.insertAdjacentHTML(
-              'beforeend',
-              '<div id="blur-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.3);backdrop-filter:blur(10px);z-index:2;"></div>'
-            );
-          },
-          didClose: () => {
-            const blurOverlay = document.getElementById('blur-overlay');
-            if (blurOverlay) blurOverlay.remove();
-          }
-        });
-      }
-    );
+      imagePath: this.imagePath
+      })
 
+    this.router.navigate(['/user-register/secondStep']);
   }
   
   // Method to set focus on a specific input field
@@ -161,7 +117,6 @@ export class RegisterFirstStepComponent {
       },
       error: (err) => {
         console.error('Error al verificar email:', err);
-        // Podés decidir qué hacer aquí: dejar el emailTaken como false o mostrar un mensaje de error
       }
     });
   }

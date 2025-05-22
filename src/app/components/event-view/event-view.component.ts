@@ -12,6 +12,7 @@ import { Comment } from '../../../architecture/model/Comment';
 import {User} from "../../../architecture/model/User";
 import {UserService} from "../../../architecture/services/UserService";
 import { EventCommentModalComponent } from '../event-comment-modal/event-comment-modal.component';
+import { LanguageService } from '../../language.service';
 
 @Component({
     selector: 'app-event-view',
@@ -39,7 +40,8 @@ export class EventViewComponent {
     constructor(
         private authService: AuthService,
         protected serviceFactory: ServiceFactory,
-        private notify: Notify
+        private notify: Notify,
+        private languageService: LanguageService
     ) {}
 
     ngOnInit() {
@@ -51,7 +53,10 @@ export class EventViewComponent {
                     console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
                     this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
                 },
-                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
+                error: res => {
+                    if (this.languageService.current == 'en') this.notify.error(`We have problems getting the comments: ${res.message}`)
+                    else this.notify.error(`Hemos encontrado un error al obtener los comentarios: ${res.message}`)
+                } 
             });
         });
     }
@@ -81,11 +86,10 @@ export class EventViewComponent {
     }
 
     createComment(comment: Comment) {
-        console.log(comment.body);
         (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
             next: () => {
-                this.notify.success(`You have published a comment`);
-                this.isCommentModalVisible = false;
+                //if (this.languageService.current == 'en') this.notify.success(`You have published a comment`);
+                //else this.notify.success(`Acabas de publicar un comentario`)
             },
             error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
         });

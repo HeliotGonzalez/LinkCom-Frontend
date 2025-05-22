@@ -8,4 +8,5 @@ export interface NotificationService extends Service {
     userNotifications(id: string): Observable<ApiResponse<Notification>>;
     send(notification: Notification): Observable<ApiResponse<Notification>>;
     removeFromRelated(ids: string[]): Observable<ApiResponse<Notification>>;
+    remove(id: string): Observable<ApiResponse<Notification>>;
 }

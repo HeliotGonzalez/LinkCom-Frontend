@@ -6,7 +6,10 @@ import {ServiceFactory} from '../../services/api-services/ServiceFactory.service
 import {User} from '../../../architecture/model/User';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../../architecture/services/UserService';
-import { Notify } from '../../services/notify';
+import {Notify} from '../../services/notify';
+import {LanguageService} from '../../language.service';
+import {NotificationService} from "../../../architecture/services/NotificationService";
+import {NotificationType} from "../../../architecture/model/NotificationType";
 
 @Component({
   selector: 'app-user-list',
@@ -26,7 +29,8 @@ export class UsersListComponent implements OnInit {
   constructor(
     private serviceFactory: ServiceFactory,
     private auth: AuthService,
-    private notify: Notify
+    private notify: Notify,
+    private languageService: LanguageService
   ) {}
 
 
@@ -39,23 +43,30 @@ export class UsersListComponent implements OnInit {
     });
 
     userService.getFriends(this.currentUserID).subscribe(res => {
-      this.friends = res.data.map((f: User) => f.id);
+      this.friends = res.data.map((f: User) => f.id!);
     });
   }
 
 
   filteredUsers(): User[] {
     if (this.filter === 'friends') {
-      return this.users.filter(user => this.friends.includes(user.id) && user.username.toLowerCase().includes(this.searchText.toLowerCase()));
+      return this.users.filter(user => this.friends.includes(user.id!) && user.username.toLowerCase().includes(this.searchText.toLowerCase()));
     }
     return this.users.filter(user => user.username.toLowerCase().includes(this.searchText.toLowerCase()));
   }
 
   sendFriendRequest(user: User) {
     (this.serviceFactory.get('users') as UserService)
-      .makeFriendRequest(this.currentUserID, user.id)
-      .subscribe(() => {
-        this.notify.success('Friend request sent!');
+      .makeFriendRequest(this.currentUserID, user.id!)
+      .subscribe(res => {
+        if (this.languageService.current == 'en') this.notify.success('Friend request sent!');
+        else this.notify.success('Solicitud de amistad enviada');
+        const request = res.data[0];
+        (this.serviceFactory.get('notifications') as NotificationService).send({
+          recipientID: request.to,
+          relatedID: request.id!,
+          type: NotificationType.FRIEND_REQUEST
+        }).subscribe()
       });
   }
 

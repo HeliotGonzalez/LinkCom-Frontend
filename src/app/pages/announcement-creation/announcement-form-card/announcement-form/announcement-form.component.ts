@@ -8,6 +8,7 @@ import { ServiceFactory } from '../../../../services/api-services/ServiceFactory
 import { CommunityService } from '../../../../../architecture/services/CommunityService';
 import { CommunityAnnouncement } from '../../../../../architecture/model/CommunityAnnouncement';
 import { Notify } from '../../../../services/notify';
+import { LanguageService } from '../../../../language.service';
 
 
 @Component({
@@ -30,7 +31,8 @@ export class AnnouncementFormComponent implements OnInit{
     private baseRoute: ActivatedRoute,
     private serviceFactory: ServiceFactory, 
     private authService: AuthService,
-    private notify: Notify
+    private notify: Notify,
+    private languageService: LanguageService
   ) {  
     this.publisherID = this.authService.getUserUUID();
   }
@@ -66,7 +68,11 @@ export class AnnouncementFormComponent implements OnInit{
   submitData(event: Event){
     event.preventDefault();
     if (this.title.trim() === '' || this.body.trim() === '') {
-      this.notify.error('Title and description are required', 'Empty fields');
+      if (this.languageService.current == 'en'){
+        Swal.fire('Error', 'Title and description are required!', 'error');
+      } else {
+        Swal.fire('Error', 'Título y descripción son requeridos para continuar', 'error');
+      }
       return;
     }
 
@@ -80,11 +86,37 @@ export class AnnouncementFormComponent implements OnInit{
     (this.serviceFactory.get('communities') as CommunityService).createAnnouncement(this.communityAnnouncement).subscribe({
       next: (response: any) => {
         console.log(response);
-        this.notify.success('News has been published!');
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: "Operation success",
+            icon: "success",
+            confirmButtonText: "Continue"
+          });
+        } else {
+          Swal.fire({
+            title: "Éxito durante la operación",
+            icon: "success",
+            confirmButtonText: "Continuar"
+          });
+        }
         this.router.navigate(["community", this.communityID]);
       },
       error: (err: any) => {
-        this.notify.error('There has been an error trying to publish the announcement. Try again later.', 'Operation error');
+        if (this.languageService.current == 'en'){
+          Swal.fire({
+            title: "Operation error",
+            text: "Database connection error",
+            icon: "error",
+            confirmButtonText: "Continue"
+          });
+        } else {
+          Swal.fire({
+            title: "La operación falló",
+            text: "Error con la conexión a la base de datos",
+            icon: "error",
+            confirmButtonText: "Continuar"
+          });  
+        }
         console.log(err);
       }
     });

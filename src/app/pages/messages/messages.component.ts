@@ -8,7 +8,7 @@ import {AuthService} from "../../services/auth.service";
 import {Message} from "../../../architecture/model/Message";
 import {MessageComponent} from "../../components/message/message.component";
 import {WebSocketFactory} from "../../services/api-services/WebSocketFactory.service";
-import {Subscription} from "rxjs";
+import {firstValueFrom, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Notify} from "../../services/notify";
 import {UsersListComponent} from "../users-list/users-list.component";
@@ -17,7 +17,9 @@ import {SendMessageCommand} from "../../commands/SendMessageCommand";
 import {TextSerializer} from "../../../architecture/io/TextSerializer";
 import {UserChat} from "../../../architecture/model/UserChat";
 import {UserChatsListComponent} from "../../components/user-chats-list/user-chats-list.component";
+import { LanguageService } from '../../language.service';
 import {NgClass} from "@angular/common";
+import {marked} from "marked";
 
 @Component({
     selector: 'app-messages',
@@ -37,7 +39,7 @@ export class MessagesComponent {
     @ViewChildren('item') private itemsElements!: QueryList<ElementRef>;
 
     protected userChats: {[key: string]: UserChat} = {};
-    protected messages: { [key: string]: Message } = {};
+    protected messages: {[key: string]: Message} = {};
     protected recipientID: string | null = null;
     protected recipient: User | null = null;
     protected isRemoving: boolean = false;
@@ -52,7 +54,8 @@ export class MessagesComponent {
         protected serviceFactory: ServiceFactory,
         private sockets: WebSocketFactory,
         protected auth: AuthService,
-        protected notify: Notify
+        protected notify: Notify,
+        private languageService: LanguageService
     ) {
     }
 
@@ -65,8 +68,22 @@ export class MessagesComponent {
                     this.recipient = res.data[0];
                     this.initializeSocketsListeners();
                 }));
-            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(res => {
+            this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getChats(this.auth.getUserUUID()).subscribe(async res => {
                 res.data.forEach(c => this.userChats[c.id!] = c);
+                const currentChat = Object.values(this.userChats).find(c => c.to === this.recipientID);
+                if (this.recipientID && currentChat) this.subscriptions.push(
+                    (this.serviceFactory.get('messages') as MessageService).createChat({
+                        from: this.auth.getUserUUID(),
+                        fromUsername: (await firstValueFrom((this.serviceFactory.get('users') as UserService).getUser(this.auth.getUserUUID()))).data[0].username,
+                        hidden: false,
+                        last_used_at: new Date().toISOString(),
+                        to: this.recipientID,
+                        toUsername: this.recipient!.username!
+                    }).subscribe()
+                );
+                else if (this.recipientID && currentChat?.hidden) this.subscriptions.push(
+                    (this.serviceFactory.get('messages') as MessageService).unhideChatBetween(this.auth.getUserUUID(), this.recipientID).subscribe()
+                );
                 this.subscriptions.push((this.serviceFactory.get('messages') as MessageService).getBetween(this.auth.getUserUUID(), this.recipientID!).subscribe(res => {
                     res.data.forEach(m => this.messages[m.id!] = m);
                     this.markAsRead(Object.values(this.messages));
@@ -85,13 +102,13 @@ export class MessagesComponent {
         this.restart();
     }
 
-    send(body: string) {
+    async send(body: string) {
         SendMessageCommand.Builder.create()
             .withFactory(this.serviceFactory)
             .withMessage({
                 from: this.auth.getUserUUID(),
                 to: this.recipientID!,
-                body: TextSerializer.serialize(body),
+                body: TextSerializer.serialize(await marked(body)),
                 created_at: new Date().toISOString()
             })
             .build().execute()
@@ -99,12 +116,23 @@ export class MessagesComponent {
     }
 
     removeMessages() {
-        this.notify.confirm('Do you want to remove this messsage?').then(confirm => {
+        let inform = (this.languageService.current == 'en') ? 'Do you want to remove this messsage?' : '¿Quieres eliminar este mensaje?'
+        this.notify.confirm(inform).then(confirm => {
             if (confirm) (this.serviceFactory.get('messages') as MessageService).deleteFrom(Object.keys(this.removeList)).subscribe({
-                next: () => this.notify.success('This message has been removed'),
-                error: err => this.notify.error(`We could not remove this message: ${err.error}`)
+                next: () =>{
+                    let text =  (this.languageService.current == 'en') ? 'This message has been removed' : 'Este mensaje ha sido eliminado'
+                    this.notify.success(text)
+                },
+                error: err =>{
+                    let text =  (this.languageService.current == 'en') ? `We could not remove this message: ${err.error}` : `No se pudo eliminar el mensaje: ${err.error}`
+                    this.notify.error(text)
+                }
             });
-            else this.notify.error('This message is still safe', 'Operation cancelled');
+            else {
+                let title = (this.languageService.current == 'en') ? 'Operation cancelled' : 'Operación cancelada'
+                let text =  (this.languageService.current == 'en') ? 'This message is still safe' : 'El mensaje no fue eliminado'
+                this.notify.error(text, title);
+            } 
             this.removeList = {};
             this.isRemoving = false;
         });

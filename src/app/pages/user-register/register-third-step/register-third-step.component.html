@@ -19,8 +19,8 @@
       
           <div class="register-form-header">
             <div class="register-form-title-container text-center">
-              <h1 class="register-form-title">User Register</h1>
-              <h2 class="register-form-subtitle">Almost done! Your registration is in process.</h2>
+              <h1 class="register-form-title" i18n="Título registro usuario|Título principal del formulario">User Register</h1>
+              <h2 class="register-form-subtitle" i18n="Subtítulo paso 3 registro|Mensaje de proceso final">Almost done! Your registration is in process.</h2>
             </div>
           </div>
         
@@ -28,12 +28,12 @@
             <!-- Mensaje de proceso -->
             <div class="message-container text-center">
               <div class="input-container d-flex flex-column" id="interests-input-container">
-                <label for="community-interests-input">Community interests</label>
-                <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" placeholder="Add your interests!">
+                <label for="community-interests-input" i18n="Etiqueta intereses comunidad|Label para intereses">Community interests</label>
+                <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" i18n-placeholder="Placeholder intereses|Placeholder para añadir intereses" placeholder="Add your interests!">
                 @if (interestsCoincidences.length) {
                     <div id="interests-suggestions">
                         @for (interest of interestsCoincidences; track $index) {
-                            <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
+                            <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"  i18n="Sugerencia interés|Texto sugerencia de interés"> {{interest}} </div>
                         }
                     </div>
                 }
@@ -49,8 +49,8 @@
         
             <!-- Pie de formulario con un botón que no hace nada por ahora -->
             <div class="register-form-footer d-flex justify-content-center gap-2 mt-3">
-              <button type="button" class="form-button normal-button" (click)="goToLogin()">Finish</button>
-              <button (click)="goToSecondStep()" type="button" class="form-button normal-button">Back</button>
+              <button type="button" class="form-button normal-button" (click)="goToLogin()" i18n="Texto botón Finalizar registro|Finaliza el registro">Finish</button>
+              <button (click)="goToSecondStep()" type="button" class="form-button normal-button" i18n="Texto botón Volver paso 2">Back</button>
             </div>
           </form>
         </div>

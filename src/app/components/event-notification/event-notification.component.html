@@ -1,0 +1,12 @@
+<article class="w-100 d-flex align-items-center rounded-3 bg-body-secondary p-3" style="height: 5rem">
+    <div class="flex-grow-1 h-100 d-flex align-items-center gap-2">
+        <i class="bi-people-fill text-black"></i>
+        @defer (when notification) {
+            <span style="color: darkslategray; font-size: 0.8rem">{{ notificationMessageMap[notification.type.toString()] }} <strong>{{related.title}}</strong></span>
+        }
+    </div>
+    <div class="h-100 d-flex align-items-center justify-content-center">
+        <i (click)="goToRelated()"
+           class="bi-box-arrow-right text-black fs-5"></i>
+    </div>
+</article>

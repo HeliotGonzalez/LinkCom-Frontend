@@ -4,32 +4,32 @@
     { step: 2, route: '/secondStepEventCreation' }
   ]" [currentStep]="1" class="form-steps-circles-container"></app-form-steps>
     <div class="community-form-title-container text-center">
-        <h1 class="community-form-title">CommunityEvent creation</h1>
-        <h2 class="community-form-subtitle">Fill the basic information!</h2>
+        <h1 class="community-form-title" i18n="Título creación evento|Encabezado del primer paso de creación de evento">CommunityEvent creation</h1>
+        <h2 class="community-form-subtitle" i18n="Subtítulo información básica evento|Indicación para rellenar información básica">Fill the basic information!</h2>
     </div>
 </div>
 <form class="community-form">
     <div class="community-form-inputs d-flex flex-column gap-5 flex-grow-1">
         <div class="input-container d-flex flex-column">
-            <label for="event-name-input">CommunityEvent name *</label>
-            <input (keydown.enter)="setFocus($event, eventDateInput)" [(ngModel)]="eventName" name="event-name" id="event-name-input" placeholder="Choose a cool name for the event!" required>
+            <label for="event-name-input" i18n="Etiqueta fecha hora evento|Label para fecha y hora del evento">CommunityEvent name *</label>
+            <input (keydown.enter)="setFocus($event, eventDateInput)" [(ngModel)]="eventName" name="event-name" id="event-name-input" placeholder="Choose a cool name for the event!" i18n-placeholder="Placeholder nombre evento|Placeholder para nombre de evento" required>
         </div>
         <div class="input-container flex-column">
-            <label class="multiple-input-label d-flex flex-column">
+            <label class="multiple-input-label d-flex flex-column" i18n="Etiqueta nombre evento|Label para nombre de evento">
                 CommunityEvent time *
                 <div class="multiple-input-container d-flex flex-grow-1 gap-2">
-                    <input (keydown.enter)="setFocus($event, eventTimeInput)" [(ngModel)]="eventDate" #eventDateInput name="event-date" id="event-date-input" type="date" placeholder="dd/mm/yyyy" required class="flex-grow-1">
+                    <input (keydown.enter)="setFocus($event, eventTimeInput)" [(ngModel)]="eventDate" #eventDateInput name="event-date" id="event-date-input" type="date" placeholder="dd/mm/yyyy" i18n-placeholder="Placeholder fecha evento|Placeholder para fecha (dd/mm/yyyy)" required class="flex-grow-1">
                     <input (keydown.enter)="setFocus($event, eventLocationInput)" [(ngModel)]="eventTime" #eventTimeInput name="event-time" id="event-time-input" type="time" placeholder="00:00" required class="flex-grow-1">
                 </div>
             </label>
         </div>
         <div class="input-container d-flex flex-column" id="interests-input-container">
-            <label for="event-location-input">CommunityEvent Location *</label>
-            <input (keydown.enter)="nextPage($event)" [(ngModel)]="eventLocation" #eventLocationInput name="event-location" id="event-location-input" placeholder="Where will the event be?">
+            <label for="event-location-input" i18n="Etiqueta ubicación evento|Label para ubicación del evento">CommunityEvent Location *</label>
+            <input (keydown.enter)="nextPage($event)" [(ngModel)]="eventLocation" #eventLocationInput name="event-location" id="event-location-input" placeholder="Where will the event be?" i18n-placeholder="Placeholder ubicación evento|Placeholder para ubicación del evento">
         </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">
-        <button class="form-button cancel-button" (click)="cancelForm($event)">CANCEL</button>
-        <button (click)="nextPage($event)" class="form-button normal-button">NEXT</button>
+        <button class="form-button cancel-button" (click)="cancelForm($event)" i18n="Texto botón cancelar evento|Acción para cancelar creación de evento">CANCEL</button>
+        <button (click)="nextPage($event)" class="form-button normal-button" i18n="Texto botón siguiente evento|Acción para avanzar al siguiente paso">NEXT</button>
     </div>
 </form>

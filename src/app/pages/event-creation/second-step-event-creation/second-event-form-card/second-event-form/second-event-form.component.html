@@ -4,8 +4,8 @@
     { step: 2, route: '/secondStepEventCreation' },
   ]" [currentStep]="2" class="form-steps-circles-container"></app-form-steps>
     <div class="community-form-title-container text-center">
-        <h1 class="community-form-title">CommunityEvent creation</h1>
-        <h2 class="community-form-subtitle">The last step, tell others about the event!</h2>
+        <h1 class="community-form-title" i18n="Título creación evento paso 2|Encabezado final de creación de evento">CommunityEvent creation</h1>
+        <h2 class="community-form-subtitle" i18n="Subtítulo último paso evento|Instrucción para el último paso">The last step, tell others about the event!</h2>
     </div>
 </div>
 <form class="community-form">
@@ -13,18 +13,18 @@
         <div class="input-container drop-zone d-flex justify-content-center align-items-center"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event)">
-          <p *ngIf="!uploadedImage">Upload an image!</p>
+          <p *ngIf="!uploadedImage" i18n="Texto zona arrastre imagen evento|Indicador para subir imagen">Upload an image!</p>
             <div *ngIf="uploadedImage" class="image-preview h-100 w-auto d-flex justify-content-center align-items-center">
                 <img [src]="uploadedImage" alt="Loaded Image" style="object-fit: cover;">
             </div>
         </div>
         <div class="input-container d-flex flex-column">
-            <label for="community-form-description-input">Community description *</label>
-            <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!"></textarea>
+            <label for="community-form-description-input" i18n="Etiqueta descripción evento|Label para descripción del evento">Community description *</label>
+            <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!" i18n-placeholder="Placeholder descripción evento|Placeholder para descripción del evento"></textarea>
         </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">
-        <button (click)="previousPage($event)" class="form-button normal-empty-button">PREVIOUS</button>
-        <button (click)="nextPage($event)" class="form-button normal-button">CREATE</button>
+        <button (click)="previousPage($event)" class="form-button normal-empty-button" i18n="Texto botón anterior evento|Acción para regresar al paso anterior">PREVIOUS</button>
+        <button (click)="nextPage($event)" class="form-button normal-button" i18n="Texto botón crear evento final|Acción para finalizar creación de evento">CREATE</button>
     </div>
 </form>

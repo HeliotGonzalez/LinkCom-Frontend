@@ -54,3 +54,19 @@ main::-webkit-scrollbar-track {
 main::-webkit-scrollbar-thumb {
     display: none;
 }
+
+.button {
+    border-radius: 5px;
+    padding: 0.5rem 1.7rem;
+    background: white;
+    border: 2px solid #2E3E7F;
+    color: #2E3E7F;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
+}
+
+.button:hover {
+    background: #2E3E7F;
+    border: 2px solid #2E3E7F;
+    color: white;
+}
