@@ -6,6 +6,10 @@ import {HttpClient} from "@angular/common/http";
 import {User} from "../../../architecture/model/User";
 import { Comment } from "../../../architecture/model/Comment";
 import {EventState} from "../../../architecture/model/EventState";
+import { ApiService } from "../api-service.service";
+import { CriteriaSerializer } from "../../../architecture/io/criteria/CriteriaSerializer";
+import { Criteria } from "../../../architecture/io/criteria/Criteria";
+import { Filters } from "../../../architecture/io/criteria/Filters";
 
 export class HTTPEventService implements EventService {
     constructor(private http: HttpClient, private url: string) {
@@ -47,8 +51,19 @@ export class HTTPEventService implements EventService {
         return this.http.delete<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/${userID}/leave`);
     }
 
+    /*
     getMembers(eventID: string): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/members`);
+    }
+    */
+    
+    getMembers(eventID: string): Observable<ApiResponse<User>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'eventID', operator: 'eq', value: eventID}
+            ])
+        ));
+        return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/members/${serial}`);
     }
 
     createComment(comment: Comment): Observable<ApiResponse<Comment>> {
@@ -59,5 +74,8 @@ export class HTTPEventService implements EventService {
         return this.http.get<ApiResponse<Comment>>(`${this.url}/events/${eventID}/getComments`);
     }
 
+    getEventQueue(eventID: string): Observable<ApiResponse<User>> {
+        return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/`)
+    }
 
 }
