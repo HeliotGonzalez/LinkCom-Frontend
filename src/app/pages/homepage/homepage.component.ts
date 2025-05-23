@@ -4,17 +4,23 @@ import {ApiService} from '../../services/api-service.service';
 import {FeedItem} from '../../interfaces/feed-item';
 import {Community} from '../../interfaces/community';
 import {AuthService} from '../../services/auth.service';
+import { Community as CM } from '../../../architecture/model/Community';
 import Swal from 'sweetalert2';
 import {FeedEventCardComponent} from "../../components/feed-event-card/feed-event-card.component";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
 import { Router } from '@angular/router';
 import { LanguageService } from '../../language.service';
+import {ServiceFactory} from "../../services/api-services/ServiceFactory.service";
+import {User} from "../../../architecture/model/User";
+import {UserService} from "../../../architecture/services/UserService";
+import { UserListCardComponent } from '../users-list/user-list-card/user-list-card.component';
+import { CommunityService } from '../../../architecture/services/CommunityService';
 
 @Component({
     selector: 'app-homepage',
     templateUrl: './homepage.component.html',
     styleUrls: ['./homepage.component.css'],
-    imports: [CommonModule, FeedEventCardComponent]
+    imports: [CommonModule, FeedEventCardComponent, UserListCardComponent],
 })
 export class HomepageComponent implements OnInit {
     allFeedItems: FeedItem[] = [];
@@ -22,6 +28,9 @@ export class HomepageComponent implements OnInit {
     feedBatchSize: number = 2;
 
     communities: Community[] = [];
+    userCommunityIDs: string[] = [];
+    friendCommunityDifferences: Record<string, string[]> = {};
+    friendCommunitiesData: { [communityId: string]: CM } = {};
 
     feedEvents: CommunityEvent[] = [];
 
@@ -30,8 +39,11 @@ export class HomepageComponent implements OnInit {
     dayNames: string[] = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
     todayDay: number = 0;
     calendarEvents: { [day: number]: string[] } = {};
+    currentUserID: any;
+    users: User[] = [];
+    friends: string[] = [];
 
-    constructor(private apiService: ApiService, private authService: AuthService, private languageService: LanguageService) {
+    constructor(private apiService: ApiService, private authService: AuthService, private languageService: LanguageService, private serviceFactory: ServiceFactory,) {
         this.dayNames = this.languageService.current === 'es'
             ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
             : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -52,7 +64,67 @@ export class HomepageComponent implements OnInit {
 
         // Generar el calendario en sí (estructura de celdas)
         this.generateCalendar();
+
+         this.currentUserID = this.authService.getUserUUID();
+        const userService = this.serviceFactory.get('users') as UserService;
+        this.loadUserCommunities();
+    
+        userService.getAllUsers().subscribe(res => {
+          this.users = res.data.filter(user => user.id !== this.currentUserID);
+        });
+    
+        userService.getFriends(this.currentUserID).subscribe(res => {
+        this.friends = res.data.map((f: User) => f.id!);
+        this.loadFriendsCommunities(); // Solo se llama cuando ya tenemos amigos
+        });
+
+
     }
+
+    get filteredUsers(): User[] {
+        const filtered = this.users.filter(user => this.friends.includes(user.id!));
+        return filtered;
+    }
+
+    loadFriendsCommunities() {
+        if (this.friends.length === 0) {
+            console.log('No hay amigos');
+            return;
+        }
+
+        const communityService = this.serviceFactory.get('communities') as CommunityService;
+
+        this.friends.forEach(friend => {
+            communityService.getUserCommunities(friend).subscribe(res => {
+                const friendCommunities: string[] = res.data.map((c: any) => c.id);
+                const difference = friendCommunities.filter(id => !this.userCommunityIDs.includes(id));
+                this.friendCommunityDifferences[friend] = difference;
+
+                for (const id of difference) {
+                    communityService.getCommunity(id).subscribe(res => {
+                        if (res.data && res.data.length > 0) {
+                            this.friendCommunitiesData[id] = res.data[0];
+                        }
+                    });
+                }
+
+                console.log(`Comunidades de ${friend} que el usuario NO tiene:`, difference);
+            });
+        });
+    }
+
+
+
+    loadUserCommunities() {
+        const userID = this.authService.getUserUUID();
+        const communityService = this.serviceFactory.get('communities') as CommunityService;
+        communityService.getUserCommunities(userID).subscribe(res => {
+            this.userCommunityIDs = res.data.map((c: any) => c.id);
+            console.log('Comunidades del usuario:', this.userCommunityIDs);
+        });
+    }
+
+
 
     // Obtener feed del usuario (eventos + noticias)
     fetchFeed(): void {
