@@ -1,7 +1,6 @@
 .whatsapp-modal {
   border-radius: 10px;
   overflow: hidden;
-  width: 75vh;
   text-align: center;
 }
 
@@ -15,7 +14,7 @@
 .chat-body {
   background-color: #ccc;
   height: 75vh;
-  width: 75vh;
+  width: auto;
   overflow-y: auto;
   padding: 15px;
   display: flex;
