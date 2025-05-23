@@ -31,12 +31,12 @@
                                         <h4>Comunidades que {{ user.name }} tiene y tú no:</h4>
                                         <div *ngFor="let communityId of friendCommunityDifferences[user.id!]">
                                         <div class="card align-items-center">
-                                            <img [src]="friendCommunitiesData[communityId]?.imagePath" 
-                                                alt="{{ friendCommunitiesData[communityId]?.name }}" 
+                                            <img [src]="friendCommunitiesData[communityId].imagePath" 
+                                                alt="{{ friendCommunitiesData[communityId].name }}" 
                                                 style="max-height: 200px; max-width: 200px;"/>
                                             <div class="card-body">
-                                            <h5 class="card-title">{{ friendCommunitiesData[communityId]?.name }}</h5>
-                                            <div [innerHTML]="friendCommunitiesData[communityId]?.description" style="text-align: justify"></div>
+                                            <h5 class="card-title">{{ friendCommunitiesData[communityId].name }}</h5>
+                                            <div [innerHTML]="friendCommunitiesData[communityId].description" style="text-align: justify"></div>
                                             <a [href]="'http://localhost:4200/community/' + communityId" class="btn btn-primary">Ver Comunidad</a>
                                             </div>
                                         </div>
