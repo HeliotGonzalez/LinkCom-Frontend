@@ -2,21 +2,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-    background-color: #f0f0f0;
+  background: linear-gradient(to right, rgb(58, 78, 208), rgb(96, 157, 252)); /* opcional */
+  min-height: 100vh;
+  padding-top: 40px;
+}
+
+.title-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #3a4ed0;
+  text-shadow: 1px 1px 4px rgba(96, 157, 252,0.6); /* opcional */
 }
 
 .container {
-  padding: 20px;
-  height: 100%;
+  max-width: 1200px;
+  width: 100%;
   background-color: white;
-  margin: auto;
+  border-radius: 1rem;
+  padding: 40px 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
-
-h3 {
-  margin: 20px 0;
-}
-
-
-
-

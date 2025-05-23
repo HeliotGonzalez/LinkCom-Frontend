@@ -76,6 +76,13 @@
                                     Events Panel
                                 </button>
                                 </li>
+                                <li>
+<button class="dropdown-item"
+        (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/community/' + community?.id + '/stadistics').build().execute()">
+    Insights
+</button>
+
+                                </li>
 
                                 @if (isCreator()) {
                                 <li><hr class="dropdown-divider"></li>
