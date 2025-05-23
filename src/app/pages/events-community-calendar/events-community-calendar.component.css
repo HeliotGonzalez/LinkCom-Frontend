@@ -8,6 +8,16 @@
   justify-content: space-between;
 }
 
+.container-dev 
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 30vh;
+}
+
 .calendar-space {
   display: flex;
   flex-direction: column;
