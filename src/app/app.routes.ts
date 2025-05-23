@@ -33,12 +33,16 @@ import { CommunityEditComponent } from './pages/community-edit/community-edit.co
 import { PersonalProfileComponent } from './components/personal-profile/personal-profile.component';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { UsersListComponent } from './pages/users-list/users-list.component';
+import {MessagesComponent} from "./pages/messages/messages.component";
+import {EventsRequestPanelComponent} from "./components/events-request-panel/events-request-panel.component";
+import { StadisticsComponent } from './pages/stadistics/stadistics.component';
 
 export const routes: Routes = [
     {path: '', component: DashboardComponent},
     {path: 'homepage', component: HomepageComponent, canActivate: [NoAuthGuard]},
     {path: 'user-register/firstStep', component: RegisterFirstStepComponent},
     {path: 'user-register/secondStep', component: RegisterSecondStepComponent},
+     {path: 'stadistics', component: StadisticsComponent},
     {path: 'user-register/thirdStep', component: RegisterThirdStepComponent},
     {path: 'login', component: LoginComponent},
     {path: 'firstStepCommunityCreation', component: FirstStepCommunityCreationComponent, canActivate: [NoAuthGuard]},
@@ -47,19 +51,25 @@ export const routes: Routes = [
     {path: 'firstStepEventCreation', component: FirstStepEventCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'secondStepEventCreation', component: SecondStepEventCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'moderatorsManagement', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
-    {path: 'community', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
+    {path: 'community/:id', component: CommunityViewComponent, canActivate: [NoAuthGuard]},
     {path: 'communities', component: ComunitiesComponent, canActivate: [NoAuthGuard]},
     {path: 'calendar', component: EventsCommunityCalendarComponent, canActivate: [NoAuthGuard]},
     {path: 'announcementCreation', component: AnnouncementCreationComponent, canActivate: [NoAuthGuard]},
     {path: 'moderators', component: ModeratorsManagementComponent, canActivate: [NoAuthGuard]},
     {path: 'announcementsList', component: AnnouncementsListComponent, canActivate: [NoAuthGuard]},
     {path: '', component: DashboardComponent, canActivate: [NoAuthGuard]},
+    // ------------------------------------------------------------------------------------------------------
     {path: 'header', component: HeaderComponent},
     {path: 'announcementCreation', component: AnnouncementCreationComponent},
     {path: 'announcementsList', component: AnnouncementsListComponent},
     {path: 'communityRequestsPanel', component: CommunityRequestsPanelComponent},
     {path: 'editCommunity', component: CommunityEditComponent},
     {path: 'profile/:id', component: PersonalProfileComponent, outlet: 'modal'},
+    {path: 'communityRequestsPanel/:id', component: CommunityRequestsPanelComponent, outlet: 'modal'},
+    {path: 'eventsRequestPanel/:id', component: EventsRequestPanelComponent, outlet: 'modal'},
     {path: 'edit-profile', component: EditProfileComponent },
-    {path: 'users-list', component: UsersListComponent}
+    {path: 'users-list', component: UsersListComponent},
+    {path: 'messages', component: MessagesComponent},
+    {path: 'messages/:id', component: MessagesComponent},
+    {path: 'community/:communityId/stadistics', component: StadisticsComponent, canActivate: [NoAuthGuard]},
 ];

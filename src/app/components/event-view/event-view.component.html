@@ -8,11 +8,16 @@
                 <span class="fw-lighter">{{ parseDateTimeLocal(event?.date!) }}</span>
             </div>
         </div>
-        <hr>
     </div>
     <div class="event-body d-flex w-100">
-        <div class="pe-4 ps-1 w-50 overflow-auto">
-            <div [innerHTML]="event?.description" style="text-align: justify"></div>
+        <div class="pe-4 ps-1 w-50 overflow-auto d-flex flex-column">
+            <div [innerHTML]="event?.description" class="flex-grow-1" style="text-align: justify"></div>
+            <!--ToDo: div con número de plazas [ocupadas/totales] -->
+            @if (this.event?.slots !== null) {
+                <div class="event-slots d-flex justify-content-end"> Slots: {{this.members.length}} / {{this.event?.slots}}</div>
+                <div class="event-queue d-flex justify-content-end"> Users in queue: {{this.queue.length}}</div>
+                
+            }
         </div>
         <div class="d-flex align-items-center justify-content-center w-50 h-100">
             <img [src]="event?.imagePath ? event?.imagePath : 'LogoLinkComNegro.svg'" alt="Event image" (click)="openImageDialog()"
@@ -27,7 +32,7 @@
     <div class="event-footer d-flex align-items-center justify-content-center w-100 p-3 gap-2">
         <!-- Botón para abrir el modal -->
         @if (event?.eventState !== EventState.PENDING) {
-            <button (click)="openCommentModal()" class="button">Comments</button>
+            <button (click)="openCommentModal()" class="button" i18n="Texto botón Comentarios|Acción para abrir modal de comentarios">Comments</button>
         }
 
         @if(isCommentModalVisible){
@@ -41,15 +46,15 @@
 
         @if (!isDisabled) {
             @if (event?.eventState === EventState.PENDING) {
-                <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()">Accept</button>
+                <button class="button" (click)="AcceptEventCommand.Builder.create().withFactory(serviceFactory).withEventID(event?.id!).build().execute()" i18n="Texto botón Aceptar evento|Acción para aceptar evento pendiente">Accept</button>
             } @else {
-                <button class="button" (click)="joinEvent()">Join</button>
+                <button class="button" (click)="joinEvent()" i18n="Texto botón Unirse evento|Acción para unirse al evento">Join</button>
             }
         } @else {
-            <button class="leave-button" (click)="leaveEvent()">Leave</button>
+            <button class="leave-button" (click)="leaveEvent()" i18n="Texto botón Abandonar evento|Acción para abandonar el evento">Leave</button>
         }
         @if (canRemove) {
-            <button class="leave-button" (click)="RemoveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(event!).build().execute()">Remove</button>
+            <button class="leave-button" (click)="RemoveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(event!).build().execute()" i18n="Texto botón Eliminar evento|Acción para eliminar evento">Remove</button>
         }
     </div>
 </article>

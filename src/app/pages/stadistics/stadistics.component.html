@@ -1,0 +1,90 @@
+<main class="body">
+  <div class="container py-5">
+    
+    <!-- Título centrado dentro del contenedor -->
+    <div class="row mb-4">
+      <div class="col-12 text-center">
+        <h1 class="page-title">'{{this.community?.name}}' Insights</h1>
+      </div>
+    </div>
+
+    <!-- Tarjetas -->
+    <div class="row g-4">
+      <!-- Number of Members -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+            <i class="bi bi-person-fill fs-1 text-info"></i>
+            <h5 class="card-title mt-3">Number of Members</h5>
+            <p class="fs-3 fw-bold">{{ numberOfMembers }}</p>
+          </div>
+        </div>
+      </div>
+
+            <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+           <i class="bi bi-person-fill-gear fs-1 text-muted"></i>
+            <h5 class="card-title mt-3">Number of Moderators</h5>
+            <p class="fs-3 fw-bold">{{ numberOfModerators }}</p>
+          </div>
+        </div>
+      </div>
+
+            <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+            <i class="bi bi-people fs-1 text-primary"></i>
+            <h5 class="card-title mt-3">Number of Users</h5>
+            <p class="fs-3 fw-bold">{{ numberOfUsers }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number of Announcements -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+            <i class="bi bi-megaphone fs-1 text-success"></i>
+            <h5 class="card-title mt-3">Number of Announcements</h5>
+            <p class="fs-3 fw-bold">{{ numberOfAnnouncements }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Number of Events -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+      
+            <i class="bi bi-calendar-event fs-1 text-danger"></i>
+            <h5 class="card-title mt-3">Number of Events</h5>
+            <p class="fs-3 fw-bold">{{ numberOfEvents }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enroll Average -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+            <i class="bi bi-bar-chart-line fs-1 text-warning"></i>
+            <h5 class="card-title mt-3">Enroll Average</h5>
+            <p class="fs-3 fw-bold">{{ enrollAverage }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder -->
+      <!--<div class="col-md-4 col-sm-6">
+        <div class="card text-center shadow rounded-4 h-100">
+          <div class="card-body">
+            <i class="bi bi-rocket-takeoff fs-1 text-info"></i>
+            <h5 class="card-title mt-3">Activity Overview</h5>
+            <p class="text-muted">Coming soon...</p>
+          </div>
+        </div>
+      </div>-->
+    </div>
+  </div>
+</main>

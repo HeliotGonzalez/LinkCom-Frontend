@@ -14,7 +14,7 @@
             </div>
             <div class="w-25 d-flex justify-content-end">
                 @if (community.isPrivate) {
-                    <span style="font-size: 0.7rem" class="fw-lighter">PRIVATE COMMUNITY</span>
+                    <span style="font-size: 0.7rem" class="fw-lighter" i18n="Etiqueta comunidad privada|Texto que indica comunidad privada">PRIVATE COMMUNITY</span>
                 }
             </div>
         </div>
@@ -29,24 +29,24 @@
         </div>
         <div class="community-card-content-footer d-flex flex-column align-items-center h-25 justify-content-center p-2 gap-2">
             <div class="d-flex align-items-center justify-content-center p-2 gap-2">
-                <button class="button" (click)="viewCommunity()">View</button>
+                <button class="button" (click)="viewCommunity()" i18n="Texto botón ver comunidad|Acción para ver detalles de comunidad">View</button>
                 @if (isUserJoined) {
                     @if (isCreator()) {
-                        <button class="leave-button" (click)="removeCommunity()">Remove</button>
+                        <button class="leave-button" (click)="removeCommunity()" i18n="Texto botón eliminar comunidad|Acción creador para eliminar comunidad">Remove</button>
                     } @else {
-                        <button class="leave-button" (click)="leaveCommunity()">Leave</button>
+                        <button class="leave-button" (click)="leaveCommunity()" i18n="Texto botón salir comunidad|Acción para abandonar comunidad">Leave</button>
                     }
                 } @else {
                     @if (isRequested) {
-                        <button class="leave-button" (click)="cancelRequest()">Cancel</button>
+                        <button class="leave-button" (click)="cancelRequest()" i18n="Texto botón cancelar solicitud|Acción para cancelar solicitud">Cancel</button>
                     } @else {
-                        <button class="button" (click)="joinCommunity()">Join</button>
+                        <button class="button" (click)="joinCommunity()" i18n="Texto botón unirse comunidad|Acción para solicitar unión">Join</button>
                     }
                 }
             </div>
             <div class="d-flex text-center">
                 @if (isRequested) {
-                    <span style="font-size: 0.7rem" class="fw-lighter">JOIN REQUEST SENT</span>
+                    <span style="font-size: 0.7rem" class="fw-lighter" i18n="Etiqueta solicitud enviada|Indicador de solicitud de unión enviada">JOIN REQUEST SENT</span>
                 }
             </div>
         </div>

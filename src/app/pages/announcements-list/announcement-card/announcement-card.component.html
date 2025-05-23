@@ -8,11 +8,13 @@
         <p class="bi bi-person-circle announcement-card-publisher" style="font-size: 2.5em"></p>
         @if (announce.publisherID === userId) {
             <button 
-            (click)="deleteAnnouncement(announce.id)"
+            (click)="deleteAnnouncement(announce.id!)"
             type="button"
-            class="btn btn-danger">
+            class="leave-button">
                 Delete
             </button>
+            <button
+            type="button" class="button" (click)="editAnnouncement(announce.id!)">Edit</button>
         }
     </div>
 </div>

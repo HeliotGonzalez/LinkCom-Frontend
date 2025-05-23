@@ -5,11 +5,13 @@ import {AuthService} from "../services/auth.service";
 import { Command } from "../../architecture/control/Command";
 import {CommunityService} from "../../architecture/services/CommunityService";
 import {Community} from "../../architecture/model/Community";
+import { LanguageService } from "../language.service";
 
 export class CreateCommunityCommand implements Command {
     private notify: Notify;
     private router: Router;
     private auth: AuthService;
+    private languageService: LanguageService;
 
     constructor(
         private serviceFactory: ServiceFactory,
@@ -18,6 +20,7 @@ export class CreateCommunityCommand implements Command {
         this.notify = this.serviceFactory.get('notify') as Notify;
         this.router = this.serviceFactory.get('router') as Router;
         this.auth = this.serviceFactory.get('auth') as AuthService;
+        this.languageService = this.serviceFactory.get('languageService') as LanguageService;
     }
 
     execute(): void {
@@ -25,10 +28,14 @@ export class CreateCommunityCommand implements Command {
             next: res => {
                 const event = res.data[0];
                 (this.serviceFactory.get('communities') as CommunityService).joinCommunity(this.community!.id!, this.auth.getUserUUID()).subscribe();
-                this.notify.success('Your event has been created!');
+                if (this.languageService.current == 'en') this.notify.success('Your event has been created!');
+                else this.notify.success('¡Tu evento ha sido creado!');
                 this.router.navigate(["/communities"]).then();
             },
-            error: res => this.notify.error(`We could not create your event: ${res.error.message}`)
+            error: res =>{
+                if (this.languageService.current == 'en') this.notify.error(`We could not create your event: ${res.error.message}`)  
+                else this.notify.error(`No pudimos crear tu evento: ${res.error.message}`)
+            } 
         })
     }
 

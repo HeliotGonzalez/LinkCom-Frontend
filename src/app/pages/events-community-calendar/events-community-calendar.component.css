@@ -1,3 +1,14 @@
+main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0;
+}
+body {
+  overflow-y:scroll;
+}
+
 .calendar-container {
   padding: 20px;
   width: 80%;
@@ -6,6 +17,15 @@
   margin: auto;
   display: flex;
   justify-content: space-between;
+}
+
+.container-dev 
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .calendar-space {

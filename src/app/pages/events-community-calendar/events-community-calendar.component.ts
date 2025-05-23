@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api-service.service';
 import { AuthService } from '../../services/auth.service';
 import { FeedItem } from '../../interfaces/feed-item';
+import { LanguageService } from '../../language.service';
 import { Router } from '@angular/router';
 import {ApiResponse} from "../../interfaces/ApiResponse";
 import {CommunityEvent} from "../../../architecture/model/CommunityEvent";
 import { Community } from '../../../architecture/model/Community';
 import { trigger, transition, style, animate,} from '@angular/animations';
+import { RouterModule } from '@angular/router';
 interface CalendarMonth {
   month: number;
   year: number;
@@ -18,7 +20,7 @@ interface CalendarMonth {
 @Component({
   selector: 'app-events-community-calendar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './events-community-calendar.component.html',
   styleUrls: ['./events-community-calendar.component.css'],
   animations: [
@@ -64,7 +66,20 @@ export class EventsCommunityCalendarComponent implements OnInit {
     imagePath: string;
     communityID: string;
   }[] = [];
+  
   selectedIdx = 0;
+  selectedDay: number | null = null;
+
+selectDay(day: number): void {
+  this.selectedDay = this.selectedDay === day ? null : day;
+}
+
+get dailyEvents() {
+  if (!this.selectedDay) return [];
+  return this.calendarEvents[this.selectedDay] || [];
+}
+
+
   openEventModal(day: number, idx: number): void {
     this.selectedDayEvents = this.calendarEvents[day] || [];
     this.selectedIdx       = idx;
@@ -81,6 +96,16 @@ export class EventsCommunityCalendarComponent implements OnInit {
     this.selectedIdx = (this.selectedIdx + 1) % this.selectedDayEvents.length;
     this.selectedEvent = this.selectedDayEvents[this.selectedIdx];
   }
+  get filteredMonthlyEvents() {
+  return this.events.filter(ev => {
+    const d = new Date(ev.date);
+    return (
+      d.getMonth() === this.calendarMonth.month &&
+      d.getFullYear() === this.calendarMonth.year
+    );
+  });
+}
+
 
   public getDotColorFromName(name: string): string {
     let hash = 0;
@@ -105,7 +130,8 @@ export class EventsCommunityCalendarComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private languageService: LanguageService
   ) {
     this.userid = this.authService.getUserUUID();
   }
@@ -127,7 +153,47 @@ export class EventsCommunityCalendarComponent implements OnInit {
       error: err => console.error('Error al cargar comunidades', err)
     });
   }
+
+  openEventModalFromList(event: {
+  title: string;
+  description: string;
+  date: Date;
+  imagePath: string;
+  communityID: string;
+  // Si tienes más propiedades, añádelas aquí
+}): void {
+  this.selectedDayEvents = this.events
+    .filter(ev => {
+      const date = new Date(ev.date);
+      return (
+        date.getDate() === new Date(event.date).getDate() &&
+        date.getMonth() === new Date(event.date).getMonth() &&
+        date.getFullYear() === new Date(event.date).getFullYear()
+      );
+    })
+    .map(ev => ({
+      title: ev.title,
+      description: ev.description,
+      date: new Date(ev.date),
+      imagePath: ev.imagePath,
+      communityID: ev.communityID,
+    }));
+
+  this.selectedIdx = this.selectedDayEvents.findIndex(e => e.title === event.title);
+  this.selectedEvent = event;
+}
+
+getEventWithParsedDate(ev: any): any {
+  // If ev.date is a string, parse it to a Date object, otherwise return as is
+  return {
+    ...ev,
+    date: ev.date instanceof Date ? ev.date : new Date(ev.date)
+  };
+}
+
+
   ngOnInit(): void {
+    this.checkLanguage();
     this.generateCalendarMonth();
     this.loadCommunities();
     if (this.userid === 'user_id') {
@@ -171,6 +237,12 @@ export class EventsCommunityCalendarComponent implements OnInit {
         console.error('Error al obtener eventos:', err);
       }
     });
+  }
+
+  private checkLanguage(): void {
+    this.dayNames = this.languageService.current === 'es'
+      ? ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+      : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   }
 
   public getCommunityName(id?: string): string {
@@ -237,8 +309,11 @@ export class EventsCommunityCalendarComponent implements OnInit {
   }
 
   getMonthName(month: number): string {
-    return new Date(this.currentDate.getFullYear(), month).toLocaleString('en-US', { month: 'long' });
+    const locale = this.languageService.current === 'es' ? 'es-ES' : 'en-US';
+    let monthName = new Date(this.currentDate.getFullYear(), month).toLocaleString(locale, { month: 'long' });
+    return monthName.charAt(0).toUpperCase() + monthName.slice(1);
   }
+
 
   navigateToEvent(day: number | null): void {
     if (!day) return;

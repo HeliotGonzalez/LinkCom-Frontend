@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {FormStepsComponent} from "../../../components/form-steps/form-steps.component";
+import { FormService } from '../../../services/form-service/form.service';
 
 @Component({
     selector: 'app-register-second-step',
@@ -15,28 +16,26 @@ export class RegisterSecondStepComponent implements OnInit {
   imagePreview: string | null = null; // Variable para almacenar la vista previa de la imagen
   imageFile: File | null = null; // Archivo de la imagen seleccionada
   protected image: string = '';
+  protected userData!: FormService;
+  protected ImageForm!: FormService;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private formData: FormService) {}
 
   ngOnInit(): void {
-    // Cargar la imagen desde localStorage si existe
+    this.formData.createFormEntry('image');
+    this.ImageForm = this.formData.get('imageUpload');
+
+    this.userData = this.formData.get('userRegister');    // Cargar la imagen desde localStorage si existe
     const savedImage = localStorage.getItem('imagePreview');
     if (savedImage) {
-      this.imagePreview = savedImage; // Asigna la imagen guardada en localStorage
-    }
-  }
+      this.imagePreview = savedImage;
+      this.image = savedImage;
 
-  // Método para manejar la imagen seleccionada
-  onImageSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string; // Asigna la imagen al src para la vista previa
-        this.imageFile = file; // Guarda el archivo para la subida
-        localStorage.setItem('imagePreview', this.imagePreview); // Guardamos la URL de la imagen en localStorage
-      };
-      reader.readAsDataURL(file);
+      this.formData.createFormEntry('imageUpload');
+      const imageForm = this.formData.get('imageUpload');
+      imageForm.image = savedImage;
+
+      console.log('Imagen cargada desde localStorage en formData:', imageForm.image);
     }
   }
 
@@ -48,6 +47,7 @@ export class RegisterSecondStepComponent implements OnInit {
   }
 
   goToThirdStep() {
+
     this.router.navigate(['/user-register/thirdStep']);
   }
 
@@ -72,15 +72,38 @@ export class RegisterSecondStepComponent implements OnInit {
     }
   }
 
-  protected handleFile(file: File) {
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.setImageValue(e.target?.result);
+protected handleFile(file: File) {
+  if (file && file.type.startsWith('image/')) {
+    const reader = new FileReader();
+      reader.onload = async () => {
+        const result = reader.result as string;
+        const resized = await this.reduceImageSize(result); // Reduce la imagen
+
+        this.imagePreview = resized;
+        this.image = resized;
+        this.imageFile = file;
+
+        localStorage.setItem('imagePreview', resized); // Guarda la imagen reducida
+
+        // Actualiza imageUpload
+        this.formData.createFormEntry('imageUpload');
+        const imageForm = this.formData.get('imageUpload');
+        imageForm.image = resized;
+
+        const currentPayload = this.userData.get('payload') || {};
+        const updatedPayload = {
+          ...currentPayload,
+          imagePath: resized
+        };
+        this.userData.put('payload', updatedPayload);
+
+
+        console.log('Imagen redimensionada y guardada en formData:', imageForm.image);
+        console.log('Payload actualizado con imagePath:', updatedPayload);
       };
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   }
+}
 
   protected triggerFileInput() {
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -89,10 +112,44 @@ export class RegisterSecondStepComponent implements OnInit {
     }
   }
 
-  protected onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.handleFile(file);
-    }
+onImageSelected(event: any): void {
+  const file = event.target.files[0];
+  if (file) {
+    this.handleFile(file);
   }
+}
+
+protected onFileSelected(event: any) {
+  const file = event.target.files[0];
+  if (file) {
+    this.handleFile(file);
+  }
+}
+
+reduceImageSize(base64: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Reducimos al 70%
+      const scale = 0.7;
+      const width = img.width * scale;
+      const height = img.height * scale;
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      // Exportamos a JPEG con calidad 0.7 (también 70%)
+      const resizedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      resolve(resizedBase64);
+    };
+    img.src = base64;
+  });
+}
+
+
 }

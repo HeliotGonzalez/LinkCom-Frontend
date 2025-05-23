@@ -15,7 +15,9 @@ import {WebSocketService} from "../architecture/io/WebSocketService";
 import {CommandBuilderFactory} from "./command-builder-factory.service";
 import {Notify} from "./services/notify";
 import {AuthService} from "./services/auth.service";
-
+import {HTTPMessageService} from "./services/api-services/HTTPMessageService";
+import {HTTPNotificationService} from "./services/api-services/HTTPNotificationService";
+import { LanguageService } from './language.service';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -24,6 +26,7 @@ import {AuthService} from "./services/auth.service";
         HeaderComponent,
         CommonModule,
         RouterOutlet,
+        
     ],
     standalone: true
 })
@@ -43,7 +46,8 @@ export class AppComponent implements OnInit {
         private notify: Notify,
         private auth: AuthService,
         private router: Router,
-        private commandBuilderFactory: CommandBuilderFactory
+        private commandBuilderFactory: CommandBuilderFactory,
+        private languageService: LanguageService
     ) {
     }
 
@@ -64,7 +68,10 @@ export class AppComponent implements OnInit {
             .put('users', new HTTPUserService(this.http, this.url))
             .put('notify', this.notify)
             .put('auth', this.auth)
+            .put('languageService', this.languageService)
             .put('router', this.router)
+            .put('messages', new HTTPMessageService(this.http, this.url))
+            .put('notifications', new HTTPNotificationService(this.http, this.url))
     }
 
     private fillSocketFactory() {
@@ -76,7 +83,12 @@ export class AppComponent implements OnInit {
             .put('JoinRequests', new WebSocketService(socket, 'JoinRequests'))
             .put('Events', new WebSocketService(socket, 'Events'))
             .put('EventUser', new WebSocketService(socket, 'EventUser'))
-            .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'));
+            .put('FriendRequests', new WebSocketService(socket, 'FriendRequests'))
+            .put('Messages', new WebSocketService(socket, 'Messages'))
+            .put('Notifications', new WebSocketService(socket, 'Notifications'))
+            .put('UserChat', new WebSocketService(socket, 'UserChat'))
+            .put('Announcements', new WebSocketService(socket, 'Announcements'))
+            .put('Comments', new WebSocketService(socket, 'Comments'))
     }
 
     onSubmit() {

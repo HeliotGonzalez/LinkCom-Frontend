@@ -6,17 +6,20 @@ import {ServiceFactory} from "../../services/api-services/ServiceFactory.service
 import {Notify} from "../../services/notify";
 import {EventState} from "../../../architecture/model/EventState";
 import {AcceptEventCommand} from "../../commands/AcceptEventCommand";
-import {JoinEventCommand} from "../../commands/JoinEventCommand";
 import {RemoveEventCommand} from "../../commands/RemoveEventCommand";
-import { EventCommentModalComponent } from '../../event-view/event-comment-modal/event-comment-modal.component';
 import { EventService } from '../../../architecture/services/EventService';
 import { Comment } from '../../../architecture/model/Comment';
+import {User} from "../../../architecture/model/User";
+import {UserService} from "../../../architecture/services/UserService";
+import { EventCommentModalComponent } from '../event-comment-modal/event-comment-modal.component';
+import { LanguageService } from '../../language.service';
+import { RequestStatus } from '../../../architecture/model/RequestStatus';
 
 @Component({
     selector: 'app-event-view',
     imports: [
         ImageDialogComponent,
-        EventCommentModalComponent,
+        EventCommentModalComponent
     ],
     templateUrl: './event-view.component.html',
     standalone: true,
@@ -24,36 +27,60 @@ import { Comment } from '../../../architecture/model/Comment';
 })
 export class EventViewComponent {
     @Input() event: CommunityEvent | null = null;
+    @Input() eventID!: string;
     @Input() canRemove: boolean = true;
     @Input() isDisabled: boolean = true;
     @Output() joinEventEmitter = new EventEmitter();
     @Output() leaveEventEmitter = new EventEmitter();
+    protected creator!: User;
     protected isDialogVisible: boolean = false;
     protected isCommentModalVisible: boolean = false;
     comments: Comment[] = [];
+    protected members: User[] = [];
+    protected queue: User[] = [];
 
-
-    ngOnInit() {
-        if (this.event) {
-            const eventId = this.event?.id ?? '';
-            (this.serviceFactory.get('events') as EventService).getComments(eventId).subscribe({
-                next: res => {
-                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
-                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
-                },
-                error: res => this.notify.error(`We have problems getting the comments: ${res.message}`)
-            });
-        }
-    }
 
     constructor(
         private authService: AuthService,
         protected serviceFactory: ServiceFactory,
-        private notify: Notify
+        private notify: Notify,
+        private languageService: LanguageService
     ) {}
 
+    ngOnInit() {
+        (this.serviceFactory.get('events') as EventService).getEvent(this.eventID).subscribe(res => {
+            this.event = {...res.data[0]};
+            (this.serviceFactory.get('users') as UserService).getUser(this.event.creatorID).subscribe( res => this.creator = res.data[0]);
+            (this.serviceFactory.get('events') as EventService).getComments(this.eventID).subscribe({
+                next: res => {
+                    console.log('Comentarios obtenidos:', res.data);  // Muestra los comentarios en consola
+                    this.comments = res.data.flat();  // Combina comentarios predefinidos y los obtenidos
+                },
+                error: res => {
+                    if (this.languageService.current == 'en') this.notify.error(`We have problems getting the comments: ${res.message}`)
+                    else this.notify.error(`Hemos encontrado un error al obtener los comentarios: ${res.message}`)
+                } 
+            });
+            (this.serviceFactory.get('events') as EventService).getMembers(this.eventID).subscribe(res => this.members = res.data);
+            (this.serviceFactory.get('events') as EventService).getEventQueue(this.eventID).subscribe(res => this.queue = res.data);
+        });
+    }
+
     joinEvent() {
-        this.joinEventEmitter.emit();
+        if (this.event?.slots) {
+            if (this.members.length < this.event.slots) {
+                this.joinEventEmitter.emit(RequestStatus.ACCEPTED);
+            } else {
+                const queueRequest = this.notify.confirm("The event slots are already full, do you want to get in queue?").then(res => {
+                    if (res) {
+                        this.joinEventEmitter.emit();
+                    } else {
+                        this.notify.info("Event info", "You didn't apply for the event queue, better luck next time!");
+                    }
+                })
+                
+            }
+        }
     }
 
     leaveEvent() {
@@ -77,20 +104,16 @@ export class EventViewComponent {
     }
 
     createComment(comment: Comment) {
-        console.log(comment.body);
         (this.serviceFactory.get('events') as EventService).createComment(comment).subscribe({
             next: () => {
-                this.notify.success(`You have published a comment`);
-                this.isCommentModalVisible = false;
+                //if (this.languageService.current == 'en') this.notify.success(`You have published a comment`);
+                //else this.notify.success(`Acabas de publicar un comentario`)
             },
             error: res => this.notify.error(`We have problems adding you to this event: ${res.message}`)
         });
     }
 
     protected readonly EventState = EventState;
-
-    acceptEvent() {}
-
     protected readonly AcceptEventCommand = AcceptEventCommand;
     protected readonly AuthService = AuthService;
     protected loggedUserID!: string;

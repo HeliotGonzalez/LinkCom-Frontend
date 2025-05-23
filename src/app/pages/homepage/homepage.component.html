@@ -9,7 +9,7 @@
                         <app-feed-event-card (joinEventEmitter)="joinEvent($event)" [event]="event"></app-feed-event-card>
                     }
                     <div class="text-center">
-                        <button class="button" (click)="loadMoreFeed()">Show more</button>
+                        <button class="button" (click)="loadMoreFeed()" i18n="Texto botón mostrar más feed|Mostrar más eventos en el feed">Show more</button>
                     </div>
                 </section>
             </div>
@@ -18,14 +18,49 @@
                 <!-- Una sola tarjeta para comunidades -->
                 <div class="card mb-4 shadow-card overflow-auto">
                     <div class="card-body recommended-communities">
-                        <h4 class="mb-3 text-center">Recommended communities</h4>
+                        <h4 class="mb-3 text-center" i18n="Título descubrimiento amigos|Encabezado descubrimiento amigos">Discover</h4>
+                            <section class="d-flex flex-column user-cards-container overflow-y-auto mt-3">
+                            @if (filteredUsers.length > 0) {
+                                <div *ngFor="let user of filteredUsers">
+                                    <app-user-list-card
+                                        [user]="user"
+                                        [isFriend]="friends.includes(user.id!)">
+                                    </app-user-list-card>
+
+                                    <div *ngIf="friendCommunityDifferences[user.id!] && friendCommunityDifferences[user.id!].length > 0">
+                                        <div *ngFor="let communityId of friendCommunityDifferences[user.id!]">
+                                        <div class="card align-items-center">
+                                            <img [src]="friendCommunitiesData[communityId].imagePath" 
+                                                alt="{{ friendCommunitiesData[communityId].name }}" 
+                                                style="max-height: 200px; max-width: 200px;"/>
+                                            <div class="card-body">
+                                            <h5 class="card-title">{{ friendCommunitiesData[communityId].name }}</h5>
+                                            <div [innerHTML]="friendCommunitiesData[communityId].description" style="text-align: justify"></div>
+                                            <a [href]="'http://localhost:4200/community/' + communityId" class="btn btn-primary" i18n="Título ver comunidad amigos|Encabezado ver comunidad amigos">View community</a>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+
+                            } @else {
+                                <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4"
+                                i18n="Mensaje sin usuarios|Texto cuando no se encuentran usuarios">
+                                    No users found
+                                </p>
+                            }
+                        </section>
+                    </div>
+                <div class="card mb-4 shadow-card overflow-auto">
+                    <div class="card-body recommended-communities">
+                        <h4 class="mb-3 text-center" i18n="Título comunidades recomendadas|Encabezado de comunidades recomendadas">Recommended communities</h4>
                         @for (community of communities; track community) {
                             <div class="community-item mb-2">
                                 <strong>{{ community.name }}</strong>
                                 <p class="mb-1" [innerHTML]="community.description"></p>
                                 <div class="text-end">
                                     <a class="button"
-                                    (click)="joinCommunity(community.id); $event.preventDefault()">Join</a>
+                                    (click)="joinCommunity(community.id); $event.preventDefault()" i18n="Texto enlace unirse comunidad|Acción para unirse a una comunidad">Join</a>
                                 </div>
                                 <hr>
                             </div>
@@ -34,7 +69,7 @@
                 </div>
                 <!-- Calendario en la parte inferior derecha -->
                 <div class="calendar">
-                    <h3 class="mb-3">Calendar</h3>
+                    <h3 class="mb-3" i18n="Título sección calendario|Encabezado del calendario">Calendar</h3>
                     <div class="card">
                     <div class="card-body p-0">
                         <table class="table table-bordered mb-0 text-center">
@@ -67,6 +102,7 @@
                     </div>
                 </div>              
             </div>
+        </div>
         </div>
     </div>
 </main>

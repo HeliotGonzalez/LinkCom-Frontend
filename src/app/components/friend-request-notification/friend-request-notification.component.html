@@ -1,0 +1,26 @@
+<article class="w-100 d-flex align-items-center rounded-3 bg-body-secondary p-3" style="height: 5rem">
+    <div class="flex-grow-1 h-100 d-flex align-items-center gap-2">
+        <i class="bi-person-plus-fill text-black"></i>
+        @defer (when notification) {
+            @if (related.status === RequestStatus.ACCEPTED) {
+                <span style="color: darkslategray; font-size: 0.8rem"><strong>{{ user.username }}</strong> is now your friend!</span>
+            } @else {
+                <span style="color: darkslategray; font-size: 0.8rem">{{ notificationMessageMap[notification.type.toString()] }}
+                    from <strong>{{ user.username }}</strong></span>
+            }
+        }
+    </div>
+    <div class="h-100 gap-1 d-flex align-items-center justify-content-center">
+        @if (related.status !== RequestStatus.ACCEPTED) {
+            <i (click)="deny()"
+               class="bi-x text-black fs-5"></i>
+        }
+        @if (related.status === RequestStatus.ACCEPTED) {
+            <i (click)="markAsSeen()"
+               class="bi-check2 text-black fs-5"></i>
+        } @else {
+            <i (click)="accept()"
+               class="bi-check2 text-black fs-5"></i>
+        }
+    </div>
+</article>

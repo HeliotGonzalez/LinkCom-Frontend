@@ -1,0 +1,46 @@
+.message-container {
+    border: 2px solid #5b75de;
+    border-radius: 10px;
+    max-width: fit-content;
+    background: white;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.self-message {
+    align-items: flex-end;
+}
+
+.check-icon {
+    margin-left: auto;
+}
+
+.message-card-footer span {
+    font-size: 0.7rem;
+}
+
+em {
+    color: grey;
+}
+
+.remove {
+    padding: 0.7rem;
+    background: #eeeeee;
+    border-radius: 10px;
+}
+
+.removing:hover {
+    padding: 0.7rem;
+    background: #e0dfdf;
+    border-radius: 10px;
+}
+
+.message .trash-icon {
+    opacity: 0;
+    transition: opacity 0.1s ease;
+    cursor: pointer;
+}
+
+.message:hover .trash-icon {
+    opacity: 1;
+}

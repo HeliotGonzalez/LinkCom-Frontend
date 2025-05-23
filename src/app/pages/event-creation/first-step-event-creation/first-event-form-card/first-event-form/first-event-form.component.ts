@@ -4,6 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {FormService} from '../../../../../services/form-service/form.service';
 import {FormsModule} from '@angular/forms';
 import Swal from "sweetalert2";
+import { LanguageService } from '../../../../../language.service';
 
 @Component({
     selector: 'app-first-event-form',
@@ -22,19 +23,24 @@ export class FirstEventFormComponent {
     protected eventDate: string | null = "";
     protected eventTime: string | null = "";
     protected eventLocation: string | null = "";
+    protected eventSlots: number | null = null;
 
-    constructor(private router: Router, private route: ActivatedRoute, private formService: FormService) {
+    constructor(private router: Router, private route: ActivatedRoute, private formService: FormService, private languageService: LanguageService) {
     }
 
     cancelForm(event: Event) {
         event.preventDefault();
-        this.router.navigate(['community'], {queryParams: {communityID: this.formData?.get('communityID')}}).then(r => {});
+        this.router.navigate(['community', this.formData?.get('communityID')]).then(r => {});
     }
 
     nextPage(event: Event) {
         event.preventDefault();
         if (this.eventName === "" || this.eventName === "" || this.eventLocation === "" || this.eventLocation === "") {
-            Swal.fire("Error!", "All required fields must be filled!", "error");
+            if (this.languageService.current == 'en'){
+                Swal.fire("Error!", "All required fields must be filled!", "error");
+            } else {
+                Swal.fire("¡Error!", "Todos los campos requeridos deben ser introducidos.", "error");
+            }
             return;
         }
         this.router.navigate(["/secondStepEventCreation"]).then(r => {
@@ -47,6 +53,7 @@ export class FirstEventFormComponent {
         this.formData!.put("date", this.eventDate);
         this.formData!.put("time", this.eventTime);
         this.formData!.put("location", this.eventLocation);
+        this.formData!.put("slots", this.eventSlots);
         this.formService.update();
     }
 

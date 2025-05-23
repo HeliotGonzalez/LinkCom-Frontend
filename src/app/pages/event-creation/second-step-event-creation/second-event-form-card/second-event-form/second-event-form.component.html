@@ -4,8 +4,8 @@
     { step: 2, route: '/secondStepEventCreation' },
   ]" [currentStep]="2" class="form-steps-circles-container"></app-form-steps>
     <div class="community-form-title-container text-center">
-        <h1 class="community-form-title">CommunityEvent creation</h1>
-        <h2 class="community-form-subtitle">The last step, tell others about the event!</h2>
+        <h1 class="community-form-title" i18n="Título creación evento paso 2|Encabezado final de creación de evento">CommunityEvent creation</h1>
+        <h2 class="community-form-subtitle" i18n="Subtítulo último paso evento|Instrucción para el último paso">The last step, tell others about the event!</h2>
     </div>
 </div>
 <form class="community-form">
@@ -13,18 +13,36 @@
         <div class="input-container drop-zone d-flex justify-content-center align-items-center"
              (dragover)="onDragOver($event)"
              (drop)="onDrop($event)">
-          <p *ngIf="!uploadedImage">Upload an image!</p>
+          <p *ngIf="!uploadedImage" i18n="Texto zona arrastre imagen evento|Indicador para subir imagen">Upload an image!</p>
             <div *ngIf="uploadedImage" class="image-preview h-100 w-auto d-flex justify-content-center align-items-center">
                 <img [src]="uploadedImage" alt="Loaded Image" style="object-fit: cover;">
             </div>
         </div>
         <div class="input-container d-flex flex-column">
-            <label for="community-form-description-input">Community description *</label>
-            <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!"></textarea>
+            <label for="community-form-description-input" i18n="Etiqueta descripción evento|Label para descripción del evento">Event description *</label>
+            <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!" i18n-placeholder="Placeholder descripción evento|Placeholder para descripción del evento"></textarea>
+        </div>
+        <div class="input-container d-flex flex-column" id="interests-input-container">
+            <label for="community-interests-input" i18n="Etiqueta intereses comunidad|Label para añadir intereses">Event interests</label>
+            <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" placeholder="Add your interests!" i18n-placeholder="Placeholder intereses comunidad|Placeholder para añadir intereses">
+            @if (interestsCoincidences.length) {
+                <div id="interests-suggestions">
+                    @for (interest of interestsCoincidences; track $index) {
+                        <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
+                    }
+                </div>
+            }
+            <div id="interests-container" class="">
+                <section id="interests-section" class="d-flex h-20 overflow-scroll p-2 gap-2 flex-wrap">
+                    @for (interest of interests; track $index) {
+                        <app-interest-tag [interestName]="interest" (removeInterestEmitter)="removeInterest($event)"></app-interest-tag>
+                    }
+                </section>
+            </div>
         </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">
-        <button (click)="previousPage($event)" class="form-button normal-empty-button">PREVIOUS</button>
-        <button (click)="nextPage($event)" class="form-button normal-button">CREATE</button>
+        <button (click)="previousPage($event)" class="form-button normal-empty-button" i18n="Texto botón anterior evento|Acción para regresar al paso anterior">PREVIOUS</button>
+        <button (click)="nextPage($event)" class="form-button normal-button" i18n="Texto botón crear evento final|Acción para finalizar creación de evento">CREATE</button>
     </div>
 </form>

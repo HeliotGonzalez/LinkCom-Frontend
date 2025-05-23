@@ -6,9 +6,15 @@ import {Community} from "../../interfaces/community";
 import {HttpClient} from "@angular/common/http";
 import { FriendRequest } from "../../../architecture/model/FriendRequest";
 import { RequestStatus } from "../../../architecture/model/RequestStatus";
+import {CriteriaSerializer} from "../../../architecture/io/criteria/CriteriaSerializer";
+import {Criteria} from "../../../architecture/io/criteria/Criteria";
+import {Filters} from "../../../architecture/io/criteria/Filters";
 
 export class HTTPUserService implements UserService {
     constructor(private http: HttpClient, private url: string) {
+    }
+    createUser(user: User): Observable<ApiResponse<User>> {
+        return this.http.post<ApiResponse<User>>(`${this.url}/users/register`, user);
     }
 
     getUsers(userID: string[]): Observable<ApiResponse<User>> {
@@ -33,6 +39,15 @@ export class HTTPUserService implements UserService {
     getFriendRequests(userID: string): Observable<ApiResponse<FriendRequest>> {
         return this.http.get<ApiResponse<FriendRequest>>(`${this.url}/users/${userID}/friendRequests?to=${userID}`);
     }
+
+    getRequest(id: string): Observable<ApiResponse<FriendRequest>> {
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'id', operator: 'eq', value: id}
+            ])
+        ));
+        return this.http.get<ApiResponse<FriendRequest>>(`${this.url}/users/friendRequests/${serial}`);
+    }
     
     updateFriendRequest(from: string, to: string, status: RequestStatus): Observable<ApiResponse<FriendRequest>> {
         return this.http.patch<ApiResponse<FriendRequest>>(`${this.url}/users/${from}/updateFriendRequest?to=${to}`, { status });
@@ -47,4 +62,5 @@ export class HTTPUserService implements UserService {
     getAllUsers(): Observable<ApiResponse<User>> {
         return this.http.get<ApiResponse<User>>(`${this.url}/users`);
     }
+    
 }

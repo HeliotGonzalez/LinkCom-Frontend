@@ -9,8 +9,8 @@
 
         <div class="register-form-header">
             <div class="register-form-title-container text-center">
-                <h1 class="register-form-title">User Register</h1>
-                <h2 class="register-form-subtitle">Plase select a unique profile picture</h2>
+                <h1 class="register-form-title" i18n="Título registro usuario|Título principal del formulario">User Register</h1>
+                <h2 class="register-form-subtitle" i18n="Subtítulo paso 2 registro|Instrucción selección imagen">Please select a unique profile picture</h2>
             </div>
         </div>
 
@@ -24,21 +24,21 @@
                     <input type="file" id="fileInput" class="d-none" (change)="onFileSelected($event)"/>
                     @if (!image) {
                         <i class="bi-upload fs-5"></i>
-                        <p>Upload your image!</p>
+                        <p i18n="Placeholder zona upload|Texto 'sube tu imagen'">Upload your image!</p>
                     } @else {
                         <div class="image-preview">
-                            <img [src]="image" alt="Loaded Image"/>
+                            <img [src]="image" alt="Loaded Image" i18n-alt="Texto alternativo vista previa de imagen"/>
                         </div>
                     }
                 </div>
                 @if (image.length) {
-                    <i (click)="onRemoveImage()" class="d-flex bi-x-circle-fill fs-1 bg-white position-absolute remove-icon"></i>
+                    <i (click)="onRemoveImage()" class="d-flex bi-x-circle-fill fs-1 bg-white position-absolute remove-icon" i18n-title="Título icono eliminar imagen"></i>
                 }
             </div>
 
             <div class="form-footer d-flex justify-content-center gap-2 mt-3">
-                <button (click)="goToFirstStep()" type="button" class="form-button normal-empty-button">Back</button>
-                <button (click)="goToThirdStep()" type="button" class="form-button normal-button">Next</button>
+                <button (click)="goToFirstStep()" type="button" class="form-button normal-empty-button" i18n="Texto botón Volver paso 1">Back</button>
+                <button (click)="goToThirdStep()" type="button" class="form-button normal-button" i18n="Texto botón Siguiente paso 3">Next</button>
             </div>
         </form>
     </div>

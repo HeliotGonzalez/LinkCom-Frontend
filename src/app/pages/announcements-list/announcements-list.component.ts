@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { ɵnormalizeQueryParams } from '@angular/common';
 import { ServiceFactory } from '../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../architecture/services/CommunityService';
+import { LanguageService } from '../../language.service';
 
 @Component({
   selector: 'app-announcements-list',
@@ -27,13 +28,13 @@ export class AnnouncementsListComponent implements OnInit{
     private router: Router,
     private baseRoute: ActivatedRoute,
     private serviceFactory: ServiceFactory,
-    private authService: AuthService
+    private authService: AuthService,
+    private languageService: LanguageService
   ) {
     this.userID = this.authService.getUserUUID();
   }
 
   async ngOnInit() {
-
     this.baseRoute.queryParams.subscribe(params => {
       this.communityID = params['communityID'];
       this.communityName = params['communityName'];
@@ -41,14 +42,26 @@ export class AnnouncementsListComponent implements OnInit{
     });
 
     if(this.userID === 'user_id') {
-      Swal.fire({
+      if (this.languageService.current == 'en'){
+        Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'User not authenticated',
+                confirmButtonText: 'Go back'
+              });
+              this.router.navigate([""]);
+              return;
+      } else {
+          Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'User not authenticated',
-              confirmButtonText: 'Go back'
+              text: 'Usuario no identificado',
+              confirmButtonText: 'Volver'
             });
             this.router.navigate([""]);
             return;
+      }
+
     } else {
       await this.fetchAnnouncements();
     }

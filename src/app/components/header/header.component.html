@@ -1,48 +1,60 @@
-<header class="bg-primary text-white d-flex align-items-center">
+<header class="bg-primary text-white d-flex position-relative align-items-center">
     <nav class="navbar navbar-expand-md navbar-dark container-fluid">
         <!-- LOGO a la izquierda -->
         <a class="navbar-brand d-flex align-items-center ps-3 ms-5" routerLink="/homepage">
             <img src="LogoLinkComBlanco.svg" alt="Logo" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
         </a>
 
-        <!-- Botón para menú colapsable en pantallas pequeñas -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+    <!-- Toggle menú en móvil -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Menú y switcher -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto me-3">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/homepage" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" i18n="@@navHome">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="communities" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" i18n="@@navCommunities">Communities</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="calendar" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" i18n="@@navCalendar">Calendar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="messages" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" i18n="@@navMessages">Social</a>
+        </li>
+      </ul>
+
+      <!-- Switch de idioma -->
+      <div class="d-flex align-items-center me-4">
+        <button class="btn btn-white p-1" (click)="switchLang('en')" title="English">
+          🇺🇸
         </button>
+        <button class="btn btn-white p-1" (click)="switchLang('es')" title="Español">
+          🇪🇸
+        </button>
+      </div>
 
-        <!-- Enlaces y botón a la derecha -->
-        <div class="collapse navbar-collapse text-center" id="navbarNav">
-            <ul class="navbar-nav ms-auto me-3 ">
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/homepage" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="communities" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Communities</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="calendar" routerLinkActive="active" [routerLinkActiveOptions]="{exact : true}">Calendar</a>
-                </li>
-            </ul>
-            @if (!this.user) {
-                <a class="btn btn-outline-light me-5" routerLink="/login">
-                    Login
-                </a>
-            } @else {
-                <div class="dropdown">
-                    <a class="dropdown-toggle me-5" href="#" role="button" id="dropdownMenuLink"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle" style="font-size: 2rem; color: white;"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-centered" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" (click)="goToProfile()" style="cursor: pointer;">Profile</a></li>
-                        <li><a class="dropdown-item" (click)="goToUsersList()" style="cursor: pointer;">Users list</a></li>
-                        <li><a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Log out</a></li>
-                    </ul>
-                </div>
-            }
-
+      <!-- Login / User dropdown -->
+      <ng-container *ngIf="!user; else loggedIn">
+        <a class="btn btn-outline-light me-5" routerLink="/login" i18n="@@btnLogin">Login</a>
+      </ng-container>
+      <ng-template #loggedIn>
+        <div class="dropdown me-5">
+          <a class="dropdown-toggle text-white" href="#" id="dropdownMenuLink" role="button"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle" style="font-size: 2rem;"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <li><a class="dropdown-item" (click)="goToProfile()" i18n="@@dropdownProfile">Profile</a></li>
+            <li><a class="dropdown-item" (click)="logout()" i18n="@@dropdownLogout">Log out</a></li>
+          </ul>
         </div>
-    </nav>
+      </ng-template>
+    </div>
+    <app-notifications></app-notifications>
+  </nav>
 </header>
-  

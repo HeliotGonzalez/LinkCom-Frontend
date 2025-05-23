@@ -20,7 +20,7 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     height: 10rem;
     background: white;
-    z-index: 500;
+    z-index: 10;
 }
 
 main {
@@ -34,6 +34,16 @@ main {
     padding: 0.5rem 1.7rem;
     background: #2E3E7F;
     border: 2px solid #2E3E7F;
+    color: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
+}
+.button:disabled 
+{
+    border-radius: 5px;
+    padding: 0.5rem 1.7rem;
+    background: #8da0ed;
+    border: 2px solid #6d85e2;
     color: white;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     transition: background 0.1s ease, border 0.1s ease, color 0.1s ease;
@@ -63,4 +73,32 @@ main {
 
 #announces-section {
     padding-bottom: 2rem;
+}
+
+.members-list {
+    z-index: 100;
+    right: 0;
+}
+
+.community-content {
+    width: 75%;
+}
+
+.dropdown-content {
+  min-width: 160px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.dropdown-item {
+  background: none;
+  border: none;
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f1f1f1;
 }

@@ -16,6 +16,7 @@ import {LeaveCommunityCommand} from "../../commands/LeaveCommunityCommand";
 import {RemoveCommunityCommand} from "../../commands/RemoveCommunityCommand";
 import {CancelJoinRequestCommunityCommand} from "../../commands/CancelJoinRequestCommunityCommand";
 import {RouterCommand} from "../../commands/RouterCommand";
+import {DataCacheService} from "../../services/cache/data-cache.service";
 
 @Component({
     selector: 'app-comunities',
@@ -25,10 +26,10 @@ import {RouterCommand} from "../../commands/RouterCommand";
     styleUrl: './comunities.component.css'
 })
 export class ComunitiesComponent {
-    protected communities: {[key: string]: Community} = {};
-    protected joinedCommunities: {[key: string]: Community} = {};
-    protected notJoinedCommunities: {[key: string]: Community} = {};
-    protected requests: {[key: string]: JoinRequest} = {};
+    protected communities: { [key: string]: Community } = {};
+    protected joinedCommunities: { [key: string]: Community } = {};
+    protected notJoinedCommunities: { [key: string]: Community } = {};
+    protected requests: { [key: string]: JoinRequest } = {};
     protected limit = 2;
     protected offset: number = 0;
     protected maxReached: boolean = false;
@@ -37,7 +38,8 @@ export class ComunitiesComponent {
     constructor(
         protected serviceFactory: ServiceFactory,
         protected authService: AuthService,
-        private socketFactory: WebSocketFactory
+        private socketFactory: WebSocketFactory,
+        protected cache: DataCacheService
     ) {
     }
 
@@ -64,8 +66,9 @@ export class ComunitiesComponent {
     }
 
     private onDeleteCommunity(community: Community) {
-        console.log(community)
         delete this.communities[community.id!];
+        if (community.id! in this.joinedCommunities) delete this.joinedCommunities[community.id!]
+        else delete this.notJoinedCommunities[community.id!]
     }
 
     private getCommunitiesIDsFrom(data: Community[]) {
@@ -94,20 +97,22 @@ export class ComunitiesComponent {
                 (this.serviceFactory.get('communities') as CommunityService).getUserJoinRequestOf(this.authService.getUserUUID(), Object.keys(this.notJoinedCommunities)).subscribe(res => {
                     res.data.filter(r => r.status === RequestStatus.PENDING).forEach(r => this.requests[r.communityID!] = r);
                 })
-                this.communities = this.orderCommunities();
+                this.communities = this.sortCommunities();
                 if (res.joined.data.length > 0 || res.notJoined.data.length > 0) this.offset += this.limit;
                 else this.maxReached = true;
             });
         });
     }
 
-    private applyCommunitiesChanges(addingList: {[key: string]: Community}, removingList: {[key: string]: Community}, community: Community) {
+    private applyCommunitiesChanges(addingList: { [key: string]: Community }, removingList: {
+        [key: string]: Community
+    }, community: Community) {
         addingList[community.id!] = community;
         delete removingList[community.id!];
-        this.communities = this.orderCommunities();
+        this.communities = this.sortCommunities();
     }
 
-    private orderCommunities() {
+    private sortCommunities() {
         return {...this.joinedCommunities, ...this.notJoinedCommunities};
     }
 
