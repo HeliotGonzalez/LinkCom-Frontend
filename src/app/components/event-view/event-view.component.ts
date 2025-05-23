@@ -13,6 +13,7 @@ import {User} from "../../../architecture/model/User";
 import {UserService} from "../../../architecture/services/UserService";
 import { EventCommentModalComponent } from '../event-comment-modal/event-comment-modal.component';
 import { LanguageService } from '../../language.service';
+import { RequestStatus } from '../../../architecture/model/RequestStatus';
 
 @Component({
     selector: 'app-event-view',
@@ -36,6 +37,7 @@ export class EventViewComponent {
     protected isCommentModalVisible: boolean = false;
     comments: Comment[] = [];
     protected members: User[] = [];
+    protected queue: User[] = [];
 
 
     constructor(
@@ -59,12 +61,26 @@ export class EventViewComponent {
                     else this.notify.error(`Hemos encontrado un error al obtener los comentarios: ${res.message}`)
                 } 
             });
-            (this.serviceFactory.get('events') as EventService).getMembers(this.event.id!).subscribe(res => this.members = res.data);
+            (this.serviceFactory.get('events') as EventService).getMembers(this.eventID).subscribe(res => this.members = res.data);
+            (this.serviceFactory.get('events') as EventService).getEventQueue(this.eventID).subscribe(res => this.queue = res.data);
         });
     }
 
     joinEvent() {
-        this.joinEventEmitter.emit();
+        if (this.event?.slots) {
+            if (this.members.length < this.event.slots) {
+                this.joinEventEmitter.emit(RequestStatus.ACCEPTED);
+            } else {
+                const queueRequest = this.notify.confirm("The event slots are already full, do you want to get in queue?").then(res => {
+                    if (res) {
+                        this.joinEventEmitter.emit();
+                    } else {
+                        this.notify.info("Event info", "You didn't apply for the event queue, better luck next time!");
+                    }
+                })
+                
+            }
+        }
     }
 
     leaveEvent() {

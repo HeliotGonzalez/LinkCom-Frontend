@@ -10,6 +10,7 @@ import { ApiService } from "../api-service.service";
 import { CriteriaSerializer } from "../../../architecture/io/criteria/CriteriaSerializer";
 import { Criteria } from "../../../architecture/io/criteria/Criteria";
 import { Filters } from "../../../architecture/io/criteria/Filters";
+import { RequestStatus } from "../../../architecture/model/RequestStatus";
 
 export class HTTPEventService implements EventService {
     constructor(private http: HttpClient, private url: string) {
@@ -43,8 +44,8 @@ export class HTTPEventService implements EventService {
         return this.http.delete<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}`);
     }
 
-    joinEvent(communityID: string, eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/join`, {communityID, userID});
+    joinEvent(communityID: string, eventID: string, userID: string, joinStatus: RequestStatus): Observable<ApiResponse<CommunityEvent>> {
+        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events/${eventID}/join`, {communityID, userID, joinStatus});
     }
 
     leaveEvent(eventID: string, userID: string): Observable<ApiResponse<CommunityEvent>> {
@@ -60,7 +61,8 @@ export class HTTPEventService implements EventService {
     getMembers(eventID: string): Observable<ApiResponse<User>> {
         const serial = CriteriaSerializer.serialize(new Criteria(
             Filters.fromValues([
-                {field: 'eventID', operator: 'eq', value: eventID}
+                {field: 'eventID', operator: 'eq', value: eventID},
+                {field: 'joinStatus', operator: 'eq', value: RequestStatus.ACCEPTED}
             ])
         ));
         return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/members/${serial}`);
@@ -75,7 +77,13 @@ export class HTTPEventService implements EventService {
     }
 
     getEventQueue(eventID: string): Observable<ApiResponse<User>> {
-        return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/`)
+        const serial = CriteriaSerializer.serialize(new Criteria(
+            Filters.fromValues([
+                {field: 'eventID', operator: 'eq', value: eventID},
+                {field: 'joinStatus', operator: 'eq', value: RequestStatus.PENDING}
+            ])
+        ));
+        return this.http.get<ApiResponse<User>>(`${this.url}/events/${eventID}/members/${serial}`);
     }
 
 }

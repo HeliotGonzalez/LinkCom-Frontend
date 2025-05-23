@@ -138,7 +138,7 @@
                         <app-event-view [eventID]="eventID"
                                         [canRemove]="canLoggedUserRemoveEvent(eventID)"
                                         [isDisabled]="isUserInEvent(events[eventID])"
-                                        (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
+                                        (joinEventEmitter)="JoinEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).withJoinStatus($event).build().execute()"
                                         (leaveEventEmitter)="LeaveEventCommand.Builder.create().withFactory(serviceFactory).withEvent(events[eventID]).withUser(authService.getUserUUID()).build().execute()"
                         ></app-event-view>
                     }

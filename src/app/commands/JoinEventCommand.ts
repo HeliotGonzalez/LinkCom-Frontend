@@ -4,6 +4,7 @@ import {ServiceFactory} from "../services/api-services/ServiceFactory.service";
 import {CommunityEvent} from "../../architecture/model/CommunityEvent";
 import {EventService} from "../../architecture/services/EventService";
 import { LanguageService } from "../language.service";
+import { RequestStatus } from "../../architecture/model/RequestStatus";
 
 export class JoinEventCommand implements Command {
     private notify: Notify;
@@ -12,7 +13,8 @@ export class JoinEventCommand implements Command {
     constructor(
         private serviceFactory: ServiceFactory,
         private event: CommunityEvent,
-        private userID: string
+        private userID: string,
+        private joinStatus: RequestStatus
     ) {
         this.notify = this.serviceFactory.get('notify') as Notify;
         this.languageService = this.serviceFactory.get('languageService') as LanguageService;
@@ -20,7 +22,7 @@ export class JoinEventCommand implements Command {
     }
 
     execute(): void {
-        (this.serviceFactory.get('events') as EventService).joinEvent(this.event?.communityID!, this.event?.id!, this.userID).subscribe({
+        (this.serviceFactory.get('events') as EventService).joinEvent(this.event?.communityID!, this.event?.id!, this.userID, this.joinStatus).subscribe({
             next: () => {
                 let text = (this.languageService.current == 'en') ? `You have joined to ${this.event?.title}` : `Te acabas de unir al evento ${this.event?.title}`;
                 this.notify.success(text);
@@ -36,6 +38,7 @@ export class JoinEventCommand implements Command {
         private serviceFactory: ServiceFactory | null = null;
         private event: CommunityEvent | null = null;
         private userID: string | null = null;
+        private joinStatus: RequestStatus = RequestStatus.PENDING;
 
         static create() {
             return new JoinEventCommand.Builder();
@@ -56,8 +59,14 @@ export class JoinEventCommand implements Command {
             return this;
         }
 
+        withJoinStatus(joinStatus?: RequestStatus) {
+            if (joinStatus)
+                this.joinStatus = joinStatus;
+            return this;
+        }
+
         build() {
-            return new JoinEventCommand(this.serviceFactory!, this.event!, this.userID!);
+            return new JoinEventCommand(this.serviceFactory!, this.event!, this.userID!, this.joinStatus);
         }
     }
 }

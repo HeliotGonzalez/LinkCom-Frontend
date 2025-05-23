@@ -14,7 +14,9 @@
             <div [innerHTML]="event?.description" class="flex-grow-1" style="text-align: justify"></div>
             <!--ToDo: div con número de plazas [ocupadas/totales] -->
             @if (this.event?.slots !== null) {
-                <div class="event-slots d-flex justify-content-end"> {{this.members.length}} / {{this.event?.slots}}</div>
+                <div class="event-slots d-flex justify-content-end"> Slots: {{this.members.length}} / {{this.event?.slots}}</div>
+                <div class="event-queue d-flex justify-content-end"> Users in queue: {{this.queue.length}}</div>
+                
             }
         </div>
         <div class="d-flex align-items-center justify-content-center w-50 h-100">
