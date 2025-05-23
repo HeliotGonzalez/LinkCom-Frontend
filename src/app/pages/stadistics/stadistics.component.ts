@@ -17,6 +17,8 @@ export class StadisticsComponent implements OnInit {
   communityID!: string;
 
   numberOfMembers: number = 0;
+  numberOfModerators: number = 0; 
+  numberOfUsers: number = 0;
   numberOfAnnouncements: number = 0;
   numberOfEvents: number = 0;
   enrollAverage: number = 0;
@@ -32,22 +34,20 @@ export class StadisticsComponent implements OnInit {
     const communityService = this.serviceFactory.get('communities') as CommunityService;
     const eventService = this.serviceFactory.get('events') as EventService;
 
-    // Obtener datos de la comunidad
     this.community = (await firstValueFrom(communityService.getCommunity(this.communityID))).data[0];
 
-    // Número de miembros
-    const members = await firstValueFrom(communityService.getUserCommunities(this.communityID));
+    const members = await firstValueFrom(communityService.getCommunityMembers(this.communityID));
+    const moderators = await firstValueFrom(communityService.getCommunityModerators(this.communityID));
+    this.numberOfModerators = moderators.data.length;
     this.numberOfMembers = members.data.length;
+    this.numberOfUsers = this.numberOfMembers + this.numberOfModerators;
 
-    // Anuncios
     const announcements = await firstValueFrom(communityService.getCommunityAnnouncements(this.communityID));
     this.numberOfAnnouncements = announcements.data.length;
 
-    // Eventos
     const events = await firstValueFrom(communityService.getCommunityEvents(this.communityID));
     this.numberOfEvents = events.data.length;
 
-    // Promedio de inscritos
     if (events.data.length > 0) {
       let totalInscritos = 0;
       for (const ev of events.data) {
