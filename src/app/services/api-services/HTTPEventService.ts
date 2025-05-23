@@ -37,7 +37,10 @@ export class HTTPEventService implements EventService {
     }
 
     createEvent(event: CommunityEvent): Observable<ApiResponse<CommunityEvent>> {
-        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events`, event);
+        const interests = event.interests;
+        delete event.interests;
+        const parameters = event;
+        return this.http.put<ApiResponse<CommunityEvent>>(`${this.url}/events`, {parameters, interests});
     }
 
     removeEvent(eventID: string): Observable<ApiResponse<CommunityEvent>> {

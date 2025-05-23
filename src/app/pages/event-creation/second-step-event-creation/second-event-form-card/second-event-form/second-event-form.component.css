@@ -94,3 +94,37 @@
     object-fit: contain;
     border-radius: 8px;
 }
+
+#interests-input-container {
+  position: relative;
+}
+
+#interests-container {
+  position: absolute;
+  width: 100%;
+  top: 42%;
+  border: 2px solid #2E3E7F;
+  border-radius: 5px;
+  height: 3rem;
+}
+
+#interests-suggestions {
+  top: 4rem;
+  position: absolute;
+  width: 100%;
+  border: 1px solid black;
+  background: white;
+  z-index: 1000;
+}
+
+.interest-suggestion-item {
+  padding: 0.5rem;
+  transition: background 0.3s ease;
+  margin: 0.2rem;
+  border-radius: 2px;
+  background: white;
+}
+
+.interest-suggestion-item:hover {
+  background: #eeeeee;
+}

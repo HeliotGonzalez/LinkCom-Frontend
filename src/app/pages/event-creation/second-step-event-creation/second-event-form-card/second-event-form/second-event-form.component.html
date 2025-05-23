@@ -22,6 +22,24 @@
             <label for="community-form-description-input" i18n="Etiqueta descripción evento|Label para descripción del evento">Event description *</label>
             <textarea [(ngModel)]="eventDescription" name="event-description-input" class="flex-grow-1" id="community-form-description-input" placeholder="What will be happening in the event. Tell us!" i18n-placeholder="Placeholder descripción evento|Placeholder para descripción del evento"></textarea>
         </div>
+        <div class="input-container d-flex flex-column" id="interests-input-container">
+            <label for="community-interests-input" i18n="Etiqueta intereses comunidad|Label para añadir intereses">Event interests</label>
+            <input [(ngModel)]="newTag" #tagNameInput (focus)="getCoincidences($event, tagNameInput.value)" (input)="getCoincidences($event, tagNameInput.value)" (keydown.enter)="addInterestTag($event, tagNameInput.value)" name="community-interests-input" id="community-interests-input" placeholder="Add your interests!" i18n-placeholder="Placeholder intereses comunidad|Placeholder para añadir intereses">
+            @if (interestsCoincidences.length) {
+                <div id="interests-suggestions">
+                    @for (interest of interestsCoincidences; track $index) {
+                        <div class="interest-suggestion-item" (click)="addInterestTagFromCoincidence($event, interest)"> {{interest}} </div>
+                    }
+                </div>
+            }
+            <div id="interests-container" class="">
+                <section id="interests-section" class="d-flex h-20 overflow-scroll p-2 gap-2 flex-wrap">
+                    @for (interest of interests; track $index) {
+                        <app-interest-tag [interestName]="interest" (removeInterestEmitter)="removeInterest($event)"></app-interest-tag>
+                    }
+                </section>
+            </div>
+        </div>
     </div>
     <div class="community-form-footer d-flex justify-content-center">
         <button (click)="previousPage($event)" class="form-button normal-empty-button" i18n="Texto botón anterior evento|Acción para regresar al paso anterior">PREVIOUS</button>
