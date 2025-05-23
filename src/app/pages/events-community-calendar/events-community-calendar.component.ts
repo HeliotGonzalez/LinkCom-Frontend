@@ -68,6 +68,18 @@ export class EventsCommunityCalendarComponent implements OnInit {
   }[] = [];
   
   selectedIdx = 0;
+  selectedDay: number | null = null;
+
+selectDay(day: number): void {
+  this.selectedDay = this.selectedDay === day ? null : day;
+}
+
+get dailyEvents() {
+  if (!this.selectedDay) return [];
+  return this.calendarEvents[this.selectedDay] || [];
+}
+
+
   openEventModal(day: number, idx: number): void {
     this.selectedDayEvents = this.calendarEvents[day] || [];
     this.selectedIdx       = idx;
