@@ -18,6 +18,36 @@
                 <!-- Una sola tarjeta para comunidades -->
                 <div class="card mb-4 shadow-card overflow-auto">
                     <div class="card-body recommended-communities">
+                        <h4 class="mb-3 text-center" i18n="Título descubrimiento amigos|Encabezado descubrimiento amigos">Discover</h4>
+                            <section class="d-flex flex-column user-cards-container overflow-y-auto mt-3">
+                            @if (filteredUsers.length > 0) {
+                                @for (user of filteredUsers; track user.id) {
+                                    <app-user-list-card
+                                            [user]="user"
+                                            [isFriend]="friends.includes(user.id!)">
+                                    </app-user-list-card>
+                                    <div *ngFor="let communityId of friendCommunitiesData | keyvalue">
+                                        <div class="card align-items-center">
+                                            <img [src]="communityId.value.imagePath" alt="{{communityId.value.name}}" style="max-height: 200px; max-width: 200px;"/>
+                                            <div class="card-body">
+                                            <h5 class="card-title">{{ communityId.value.name }}</h5>
+                                            <div [innerHTML]="communityId.value.description" style="text-align: justify"></div>
+                                            <a [href]="'http://localhost:4200/community/' + communityId.key" class="btn btn-primary">Ver Comunidad</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                            } @else {
+                                <p class="d-flex align-items-center justify-content-center h-25 text-light fs-4"
+                                i18n="Mensaje sin usuarios|Texto cuando no se encuentran usuarios">
+                                    No users found
+                                </p>
+                            }
+                        </section>
+                    </div>
+                <div class="card mb-4 shadow-card overflow-auto">
+                    <div class="card-body recommended-communities">
                         <h4 class="mb-3 text-center" i18n="Título comunidades recomendadas|Encabezado de comunidades recomendadas">Recommended communities</h4>
                         @for (community of communities; track community) {
                             <div class="community-item mb-2">
@@ -67,6 +97,7 @@
                     </div>
                 </div>              
             </div>
+        </div>
         </div>
     </div>
 </main>
