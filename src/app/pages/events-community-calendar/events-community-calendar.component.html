@@ -33,12 +33,15 @@
                   @for (day of week; track day)
                   {
                     <td class="td-calendar">
-                      <div class="calendar-day" [ngClass]="{
-                        today:
-                          day === today &&
-                          calendarMonth.month === currentMonth &&
-                          calendarMonth.year === currentYear
-                      }">
+                <div
+                  class="calendar-day"
+                  (click)="selectDay(day!)"
+                  [ngClass]="{
+                    today: day === today && calendarMonth.month === currentMonth && calendarMonth.year === currentYear,
+                    selected: day === selectedDay
+                  }"
+                >
+
                         <span>{{ day ? day : '' }}</span>
                         @if (day && calendarEvents[day])
                         {
@@ -65,37 +68,35 @@
           </table>
         </div>
 
-<div class="mt-5">
-  <h3 class="text-center">Eventos del mes</h3>
+<div class="mt-5" style="margin-bottom: 7vh;">
+  <h3 class="text-center">Eventos del día {{ selectedDay }}</h3>
 
-  @if (filteredMonthlyEvents.length === 0) {
-    <div class="text-center text-muted">No hay eventos para este mes.</div>
+  @if (!selectedDay || dailyEvents.length === 0) {
+    <div class="text-center text-muted">No hay eventos para este día.</div>
   } @else {
-    @for (ev of filteredMonthlyEvents; track ev) {
-  <div class="card my-2">
-    <div class="card-body">
-      <h5 class="card-title">{{ ev.title }}</h5>
-      <p class="card-text">
-        <strong>Fecha:</strong> {{ ev.date | date:'dd/MM/yyyy HH:mm' }}
-      </p>
-      <p class="card-text">
-        <strong>Comunidad:</strong> {{ getCommunityName(ev.communityID) }}
-      </p>
-<button
-  class="btn btn-primary mt-2"
-  data-bs-toggle="modal"
-  data-bs-target="#exampleModal"
-  (click)="openEventModalFromList(getEventWithParsedDate(ev))"
->
-  Ver evento
-</button>
-    </div>
-  </div>
-}
-
+    @for (ev of dailyEvents; track ev) {
+      <div class="card my-2">
+        <div class="card-body">
+          <h5 class="card-title">{{ ev.title }}</h5>
+          <p class="card-text">
+            <strong>Fecha:</strong> {{ ev.date | date:'dd/MM/yyyy HH:mm' }}
+          </p>
+          <p class="card-text">
+            <strong>Comunidad:</strong> {{ getCommunityName(ev.communityID) }}
+          </p>
+          <button
+            class="btn btn-primary mt-2"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="openEventModalFromList(getEventWithParsedDate(ev))"
+          >
+            Ver evento
+          </button>
+        </div>
+      </div>
+    }
   }
 </div>
-
 
       </div>
     </div>
