@@ -11,15 +11,22 @@
 <form class="community-form">
     <div class="community-form-inputs d-flex flex-column gap-5 flex-grow-1">
         <div class="input-container d-flex flex-column">
-            <label for="event-name-input" i18n="Etiqueta fecha hora evento|Label para fecha y hora del evento">CommunityEvent name *</label>
+            <label for="event-name-input" i18n="Etiqueta fecha hora evento|Label para fecha y hora del evento">Event name *</label>
             <input (keydown.enter)="setFocus($event, eventDateInput)" [(ngModel)]="eventName" name="event-name" id="event-name-input" placeholder="Choose a cool name for the event!" i18n-placeholder="Placeholder nombre evento|Placeholder para nombre de evento" required>
         </div>
         <div class="input-container flex-column">
             <label class="multiple-input-label d-flex flex-column" i18n="Etiqueta nombre evento|Label para nombre de evento">
-                CommunityEvent time *
+                Event's date & time *
                 <div class="multiple-input-container d-flex flex-grow-1 gap-2">
                     <input (keydown.enter)="setFocus($event, eventTimeInput)" [(ngModel)]="eventDate" #eventDateInput name="event-date" id="event-date-input" type="date" placeholder="dd/mm/yyyy" i18n-placeholder="Placeholder fecha evento|Placeholder para fecha (dd/mm/yyyy)" required class="flex-grow-1">
                     <input (keydown.enter)="setFocus($event, eventLocationInput)" [(ngModel)]="eventTime" #eventTimeInput name="event-time" id="event-time-input" type="time" placeholder="00:00" required class="flex-grow-1">
+                </div>
+            </label>
+            <br>
+            <label for="event-slots-input-container d-flex">
+                Event capacity (optional):
+                <div id="event-slots-input-container">
+                    <input (keydown.enter)="setFocus($event, eventLocationInput)" [(ngModel)]="eventSlots" #eventSlotsInput name="event-slots" id="event-slots-input" type="number" min="2" placeholder="4" class="">
                 </div>
             </label>
         </div>

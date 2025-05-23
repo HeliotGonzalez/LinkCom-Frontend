@@ -23,6 +23,7 @@ export class FirstEventFormComponent {
     protected eventDate: string | null = "";
     protected eventTime: string | null = "";
     protected eventLocation: string | null = "";
+    protected eventSlots: number | null = null;
 
     constructor(private router: Router, private route: ActivatedRoute, private formService: FormService, private languageService: LanguageService) {
     }
@@ -52,6 +53,7 @@ export class FirstEventFormComponent {
         this.formData!.put("date", this.eventDate);
         this.formData!.put("time", this.eventTime);
         this.formData!.put("location", this.eventLocation);
+        this.formData!.put("slots", this.eventSlots);
         this.formService.update();
     }
 

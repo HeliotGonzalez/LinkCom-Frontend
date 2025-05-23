@@ -35,6 +35,7 @@ export class EventViewComponent {
     protected isDialogVisible: boolean = false;
     protected isCommentModalVisible: boolean = false;
     comments: Comment[] = [];
+    protected members: User[] = [];
 
 
     constructor(
@@ -58,6 +59,7 @@ export class EventViewComponent {
                     else this.notify.error(`Hemos encontrado un error al obtener los comentarios: ${res.message}`)
                 } 
             });
+            (this.serviceFactory.get('events') as EventService).getMembers(this.event.id!).subscribe(res => this.members = res.data);
         });
     }
 
