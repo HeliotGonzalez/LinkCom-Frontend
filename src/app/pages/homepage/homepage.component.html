@@ -28,7 +28,6 @@
                                     </app-user-list-card>
 
                                     <div *ngIf="friendCommunityDifferences[user.id!] && friendCommunityDifferences[user.id!].length > 0">
-                                        <h4>Comunidades que {{ user.name }} tiene y tú no:</h4>
                                         <div *ngFor="let communityId of friendCommunityDifferences[user.id!]">
                                         <div class="card align-items-center">
                                             <img [src]="friendCommunitiesData[communityId].imagePath" 
@@ -37,7 +36,7 @@
                                             <div class="card-body">
                                             <h5 class="card-title">{{ friendCommunitiesData[communityId].name }}</h5>
                                             <div [innerHTML]="friendCommunitiesData[communityId].description" style="text-align: justify"></div>
-                                            <a [href]="'http://localhost:4200/community/' + communityId" class="btn btn-primary">Ver Comunidad</a>
+                                            <a [href]="'http://localhost:4200/community/' + communityId" class="btn btn-primary" i18n="Título ver comunidad amigos|Encabezado ver comunidad amigos">View community</a>
                                             </div>
                                         </div>
                                         </div>
