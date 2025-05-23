@@ -100,6 +100,7 @@ export class HomepageComponent implements OnInit {
                 const difference = friendCommunities.filter(id => !this.userCommunityIDs.includes(id));
                 this.friendCommunityDifferences[friend] = difference;
 
+
                 for (const id of difference) {
                     communityService.getCommunity(id).subscribe(res => {
                         if (res.data && res.data.length > 0) {
@@ -107,10 +108,11 @@ export class HomepageComponent implements OnInit {
                         }
                     });
                 }
-
+                console.log(`RASADADS`,this.friendCommunityDifferences);
                 console.log(`Comunidades de ${friend} que el usuario NO tiene:`, difference);
             });
         });
+
     }
 
 
