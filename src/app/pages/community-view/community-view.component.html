@@ -28,13 +28,14 @@
                         <p i18n="Mensaje sin permiso anuncios|Indica que no puede crear anuncios">You will be able to create announcements when your invitation is accepted.</p>
                     }
 
-                    @if (announcements.length === 0) {
+                    @if (Object.keys(announcements).length <= 0) {
                         <p i18n="Mensaje sin noticias|Texto cuando no hay anuncios">There is no news yet</p>
                     } @else {
-                        @for (newAnnounce of announcements; track newAnnounce) {
+                        @for (announcementID of Object.keys(announcements); track announcementID) {
                             <app-announcement-card
-                                    [announce]="newAnnounce"
+                                    [announce]="announcements[announcementID]"
                                     [imgPath]="this.community!.imagePath!"
+                                    (deleted)="updateAnnouncement(announcements[$event], true)"
                             ></app-announcement-card>
                         }
                     }

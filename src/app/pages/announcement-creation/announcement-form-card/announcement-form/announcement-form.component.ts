@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ServiceFactory } from '../../../../services/api-services/ServiceFactory.service';
 import { CommunityService } from '../../../../../architecture/services/CommunityService';
 import { CommunityAnnouncement } from '../../../../../architecture/model/CommunityAnnouncement';
+import { Notify } from '../../../../services/notify';
 import { LanguageService } from '../../../../language.service';
 
 
@@ -30,6 +31,7 @@ export class AnnouncementFormComponent implements OnInit{
     private baseRoute: ActivatedRoute,
     private serviceFactory: ServiceFactory, 
     private authService: AuthService,
+    private notify: Notify,
     private languageService: LanguageService
   ) {  
     this.publisherID = this.authService.getUserUUID();
@@ -59,7 +61,8 @@ export class AnnouncementFormComponent implements OnInit{
 
   exitForm(event: Event) {
     this.resetForm();
-    this.router.navigate(['community'], {queryParams: {communityID: this.communityID}}).then(r => {});
+    console.log(this.communityID);
+    this.router.navigate([`community`, this.communityID]);
   }
 
   submitData(event: Event){
@@ -96,7 +99,7 @@ export class AnnouncementFormComponent implements OnInit{
             confirmButtonText: "Continuar"
           });
         }
-        this.router.navigate(["/community"], {queryParams: {communityID: this.communityID}});
+        this.router.navigate(["community", this.communityID]);
       },
       error: (err: any) => {
         if (this.languageService.current == 'en'){

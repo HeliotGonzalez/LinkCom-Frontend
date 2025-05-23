@@ -25,6 +25,7 @@ import {EventUser} from "../../../architecture/model/EventUser";
 import {BlurPanelComponent} from "../../components/blur-panel/blur-panel.component";
 import {RequestStatus} from "../../../architecture/model/RequestStatus";
 import {EventsRequestPanelComponent} from "../../components/events-request-panel/events-request-panel.component";
+import { CommunityAnnouncement } from '../../../architecture/model/CommunityAnnouncement';
 
 @Component({
     selector: 'app-community-view',
@@ -44,7 +45,7 @@ export class CommunityViewComponent {
     protected isUserJoined: boolean = false;
     protected isRequested: boolean = false;
     protected isUserModerator: boolean = false;
-    protected announcements: Announce[] = [];
+    protected announcements: {[key: string]: CommunityAnnouncement} = {};
     protected eventsRequestPanelVisible: boolean = false;
     protected isLoaded: boolean = false;
     protected eventRequests: {[key: string]: CommunityEvent} = {};
@@ -68,7 +69,7 @@ export class CommunityViewComponent {
             (await this.loadEventRequests()).forEach(e => this.eventRequests[e.id!] = e);
             (await this.getCommunityEvents(params.get('id')!)).forEach(e => this.events[e.id!] = e);
             (await this.getUserCommunityEvents(params.get('id')!, this.authService.getUserUUID())).forEach(e => this.userEvents[e.id!] = e);
-            this.announcements = await this.getCommunityAnnouncements(params.get('id')!);
+            (await this.getCommunityAnnouncements(params.get('id')!)).forEach(e => this.announcements[e.id!] = e);
             this.initializeSockets();
             this.isLoaded = true;
         });
@@ -136,6 +137,10 @@ export class CommunityViewComponent {
         eventsSocket.onInsert().subscribe(res => this.updateEvent(res.new as CommunityEvent, false));
         eventsSocket.onUpdate().subscribe(res => this.updateEvent(res.new as CommunityEvent, false));
         eventsSocket.onDelete().subscribe(res => this.updateEvent(res.old as CommunityEvent, true));
+        const announcementsSocket =(this.socketFactory.get('Announcements'));
+        announcementsSocket.onInsert().subscribe(res => this.updateAnnouncement(res.new as CommunityAnnouncement, false));
+        announcementsSocket.onUpdate().subscribe(res => this.updateAnnouncement(res.new as CommunityAnnouncement, false));
+        announcementsSocket.onDelete().subscribe(res => this.updateAnnouncement(res.old as CommunityAnnouncement, true));
     }
 
     private updateEvent(event: CommunityEvent, removed: boolean) {
@@ -191,4 +196,12 @@ export class CommunityViewComponent {
         const loggedUserID = this.authService.getUserUUID();
         return this.events[eventID].creatorID === loggedUserID || this.isUserModerator || this.isCreator();
     }
+
+    protected updateAnnouncement(announcement: CommunityAnnouncement, removed: boolean) {
+        console.log("Anuncios:", announcement);
+        if (announcement.communityID !== this.community?.id) return;
+        if (removed) delete this.announcements[announcement.id!];
+        else this.announcements[announcement.id!] = announcement;
+    }
+
 }

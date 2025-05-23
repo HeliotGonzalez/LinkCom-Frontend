@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ApiService } from '../../../services/api-service.service';
 import { AuthService } from '../../../services/auth.service';
 import Swal from 'sweetalert2';
@@ -6,6 +6,8 @@ import { ServiceFactory } from '../../../services/api-services/ServiceFactory.se
 import { CommunityService } from '../../../../architecture/services/CommunityService';
 import { Router } from '@angular/router';
 import { Announce } from '../../../interfaces/announce';
+import { CommunityAnnouncement } from '../../../../architecture/model/CommunityAnnouncement';
+import { Notify } from '../../../services/notify';
 import { LanguageService } from '../../../language.service';
 
 @Component({
@@ -17,8 +19,9 @@ import { LanguageService } from '../../../language.service';
 })
 export class AnnouncementCardComponent implements OnInit {
   
-  @Input() announce!: Announce;
+  @Input() announce!: CommunityAnnouncement;
   @Input() imgPath!: string;
+  @Output() deleted = new EventEmitter<string>();
   userId!: string;  
 
   constructor(
@@ -26,6 +29,7 @@ export class AnnouncementCardComponent implements OnInit {
     private authService: AuthService, 
     private apiService: ApiService,
     private serviceFactory: ServiceFactory,
+    private notify: Notify,
     private languageService: LanguageService
   ) {}
 

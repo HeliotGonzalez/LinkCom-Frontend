@@ -10,4 +10,5 @@ export interface CommunityEvent {
     communityID: string;
     imagePath: string;
     eventState: EventState;
+    slots: number;
 }
