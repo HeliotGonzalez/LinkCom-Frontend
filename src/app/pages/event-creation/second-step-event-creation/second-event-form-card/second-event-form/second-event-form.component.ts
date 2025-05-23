@@ -51,7 +51,7 @@ export class SecondEventFormComponent {
 
     previousPage(event: Event) {
         event.preventDefault();
-        this.router.navigate(["/firstStepEventCreation"]).then(r => {
+        this.router.navigate(["/firstStepEventCreation"], {queryParams: {communityID: this.formData!.get("communityID")}}).then(r => {
         });
         this.saveFormData();
     }

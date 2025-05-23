@@ -6,16 +6,18 @@
         <span class="ms-3">{{ user.username }}</span>
     </div>
     <div class="d-flex gap-2">
-        <div class="rounded-div" (click)="viewProfile()">
-            <i class="bi bi-person-lines-fill fs-3"></i>
-        </div>
-        <div class="rounded-div" (click)="goToChat()">
-            <i class="bi bi-chat-fill fs-3"></i>
-        </div>
-        @if (!isFriend) {
-            <div class="rounded-div">
-                <i class="bi bi-person-plus-fill fs-3" (click)="requestFriend()"></i>
+        @if (!hideBtn) {
+            <div class="rounded-div" (click)="viewProfile()">
+                <i class="bi bi-person-lines-fill fs-3"></i>
             </div>
+                <div class="rounded-div" (click)="goToChat()">
+                    <i class="bi bi-chat-fill fs-3"></i>
+                </div>
+            @if (!isFriend) {
+                <div class="rounded-div">
+                    <i class="bi bi-person-plus-fill fs-3" (click)="requestFriend()"></i>
+                </div>
+            }
         }
         <!--
         <button class="gap-2 btn btn-outline-light btn-sm" (click)="viewProfile()">
@@ -31,6 +33,7 @@
             </button>
         }
         -->
+        <ng-content></ng-content>
     </div>
 </article>
   

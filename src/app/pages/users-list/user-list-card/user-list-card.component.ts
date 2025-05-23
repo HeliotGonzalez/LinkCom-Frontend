@@ -16,6 +16,7 @@ import {firstValueFrom} from "rxjs";
 export class UserListCardComponent {
     @Input() user!: User;
     @Input() isFriend: boolean = false;
+    @Input() hideBtn: boolean = false;
     @Output() addFriend = new EventEmitter<User>();
 
     constructor(private router: Router, private serviceFactory: ServiceFactory, private auth: AuthService) {

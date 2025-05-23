@@ -1,0 +1,19 @@
+<div class="container-blur">
+  <div class="requests-panel" [@fadeDialog]>
+    <div class="panel-header p-4 text-white flex justify-between items-center">
+      <h2 class="text-2xl font-bold">Invite friends to this community</h2>
+      <button class="icon-button text-white text-2xl" (click)="close()">×</button>
+    </div>
+    <div class="requests-section-container overflow-y-auto">
+      <div class="p-4 space-y-4">
+        @for (friend of friends; track friend.id) {
+            <app-user-list-card [user]="friend" [isFriend]="true" [hideBtn]="true">
+                <div class="rounded-div" (click)="invite(friend)" >
+                    <i class="bi bi-people-fill fs-3 text-success"></i>
+                </div>
+            </app-user-list-card>
+        }
+      </div>
+    </div>
+  </div>
+</div>

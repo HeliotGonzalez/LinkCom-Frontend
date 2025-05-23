@@ -204,4 +204,8 @@ export class CommunityViewComponent {
         else this.announcements[announcement.id!] = announcement;
     }
 
+    showInvitationPanel() {
+        this.router.navigate([{outlets: {modal: ['inviteRequestPanel', this.community?.id]}}]).then();
+    }
+
 }

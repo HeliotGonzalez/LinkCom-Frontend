@@ -76,11 +76,16 @@
                                 </button>
                                 </li>
                                 <li>
-<button class="dropdown-item"
-        (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/community/' + community?.id + '/stadistics').build().execute()">
-    Insights
-</button>
-
+                                <button class="dropdown-item" (click)="showInvitationPanel()" i18n="Botón invitación amigos|Acción para mostrar panel de invitación de amigos">
+                                    Invite friends
+                                </button>
+                                </li>
+                                
+                                <li>
+                                <button class="dropdown-item"
+                                        (click)="RouterCommand.Builder.create().withFactory(serviceFactory).withRoute('/community/' + community?.id + '/stadistics').build().execute()">
+                                    Insights
+                                </button>
                                 </li>
 
                                 @if (isCreator()) {
