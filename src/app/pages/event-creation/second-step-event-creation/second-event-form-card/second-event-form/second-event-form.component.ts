@@ -109,7 +109,8 @@ export class SecondEventFormComponent {
             creatorID: this.authService.getUserUUID(),
             communityID: this.formData?.get("communityID"),
             imagePath: this.formData?.get("image"),
-            eventState: await this.canCreateEvent() ? EventState.PUBLISHED : EventState.PENDING
+            eventState: await this.canCreateEvent() ? EventState.PUBLISHED : EventState.PENDING,
+            slots: this.formData?.get("slots")
         }
     }
 
