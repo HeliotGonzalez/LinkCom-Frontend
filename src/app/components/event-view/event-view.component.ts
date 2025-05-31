@@ -80,7 +80,9 @@ export class EventViewComponent {
                 })
                 
             }
-        }
+        } 
+
+        this.joinEventEmitter.emit(RequestStatus.ACCEPTED);
     }
 
     leaveEvent() {

@@ -67,7 +67,7 @@ export class PersonalProfileComponent implements OnInit {
   viewCommunity(communityID?: string): void {
     if (!communityID) { return; }
     this.router.navigate([{ outlets: { modal: null } }]).then(() => {
-      this.router.navigate(['/community'], { queryParams: { communityID } });
+      this.router.navigate(['/community', communityID]);
     });
   }
   
