@@ -10,10 +10,11 @@ import { HttpClient } from '@angular/common/http';
 import { HTTPUserService } from '../../../services/api-services/HTTPUserService';
 import { ServiceFactory } from '../../../services/api-services/ServiceFactory.service';
 import { UserService } from '../../../../architecture/services/UserService';
+import { FormStepsComponent } from '../../../components/form-steps/form-steps.component';
 
 @Component({
   selector: 'app-register-third-step',
-  imports: [InterestTagComponent, FormsModule],
+  imports: [InterestTagComponent, FormsModule, FormStepsComponent],
   templateUrl: './register-third-step.component.html',
   styleUrl: './register-third-step.component.css'
 })
